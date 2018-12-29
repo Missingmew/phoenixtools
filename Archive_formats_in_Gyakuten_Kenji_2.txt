@@ -1,0 +1,48 @@
+Archive formats in Gyakuten Kenji 2
+
+
+This text describes the two custom archive file formats
+that are used by the game "Gyakuten Kenji 2" by Capcom.
+
+
+
+The first archive format can be found directly in
+the nds filesystem as a bunch of files with file names that
+end with ".bin", but not all files with matching names are
+archives.
+
+The first file format has no filenames and files are
+addressed by their position in the file table.
+
+The file begins with a table of unspecified length. This
+is the file table. It contains two fields, both 4 byte long.
+
+The first field is the offset in the archive file where
+the file data begins.
+
+The second field is the lenght of the file data as well as a
+flag for if it is compressed or not. The flag is the MSD of
+the field and when that bit is set the data is compressed.
+
+The used compression is the stock ds compression, with the
+stock compression type and length header.
+
+An entry with the size of zero is used to terminate the table.
+
+
+
+The second archive format is found as files stored the first
+archive format.
+
+The second fileformat also lacks filenames. As such, positions
+in the table has to be used there too.
+
+The file begins with a table consisting of pointers to
+the files stored in the archive file. Each pointer is 4 bytes
+long.
+
+There is no table size information stored and there is
+no terminating entry either.
+
+
+Written & figured out by henke37 2011

@@ -1,0 +1,23 @@
+even:
+	begins with 0x80000001
+	followed by palette 0x20 bytes (4bpp)
+	followed by table
+	followed by tile data
+
+odd:
+	begins with table
+	first entry:
+	uint16_t null
+	uint16_t numthings
+	uint32_t null
+	
+	following entries:
+	uint16_t offset (from beginning of table)
+	uint16_t size (in bytes)
+	uint32_t null
+	
+	data at offset like this:
+	uint32_t numitems (4bytes per item)
+	uint32_t items[] (numitems times)
+	items are possibly OAM data
+	

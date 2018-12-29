@@ -1,0 +1,18 @@
+PAC File format specification
+
+Known filename extensions: .pac
+
+The file format is used by Capcom.
+
+The file is read in little endian mode.
+
+The file begins with a 4 byte long integer specifying the number of files in it.
+
+Following that is just that many 8 byte long records for each file in the archive.
+The first 4 bytes in each record is the file offset in the archive while the next 4 is the size of the file.
+
+There are no filenames provided by the format.
+
+
+Written by henke37 2011.
+Greets to lowlines for the help in figuring out the file format.

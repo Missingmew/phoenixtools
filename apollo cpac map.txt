@@ -1,0 +1,11 @@
+cpac_2d.bin:
+	subarc0 - palettes? (PKEY/PDAT)
+	subarc1 - raw images, linked to subarc0? (with or without palette, convert with convert-apollo-raw)
+	subarc2 - tilemaps?
+	subarc3 - characters?
+	subarc4 - game graphics (convert with convert-apollo-image)
+	subarc5 - possibly raw images?
+	
+cpac_3d.bin:
+	subarc0 - game graphics (uncompressed header) file 2650 has an evil height?
+	subarc1 - 3d models

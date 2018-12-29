@@ -1,0 +1,616 @@
+
+0x00000000	0	"common/archives/case5-badger-32-20.bin"	0x001bd415			
+0x001bd418	0	"common/archives/case5-intro-32-24.bin"		0x000d0522				
+0x0028d93c	0	"common/archives/case5-security-32-24.bin"	0x0158ae79				
+0x018187b8	0	"common/archives/case5-epilogue-32-24.bin"	0x0024ab27				
+0x01a632e0	0	"common/archives/unknown-archive1.bin"		0x0000e2f2						
+0x01a715d4	0	"common/archives/unknown-archive2.bin"		0x00001008						
+0x01a725dc	0	"common/archives/unknown-archive3.bin"		0x00002947						
+0x01a74f24	0	"common/archives/unknown-archive4.bin"		0x00002df8						
+0x01a77d1c	2	"common/graphics/logo1.png"			32	24	8
+0x01a7bb04	2	"common/graphics/logo2.png"			32	24	8
+0x01a7f8ec	2	"common/graphics/logo3.png"			32	24	8
+// 0x01a836d4	1	""	0x00000800	uncompressed	font			4		no (uses message box tiles)	
+// 0x01a83ed4	1	""	0x00001020	uncompressed	message box tiles			4		yes	
+// 0x01a84ef4	1	""	0x00000440	uncompressed	message box tiles 2			4		yes	
+// 0x01a85374	1	""	0x00010800	uncompressed	nametags			4		no (uses message box tiles)	
+// 0x01a95b74	1	""	0x00000780	uncompressed	msgbox cross-exam tiles			4		no	
+// 0x01a962f4	1	""	0x00008000	uncompressed	unknown jap text			4		no	"includes one blank part	 uses ""big tiles"" 2x2 tiles per big tile"
+// 0x01a9e2f4	1	""	0x00000400	uncompressed	buttons (gba)			4		no	"first 4 are 2x2	 second two are 4x2"
+// 0x01a9e6f4	1	""	0x00001800	uncompressed	testemony text tiles			4		no	
+// 0x01a9fef4	1	""	0x00000a00	uncompressed	jap cross-exam court record tiles			4		no	
+// 0x01aa08f4	1	""	0x00000500	uncompressed	investigation cursor (gba)			4		no	
+// 0x01aa0df4	1	""	0x00000200	uncompressed	correct tick			4		no	
+// 0x01aa0ff4	1	""	0x000002e0	uncompressed	unknown (court wall)			4		no	odd number of tiles?
+// 0x01aa12d4	1	""	0x00002800	uncompressed	jap guilty-not guilty text			4		no	
+// 0x01aa3ad4	1	""	0x00000020	uncompressed	unknown dot			4		no	
+// 0x01aa3af4	1	""	0x00000080	uncompressed	unknown arrow			4		no	
+// 0x01aa3b74	1	""	0x00002500	uncompressed	court furniture			4		no	various sizes of individual graphics
+// 0x01aa6074	1	""	0x00003000	uncompressed	french? not guilty			4		no	
+// 0x01aa9074	1	""	0x0000c020	uncompressed	case 5 fingerprints			4		yes	
+// 0x01ab5094	1	""	0x00003000	uncompressed	english not guilty			4		no	
+// 0x01ab8094	1	""	0x00000600	uncompressed	unknown garbage			4		yes?	"not sure what that is	 data at beginning suggests palette"
+// 0x01ab8694	1	""	0x00000020	uncompressed	crosshair			4		no	
+// 0x01ab86b4	1	""	0x00000100	uncompressed	unknown bars			4		no	
+// 0x01ab87b4	1	""	0x00000120	uncompressed	grayscale pencil			4		yes	
+// 0x01ab88d4	1	""	0x00006180	uncompressed	ema head images			4		yes	"multiple images	 each with its own palette	 one blank (gray)"
+// 0x01abea54	1	""	0x000030c0	uncompressed	gumshoe head images			4		yes	"multiple images	 each with its own palette"
+// 0x01ac1b14	1	""	0x00003020	uncompressed	emas drawing with border			4		yes	
+// 0x01ac4b34	1	""	0x00003020	uncompressed	vase with missing piece with border			4		yes	
+// 0x01ac7b54	1	""	0x00003020	uncompressed	vase with missing piece with border 2			4		yes	
+// 0x01acab74	1	""	0x00003020	uncompressed	vase with piece unconnected			4		yes	
+// 0x01acdb94	1	""	0x00003020	uncompressed	vase with piece connected			4		yes	
+// 0x01ad0bb4	1	""	0x00008020	uncompressed	main font			4		yes	"each char is 2x2 tiles	 with the two right tiles being blank"
+// 0x01ad8bd4	1	""	0x00005820	uncompressed	german and spanish/italian not guilty			4		yes	each letter only once
+// 0x01ade3f4	1	""	0x00000040	uncompressed	unknown garbage			4		yes?	apparently palettes
+// 0x01ade434	1	""	0x00000320	uncompressed	killer/victim icons (circles)			4		yes	"one for each language (in order italian	 german	 spanish)"
+// 0x01ade754	1	""	0x00000440	uncompressed	unknown things 1			4		no	
+// 0x01adeb94	1	""	0x00004b80	uncompressed	global studios map objects			4		no	"includes studios	 employee area	 gate and white box at end"
+// 0x01ae3714	1	""	0x00000080	uncompressed	generic green icon (circle)			4		no (uses circle icons)	
+// 0x01ae3794	1	""	0x00000040	uncompressed	tiny arrow right			4		no	
+// 0x01ae37d4	1	""	0x00000300	uncompressed	house and van icon			4		no	
+// 0x01ae3ad4	1	""	0x00000040	uncompressed	arrow up			4		no	
+// 0x01ae3b14	1	""	0x00000180	uncompressed	witness icons (circle)			4		no (uses circle icons)	
+// 0x01ae3c94	1	""	0x00002480	uncompressed	case 5 map icons			4		no	"parking garage	 badger (multi3)	 evidence room (w/ luminol)"
+// 0x01ae6114	1	""	0x00000300	uncompressed	red box (selection highlight)			4		no (maybe circle icons)	
+0x01ae6314	2	"common/graphics/interface/touchscreen/vase-puzzle-circle.png"			32	24	4
+0x01ae6f48	2	"jp/graphics/backgrounds/bg200-keypad.png"					32	24	8
+0x01aea770	2	"common/graphics/interface/closeup-speedlines-bars.png"				32	24	4
+0x01aeb6d4	3	"common/graphics/backgrounds/bg000-mia-office-night.png"			64	4
+0x01af9358	3	"common/graphics/backgrounds/bg001-mia-office-day.png"				32	4
+0x01b007b4	3	"common/graphics/backgrounds/bg002-defense-lobby.png"	32	4
+0x01b07c74	3	"common/graphics/backgrounds/bg003-defense-bench.png"	32	4
+0x01b09c40	3	"common/graphics/backgrounds/bg004-prosecution-bench.png"	32	4
+0x01b0ba98	3	"common/graphics/backgrounds/bg005-witness-stand.png"	32	4
+0x01b0dee8	3	"common/graphics/backgrounds/bg006-courtroom-total.png"	32	4
+0x01b16b80	3	"common/graphics/backgrounds/bg007-defense-bench-partner.png"	32	4
+0x01b1d910	3	"common/graphics/backgrounds/bg008-judge-seat.png"	32	4
+0x01b25624	3	"common/graphics/backgrounds/bg009-mia-office-entry-night.png"	32	4
+0x01b2c27c	3	"common/graphics/backgrounds/bg010-dead-mia-with-maya.png"	32	4
+0x01b33eb8	3	"common/graphics/backgrounds/bg011-studio-path.png"	32	4
+0x01b3c508	3	"common/graphics/backgrounds/bg012-staff-area.png"	64	4
+0x01b497a8	3	"common/graphics/backgrounds/bg013-mia-dodge-right.png"	32	4
+0x01b4c4e0	3	"common/graphics/backgrounds/bg014-mia-dodge-left.png"	32	4
+0x01b4f208	3	"common/graphics/backgrounds/bg015-mia-office.png"	32	4
+0x01b503cc	3	"common/graphics/backgrounds/bg016-april-and-bellboy.png"	32	4
+0x01b54714	3	"common/graphics/backgrounds/bg017-mia-office-body.png"	32	4
+0x01b5b278	3	"common/graphics/backgrounds/bg018-phoenix-maya-mia.png"	32	4
+0x01b628e0	3	"common/graphics/backgrounds/bg019-studio-2-house.png"	32	4
+0x01b69344	3	"common/graphics/backgrounds/bg020-april-on-phone.png"	32	4
+0x01b70e0c	3	"common/graphics/backgrounds/bg021-redd-attacking.png"	32	8
+0x01b7f1ec	3	"common/graphics/backgrounds/bg022-mia-being-attacked.png"	32	4
+0x01b89554	3	"common/graphics/backgrounds/bg023-thinker-as-weapon.png"	32	4
+0x01b8b934	3	"common/graphics/backgrounds/bg024-dressing-room.png"	32	4
+0x01b92c14	3	"common/graphics/backgrounds/bg025-main-gate.png"	32	4
+0x01b98c9c	3	"common/graphics/backgrounds/bg026-studio-1.png"	32	4
+0x01b9eb80	3	"common/graphics/backgrounds/bg027-gavel-slam.png"	32	4
+
+0x01ba10a0	3	"common/graphics/effects/speedlines-center.png"	32	4
+
+0x01ba3d94	3	"common/graphics/backgrounds/bg029-mia-office-fov.png"	32	4
+0x01ba523c	3	"common/graphics/backgrounds/bg030-detention-center.png"	32	4
+0x01bab1b4	3	"common/graphics/backgrounds/bg031-bluecorp-ceo-office.png"	32	4
+0x01bb306c	3	"common/graphics/backgrounds/bg032-gatewater-aprils-room.png"	32	4
+0x01bb9908	3	"common/graphics/backgrounds/bg033-thinker-with-blood.png"	32	8
+0x01bbed08	3	"common/graphics/backgrounds/bg034-cindy-dead-on-floor.png"	32	4
+0x01bc4590	3	"common/graphics/backgrounds/bg035-sahwit-after-murder.png"	32	8
+0x01bd1e30	3	"common/graphics/backgrounds/bg036-sahwit-clueless.png"	32	4
+0x01bd6710	3	"common/graphics/backgrounds/bg037-sahwit-thinking.png"	32	4
+0x01bdb508	3	"common/graphics/backgrounds/bg038-sahwit-having-idea.png"	32	4
+0x01be0bf4	3	"common/graphics/backgrounds/bg039-grossbergs-office.png"	32	4
+0x01be8c5c	3	"common/graphics/backgrounds/bg040-grossbergs-office-no-painting.png"	32	4
+0x01bf0354	3	"common/graphics/backgrounds/bg041-sahwit-caught.png"	32	4
+0x01bf42d8	3	"common/graphics/backgrounds/bg042-sahwit-seeing-larry.png"	32	4
+0x01bf71e8	3	"common/graphics/backgrounds/bg043-sahwit-finding-cindy.png"	32	4
+0x01bfa7e4	3	"common/graphics/backgrounds/bg044-studio-2-entrance.png"	64	4
+
+0x01c07a14	3	"de/graphics/evidence-details/case2/maya-phone-log-1.png"	32	4
+0x01c08a84	3	"it/graphics/evidence-details/case2/maya-phone-log-1.png"	32	4
+0x01c09a84	3	"es/graphics/evidence-details/case2/maya-phone-log-1.png"	32	4
+0x01c0ab24	3	"de/graphics/evidence-details/case2/maya-phone-log-2.png"	32	4
+0x01c0bb48	3	"it/graphics/evidence-details/case2/maya-phone-log-2.png"	32	4
+0x01c0cbcc	3	"es/graphics/evidence-details/case2/maya-phone-log-2.png"	32	4
+0x01c0db60	3	"common/graphics/capcom-logo.png"	32	4
+0x01c0fba0	3	"de/graphics/evidence-details/case2/maya-phone-log-3.png"	32	4
+0x01c10c0c	3	"de/graphics/evidence-details/case2/maya-phone-log-3.png"	32	4
+0x01c11c74	3	"de/graphics/evidence-details/case2/maya-phone-log-3.png"	32	4
+
+0x01c12c44	3	"common/graphics/backgrounds/bg049-steel-samurai-broken-leg.png"	32	4
+0x01c16190	3	"common/graphics/backgrounds/bg050-finding-dead-hammer.png"	32	4
+0x01c1b050	3	"common/graphics/backgrounds/bg051-hammer-stealing-costume.png"	32	4
+0x01c1f668	3	"common/graphics/backgrounds/bg052-vasquez-after-murder.png"	32	4
+0x01c23b88	3	"common/graphics/backgrounds/bg053-staff-at-lunch.png"	32	4
+0x01c28804	3	"common/graphics/backgrounds/bg054-victim-and-vasquez-at-studio-2.png"	32	4
+0x01c2d4a4	3	"common/graphics/backgrounds/bg055-cody-sees-samurai.png"	32	4
+0x01c330e8	3	"common/graphics/backgrounds/bg056-samurai-at-studio-2-by-cody.png"	32	4
+0x01c34e00	3	"common/graphics/backgrounds/bg057-incident-5-years-ago.png"	32	4
+0x01c3825c	3	"common/graphics/backgrounds/bg058-studio-2-house-with-mib.png"	32	4
+0x01c3f2ac	3	"de/graphics/backgrounds/bg059-pink-princess-poster.png"	32	4
+0x01c48dcc	3	"it/graphics/backgrounds/bg059-pink-princess-poster.png"	32	4
+0x01c52b30	3	"es/graphics/backgrounds/bg059-pink-princess-poster.png"	32	4
+0x01c5c6e4	3	"common/graphics/backgrounds/bg060-monkey-head-on-road.png"	32	4
+0x01c671f0	3	"de/graphics/backgrounds/bg061-global-studios.png"	32	4
+0x01c68288	3	"it/graphics/backgrounds/bg061-global-studios.png"	32	4
+0x01c69348	3	"es/graphics/backgrounds/bg061-global-studios.png"	32	4
+0x01c6a3f8	3	"common/graphics/backgrounds/bg062-actors-training.png"	32	4
+0x01c6e518	3	"de/graphics/backgrounds/bg063-steel-samurai-poster.png"	32	4
+0x01c7682c	3	"it/graphics/backgrounds/bg063-steel-samurai-poster.png"	32	4
+0x01c7e918	3	"es/graphics/backgrounds/bg063-steel-samurai-poster.png"	32	4
+
+0x01c868e8	3	"common/graphics/backgrounds/bg066-closeup-speedlines.png"	32	4
+0x01c879f4	3	"common/graphics/interface/courtroom-simple-with-scanlines.png"	32	4
+0x01c8ba6c	3	"common/graphics/capcom-logo-no-license.png"	32	4
+
+0x01c8cbd0	3	"common/graphics/backgrounds/bg069-steel-samurai-moon.png"	32	8
+0x01c8f0cc	3	"common/graphics/backgrounds/bg070-gourd-lake-entrance.png"	32	4
+0x01c99650	3	"common/graphics/backgrounds/bg071-gourd-lake-park-decorated.png"	32	4
+0x01ca1638	3	"common/graphics/backgrounds/bg072-gourd-lake-park.png"	32	4
+0x01ca8080	3	"common/graphics/backgrounds/bg073-gourd-lake-forest.png"	64	4
+0x01cb67f0	3	"common/graphics/backgrounds/bg074-grass.png"	32	4
+
+0x01cb76a0	3	"common/graphics/backgrounds/case3/trees.png"	32	4
+
+0x01cb8498	3	"common/graphics/backgrounds/bg076-steel-samurai-in-action.png"	32	4
+0x01cba888	3	"common/graphics/backgrounds/bg077-gourd-lake-boat-rental.png"	32	4
+0x01cc18a0	3	"common/graphics/backgrounds/bg078-gourd-lake-boat-rental-inside.png"	32	4
+0x01cc7990	3	"common/graphics/backgrounds/bg079-police-station-inside.png"	32	4
+0x01ccf9c0	3	"common/graphics/backgrounds/bg080-police-station-evidence-room.png"	32	4
+0x01cd7e30	3	"common/graphics/backgrounds/bg081-steel-samurai-crossing-swords.png"	32	4
+
+0x01cdbb50	3	"de/graphics/evidence-details/case4/dl-6-files-1.png"	32	4
+0x01cdcab0	3	"it/graphics/evidence-details/case4/dl-6-files-1.png"	32	4
+0x01cdd9f0	3	"es/graphics/evidence-details/case4/dl-6-files-1.png"	32	4
+0x01cde97c	3	"de/graphics/evidence-details/case4/dl-6-files-2.png"	32	4
+0x01cdf9c0	3	"it/graphics/evidence-details/case4/dl-6-files-2.png"	32	4
+0x01ce09b4	3	"es/graphics/evidence-details/case4/dl-6-files-2.png"	32	4
+0x01ce1a0c	3	"de/graphics/evidence-details/case4/dl-6-files-3.png"	32	4
+0x01ce2a4c	3	"it/graphics/evidence-details/case4/dl-6-files-3.png"	32	4
+0x01ce3a28	3	"es/graphics/evidence-details/case4/dl-6-files-3.png"	32	4
+
+0x01ce4a2c	3	"common/graphics/backgrounds/bg085-train-station.png"	32	4
+0x01cedfd4	3	"common/graphics/backgrounds/bg086-map-gourd-lake.png"	32	4
+0x01ceefdc	3	"common/graphics/backgrounds/bg087-lottas-photo-enlarged.png"	32	4
+0x01cf1f14	3	"common/graphics/backgrounds/bg088-incident-from-dl-6.png"	32	4
+0x01cf5518	3	"de/graphics/backgrounds/bg089-newspaper.png"	32	4
+0x01cfd248	3	"it/graphics/backgrounds/bg089-newspaper.png"	32	4
+0x01d04a70	3	"es/graphics/backgrounds/bg089-newspaper.png"	32	4
+0x01d0c678	3	"common/graphics/backgrounds/bg090-larry-with-balloon.png"	32	4
+0x01d11aa0	3	"common/graphics/backgrounds/bg091-balloon-hitting-lake.png"	32	4
+0x01d16100	3	"common/graphics/backgrounds/bg092-larry-searching-for-balloon.png"	32	4
+0x01d1a264	3	"common/graphics/backgrounds/bg093-school-court.png"	32	4
+0x01d236b4	3	"common/graphics/backgrounds/bg094-lottas-photo.png"	32	4
+0x01d26f1c	3	"common/graphics/backgrounds/bg095-school-phoenix.png"	32	4
+0x01d2cd38	3	"common/graphics/backgrounds/bg096-school-edgeworth.png"	32	4
+0x01d349b8	3	"common/graphics/backgrounds/bg097-school-larry.png"	32	4
+0x01d3bb18	3	"common/graphics/backgrounds/bg098-yanni-attacking-victim.png"	32	4
+0x01d3f974	3	"common/graphics/backgrounds/bg099-yanni-and-edgeworth-on-boat.png"	32	4
+0x01d43e34	3	"common/graphics/backgrounds/bg100-edgeworth-inside-elevator.png"	32	4
+0x01d48694	3	"common/graphics/backgrounds/bg101-edgeworth-throwing-weapon.png"	32	4
+0x01d4c970	3	"common/graphics/backgrounds/bg102-von-karma-being-shot.png"	32	4
+0x01d51be8	3	"common/graphics/backgrounds/bg103-von-karma-entering-elevator.png"	32	4
+0x01d54720	3	"common/graphics/backgrounds/bg104-maya-leaving-at-station.png"	32	4
+0x01d5b9fc	3	"de/graphics/backgrounds/bg105-winning-party.png"	32	4
+0x01d63f8c	3	"it/graphics/backgrounds/bg105-winning-party.png"	32	4
+0x01d6c578	3	"es/graphics/backgrounds/bg105-winning-party.png"	32	4
+0x01d74ba0	3	"common/graphics/backgrounds/bg106-boat-single-passenger.png"	32	4
+0x01d77b90	3	"common/graphics/backgrounds/bg107-man-with-gun.png"	32	4
+0x01d7a574	3	"common/graphics/backgrounds/bg108-edgeworth-with-gun.png"	32	8
+0x01d893dc	3	"common/graphics/backgrounds/bg109-capcom-logo-bw.png"	32	4
+0x01d8a5bc	3	"common/graphics/backgrounds/common/phoenix-thinking-bw.png"	32	4
+0x01d8ce7c	3	"common/graphics/backgrounds/bg113-police-station-entrance.png"	32	4
+0x01d95b38	3	"common/graphics/backgrounds/bg114-edgeworths-office.png"	32	4
+0x01d9f218	3	"common/graphics/backgrounds/bg115-parking-garage.png"	64	4
+0x01db00f4	3	"common/graphics/backgrounds/bg116-gants-office.png"	64	4
+0x01dc1230	3	"common/graphics/backgrounds/bg117-evidence-locker-room.png"	64	4
+0x01dcfcb8	3	"common/graphics/backgrounds/bg118-police-station-security-room.png"	32	4
+
+0x01dd8838	4	"common/graphics/patches/case3/staff-area-shutter-left.png"		4	7	0x01b3c508	0
+0x01dd8cd8	4	"common/graphics/patches/case2/mia-office-night-note.png"		2	2	0x01aeb6d4	0
+0x01dd8d98	4	"common/graphics/patches/case3/staff-area-shutter-right.png"		3	5	0x01b3c508	0
+0x01dd90d0	4	"common/graphics/patches/case2/grossbergs-office-no-painting-notes-table.png"		4	2	0x01be8c5c	0
+0x01dd9244	4	"common/graphics/patches/case4/gourd-lake-park-items-bench.png"		3	3	0x01ca1638	0
+0x01dd9418	4	"common/graphics/patches/case4/police-station-evidence-room-drawer.png"		4	6	0x01ccf9c0	0
+
+0x01dd97a4	2	"common/graphics/interface/touchscreen/background-phoenix.png"	32	24	4
+0x01ddbaa4	2	"common/graphics/interface/touchscreen/background-prosecution.png"	32	24	4
+0x01dde4ec	2	"common/graphics/interface/background-main-menu.png"	32	24	4
+0x01de24fc	2	"common/graphics/interface/touchscreen/3d-interface.png"	32	24	4
+0x01de3458	2	"common/graphics/interface/touchscreen/3d-interface-no-controls.png"	32	24	4
+0x01de4000	2	"common/graphics/backgrounds/common/blurred-courtroom-png"	32	24	4
+
+0x01de5bf0	4	"common/graphics/patches/case5/map-parking-garage-car-luminol.png"		2	3	0x01de6828	0
+0x01de5c4c	4	"de/graphics/patches/case5/map-parking-garage-secret-path-01.png"		5	4	0x01de6828	0
+0x01de5ce4	4	"it/graphics/patches/case5/map-parking-garage-secret-path-01.png"		5	4	0x01de7fc4	0
+0x01de5d7c	4	"es/graphics/patches/case5/map-parking-garage-secret-path-01.png"		5	4	0x01de9764	0
+0x01de5e14	4	"common/graphics/patches/case5/map-parking-garage-secret-path-02.png"		6	4	0x01de6828	0
+0x01de5eb4	4	"de/graphics/patches/case5/map-parking-garage-secret-path-03.png"		4	5	0x01de6828	0
+0x01de5fa4	4	"it/graphics/patches/case5/map-parking-garage-secret-path-03.png"		4	5	0x01de7fc4	0
+0x01de608c	4	"es/graphics/patches/case5/map-parking-garage-secret-path-03.png"		4	5	0x01de9764	0
+0x01de6170	4	"common/graphics/patches/case5/map-parking-garage-secret-path-04.png"		4	5	0x01de6828	0
+0x01de61e0	4	"common/graphics/patches/case5/map-parking-garage-secret-path-05.png"		4	4	0x01de6828	0
+0x01de623c	4	"common/graphics/patches/case5/map-parking-garage-secret-path-06.png"		6	4	0x01de6828	0
+0x01de62e0	4	"common/graphics/patches/case5/map-parking-garage-secret-path-07.png"		4	8	0x01de6828	0
+0x01de636c	4	"common/graphics/patches/case5/map-parking-garage-secret-path-08.png"		4	8	0x01de6828	0
+0x01de63f8	4	"common/graphics/patches/case5/map-parking-garage-secret-path-09.png"		4	8	0x01de6828	0
+0x01de6488	4	"common/graphics/patches/case5/map-parking-garage-secret-path-10.png"		2	4	0x01de6828	0
+0x01de64b8	4	"common/graphics/patches/case5/map-parking-garage-secret-path-11.png"		8	4	0x01de6828	0
+0x01de6544	4	"common/graphics/patches/case5/map-parking-garage-secret-path-12.png"		5	4	0x01de6828	0
+0x01de65b8	4	"common/graphics/patches/case5/map-parking-garage-secret-path-13.png"		3	3	0x01de6828	0
+0x01de665c	4	"common/graphics/patches/case5/map-parking-garage-lunchland-van.png"		5	4	0x01de6828	0
+0x01de6704	4	"common/graphics/patches/unknown01.png"	0x00000122	patch image	unknown reference	2	4	
+
+0x01de6828	3	"de/graphics/backgrounds/bg119-parking-garage.png"	48	4
+0x01de7fc4	3	"it/graphics/backgrounds/bg119-parking-garage.png"	48	4
+0x01de9764	3	"es/graphics/backgrounds/bg119-parking-garage.png"	48	4
+0x01deaf28	3	"common/graphics/backgrounds/bg120-lana-attacking-victim.png"	32	4
+0x01def12c	3	"common/graphics/backgrounds/bg121-lana-in-garage.png"	32	4
+0x01df29b8	3	"common/graphics/backgrounds/bg122-angel-with-lana.png"	32	4
+0x01df7248	3	"common/graphics/backgrounds/bg123-edgeworths-car-trunk.png"	32	4
+0x01dfa920	3	"de/graphics/backgrounds/bg124-goodmans-note.png"	32	4
+0x01dfd740	3	"it/graphics/backgrounds/bg124-goodmans-note.png"	32	4
+0x01e00560	3	"es/graphics/backgrounds/bg124-goodmans-note.png"	32	4
+0x01e03380	3	"de/graphics/backgrounds/bg125-key-card-log-blank.png"	32	4
+0x01e04220	3	"it/graphics/backgrounds/bg125-key-card-log-blank.png"	32	4
+0x01e050c8	3	"es/graphics/backgrounds/bg125-key-card-log-blank.png"	32	4
+0x01e05f84	3	"common/graphics/backgrounds/bg126-meekings-with-victim-at-evidence-lockers.png"	32	4
+
+0x01e09e94	3	"common/graphics/backgrounds/case5/police-station-security-room-luminol-2.png"	32	4
+0x01e1147c	3	"common/graphics/backgrounds/case5/evidence-lockers-luminol-2.png"	32	4
+0x01e17548	4	"common/graphics/patches/case5/map-evidence-lockers-luminol.png"		2	2	0x01eca0d4	0
+0x01e1757c	4	"common/graphics/patches/case5/map-parking-garage-phone-luminol.png"		2	1	0x01de6828	0
+
+0x01e175a8	3	"common/graphics/backgrounds/bg128-bloody-print-on-locker-stripe.png"	32	4
+0x01e19df8	2	"common/graphics/backgrounds/bg128-bloody-print-on-locker.png"	32	24	4
+0x01e1c248	3	"common/graphics/backgrounds/bg129-luminol-print-on-locker-stripe.png"	32	4
+0x01e202f0	2	"common/graphics/backgrounds/bg129-luminol-print-on-locker.png"	32	24	8
+0x01e24150	3	"common/graphics/backgrounds/bg130-hand-print-on-cloth-stripe.png"	32	4
+0x01e26cb0	2	"common/graphics/backgrounds/bg130-hand-print-on-cloth.png"	32	24	4
+
+0x01e29418	3	"common/graphics/interface/touchscreen/3d-interface-no-zoom-stripe.png"	32	4
+0x01e2a3c0	2	"common/graphics/interface/touchscreen/3d-interface-no-zoom.png"	32	24	4
+
+0x01e2b250	1	"de/graphics/patches/unknown-witness-icon.png"	0x00000068	compressed	witness icon (no reference)	2	2		yes		
+0x01e2b2b8	1	"it/graphics/patches/unknown-witness-icon.png"	0x00000060	compressed	witness icon (no reference)	2	2		yes		
+0x01e2b318	1	"es/graphics/patches/unknown-witness-icon.png"	0x00000060	compressed	witness icon (no reference)	2	2		yes		
+0x01e2b378	4	"common/graphics/patches/case5/evidence-locker-room-open-locker.png"		8	6	0x01dc1230	0
+
+0x01e2bddc	3	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-0.png"	32	4
+0x01e30148	3	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-1.png"	32	4
+0x01e3435c	3	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-2.png"	32	4
+0x01e3b5fc	3	"common/graphics/backgrounds/case5/parking-garage-phone-luminol-0.png"	32	4
+0x01e3e9e0	3	"common/graphics/backgrounds/case5/parking-garage-phone-luminol-1.png"	32	4
+0x01e416a4	3	"common/graphics/backgrounds/case5/parking-garage-phone-luminol-2.png"	32	4
+
+0x01e45458	3	"common/graphics/interface/topscreen/fingerprint-analysis.png"	32	4
+
+0x01e462c4	3	"common/graphics/backgrounds/bg181-statue-in-gants-office-night.png"	32	4
+0x01e49b9c	3	"common/graphics/backgrounds/bg182-lana-and-gant.png"	32	4
+0x01e4d8a4	3	"common/graphics/backgrounds/bg183-sl-9-murderer-darke.png"	32	4
+0x01e51638	3	"common/graphics/backgrounds/bg184-sl-9-investigation-group.png"	32	4
+0x01e5658c	3	"common/graphics/backgrounds/bg185-gant-lana-neil-with-trophy.png"	32	4
+0x01e5c720	3	"common/graphics/backgrounds/bg186-sl-9-murder-scene.png"	32	4
+0x01e60dd0	3	"common/graphics/backgrounds/bg187-sl-9-lana-with-unconcious-ema.png"	32	4
+0x01e649d4	3	"common/graphics/backgrounds/bg188-sl-9-dead-neil-with-murderer.png"	32	4
+
+0x01e69068	3	"common/graphics/backgrounds/bg189-sl-9-emas-drawing.png"	32	4
+0x01e6c43c	3	"common/graphics/backgrounds/bg190-sl-9-emas-drawing-people.png"	32	4
+0x01e6ea10	3	"common/graphics/backgrounds/bg191-sl-9-emas-drawing-vase.png"	32	4
+
+0x01e70bb8	3	"common/graphics/backgrounds/bg140-contradiction-of-the-law.png"	32	4
+
+0x01e75870	3	"de/graphics/evidence-details/case5/key-card-log-1.png"	32	4
+0x01e7675c	3	"it/graphics/evidence-details/case5/key-card-log-1.png"	32	4
+0x01e77650	3	"es/graphics/evidence-details/case5/key-card-log-1.png"	32	4
+
+0x01e78558	3	"common/graphics/backgrounds/bg197-vase-with-bloody-writing.png"	32	4
+
+0x01e7a184	3	"common/graphics/evidence-details/case5/vase-with-missing-piece.png"	32	4
+
+0x01e7bc44	3	"common/graphics/backgrounds/case5/gants-office-preview.png"	32	4
+0x01e84640	3	"common/graphics/backgrounds/bg199-neil-impaled-on-statue.png"	32	4
+
+0x01e882a8	3	"common/graphics/backgrounds/bg142-vase-closeup-of-writing.png"	32	4
+
+0x01e8bee4	3	"common/graphics/interface/touchscreen/3d-vase-puzzle-base.png"	32	4
+
+0x01e8d0e4	3	"common/graphics/backgrounds/bg144-evidence-lockers-closeup.png"	32	4
+0x01e93ef0	3	"common/graphics/backgrounds/bg145-evidence-lockers-closeup-of-print.png"	32	4
+
+0x01e98660	3	"common/graphics/backgrounds/bg146-evidence-lockers-left-luminol-0.png"	32	4
+0x01e9b75c	3	"common/graphics/backgrounds/bg147-evidence-lockers-left-luminol-1.png"	32	4
+
+0x01e9dd84	3	"de/graphics/backgrounds/case1/touchscreen.png"	32	4
+0x01e9ed34	3	"it/graphics/backgrounds/case1/touchscreen.png"	32	4
+0x01e9fc68	3	"es/graphics/backgrounds/case1/touchscreen.png"	32	4
+0x01ea0b8c	3	"de/graphics/backgrounds/case2/touchscreen.png"	32	4
+0x01ea1c28	3	"it/graphics/backgrounds/case2/touchscreen.png"	32	4
+0x01ea2c48	3	"es/graphics/backgrounds/case2/touchscreen.png"	32	4
+0x01ea3ccc	3	"de/graphics/backgrounds/case3/touchscreen.png"	32	4
+0x01ea4ce8	3	"it/graphics/backgrounds/case3/touchscreen.png"	32	4
+0x01ea5d00	3	"es/graphics/backgrounds/case3/touchscreen.png"	32	4
+0x01ea6ce0	3	"de/graphics/backgrounds/case4/touchscreen.png"	32	4
+0x01ea7ca8	3	"it/graphics/backgrounds/case4/touchscreen.png"	32	4
+0x01ea8c98	3	"es/graphics/backgrounds/case4/touchscreen.png"	32	4
+0x01ea9c44	3	"de/graphics/backgrounds/case5/touchscreen.png"	32	4
+0x01eaab84	3	"it/graphics/backgrounds/case5/touchscreen.png"	32	4
+0x01eabbe0	3	"es/graphics/backgrounds/case5/touchscreen.png"	32	4
+
+0x01eacc14	3	"common/graphics/backgrounds/bg153-vase-break-1.png"	32	4
+0x01eaedc0	3	"common/graphics/backgrounds/bg154-vase-break-2.png"	32	4
+0x01eb17dc	3	"common/graphics/backgrounds/bg155-vase-break-3.png"	32	4
+0x01eb45e8	3	"common/graphics/backgrounds/bg156-badger-backlit.png"	32	4
+0x01eb68b8	3	"common/graphics/backgrounds/bg157-parking-garage-background.png"	32	8
+0x01ec5788	3	"common/graphics/backgrounds/case3/scene-of-murder-5-years-ago.png"	32	4
+0x01eca0d4	3	"common/graphics/backgrounds/bg159-map-evidence-lockers.png"	32	4
+
+0x01ecad38	3	"jp/graphics/backgrounds/bg200-keypad-stripe.png"	32	4
+
+0x01ecea70	4	"common/graphics/patches/case5/map-evidence-lockers-luminol-2.png"		3	3	0x01eca0d4	0
+0x01eceae8	4	"de/graphics/patches/case5/map-evidence-lockers-badger-with-luminol.png"		8	4	0x01eca0d4	0
+0x01ecec3c	4	"it/graphics/patches/case5/map-evidence-lockers-badger-with-luminol.png"		8	4	0x01eca0d4	0
+0x01eced6c	4	"es/graphics/patches/case5/map-evidence-lockers-badger-with-luminol.png"		8	4	0x01eca0d4	0
+0x01eceeb8	4	"common/graphics/patches/case5/map-evidence-lockers-luminol-3.png"		2	2		0x01eca0d4	0
+
+0x01eceef4	3	"common/graphics/backgrounds/bg160-vase-closeup-with-bloody-writing-complete.png"	32	4
+
+0x01ed2a88	3	"common/graphics/backgrounds/bg212-vase-closeup-with-missing-piece.png"	32	4
+
+0x01ed5d7c	3	"de/graphics/backgrounds/bg161-key-card-log-2.png"	32	4
+0x01ed6cd8	3	"it/graphics/backgrounds/bg161-key-card-log-2.png"	32	4
+0x01ed7c3c	3	"es/graphics/backgrounds/bg161-key-card-log-2.png"	32	4
+0x01ed8bb4	3	"de/graphics/backgrounds/bg162-key-card-log-3.png"	32	4
+0x01ed9b94	3	"it/graphics/backgrounds/bg162-key-card-log-3.png"	32	4
+0x01edab7c	3	"es/graphics/backgrounds/bg162-key-card-log-3.png"	32	4
+
+0x01edbb78	3	"de/graphics/evidence-details/case5/sl-9-case-files-1.png"	32	4
+0x01edc9d4	3	"it/graphics/evidence-details/case5/sl-9-case-files-1.png"	32	4
+0x01edd854	3	"es/graphics/evidence-details/case5/sl-9-case-files-1.png"	32	4
+0x01ede6cc	3	"de/graphics/evidence-details/case5/sl-9-case-files-2.png"	32	4
+0x01edf56c	3	"it/graphics/evidence-details/case5/sl-9-case-files-2.png"	32	4
+0x01ee03fc	3	"es/graphics/evidence-details/case5/sl-9-case-files-2.png"	32	4
+0x01ee12a4	3	"de/graphics/evidence-details/case5/sl-9-case-files-3.png"	32	4
+0x01ee215c	3	"it/graphics/evidence-details/case5/sl-9-case-files-3.png"	32	4
+0x01ee3034	3	"es/graphics/evidence-details/case5/sl-9-case-files-3.png"	32	4
+0x01ee3e68	3	"de/graphics/evidence-details/case5/sl-9-case-files-4.png"	32	4
+0x01ee4d78	3	"it/graphics/evidence-details/case5/sl-9-case-files-4.png"	32	4
+0x01ee5d2c	3	"es/graphics/evidence-details/case5/sl-9-case-files-4.png"	32	4
+
+0x01ee6d04	3	"common/graphics/backgrounds/bg167-ending-kurain.png"	32	4
+0x01ef0030	3	"common/graphics/backgrounds/case5/police-station-security-room-luminol-0.png"	32	4
+0x01ef4dd8	3	"common/graphics/backgrounds/case5/police-station-security-room-luminol-1.png"	32	4
+0x01ef959c	3	"common/graphics/backgrounds/case5/evidence-lockers-luminol-0.png"	32	4
+0x01efcf4c	3	"common/graphics/backgrounds/case5/evidence-lockers-luminol-1.png"	32	4
+0x01f00340	3	"common/graphics/backgrounds/case5/edgeworths-office-luminol-0.png"	32	4
+0x01f043c8	3	"common/graphics/backgrounds/case5/edgeworths-office-luminol-1.png"	32	4
+0x01f07428	3	"common/graphics/backgrounds/case5/gants-office-luminol-0.png"	32	4
+0x01f0afb0	3	"common/graphics/backgrounds/case5/gants-office-luminol-1.png"	32	4
+0x01f0e730	3	"common/graphics/backgrounds/case5/edgeworths-office-luminol-2.png"	32	4
+0x01f1376c	3	"common/graphics/backgrounds/case5/gants-office-luminol-2.png"	32	4
+
+0x01f19348	3	"common/graphics/interface/topscreen/case5/3d-vase-puzzle.png"	32	4
+
+0x01f1a008	3	"common/graphics/backgrounds/bg201-evidence-lockers-untouched.png"	64	4
+
+0x01f2116c	3	"common/graphics/interface/topscreen/case5/3d-vase-puzzle-missing-piece.png"	32	4
+0x01f23678	3	"common/graphics/interface/topscreen/case5/3d-vase-puzzle-complete.png"	32	4
+
+0x01f25d5c	3	"common/graphics/backgrounds/bg202-red-badger.png"	32	4
+
+0x01f26d04	3	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-0.png"	32	4
+0x01f2a3dc	3	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-1.png"	32	4
+0x01f2c368	3	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-2.png"	32	4
+0x01f30cbc	3	"common/graphics/backgrounds/bg203-lana-hugging-ema.png"	32	4
+0x01f39120	3	"common/graphics/backgrounds/case5/young-lana-with-ema.png"	32	4
+
+0x01f41098	3	"common/graphics/backgrounds/bg230-background-for-dancing-badger.png"	32	4
+
+0x01f42ca8	3	"common/graphics/interface/touchscreen/3d-vase-puzzle-inner-circle.png"	32	4
+
+0x01f439c4	3	"common/graphics/backgrounds/bg223-safe-at-gants-office-0.png"	32	4
+0x01f49740	3	"common/graphics/backgrounds/bg224-safe-at-gants-office-1.png"	32	4
+0x01f4ea70	3	"common/graphics/backgrounds/bg225-safe-at-gants-office-2.png"	32	4
+
+0x01f554a0	3	"common/graphics/backgrounds/bg221-3d-vase-angled-as-badger.png"	32	4
+
+0x01f57900	3	"common/graphics/interface/main-menu-poster-case-1.png"	32	8
+0x01f671b8	3	"common/graphics/interface/main-menu-poster-case-2.png"	32	8
+0x01f79828	3	"common/graphics/interface/main-menu-poster-case-3.png"	32	8
+0x01f8db98	3	"common/graphics/interface/main-menu-poster-case-4.png"	32	8
+0x01fa0a80	3	"common/graphics/interface/main-menu-poster-case-5.png"	32	8
+
+0x01fb16b8	3	"common/graphics/backgrounds/case5/blank-evidence-locker.png"	32	4
+
+//~ 0x01fb38cc	1	""	0x000001a2	compressed	erase button german (no reference)	8	4				
+//~ 0x01fb3a70	1	""	0x000001bd	compressed	erase button italian (no reference)	8	4				
+//~ 0x01fb3c30	1	""	0x000001ae	compressed	erase button spanish (no reference)	8	4				
+0x01fb3de0	3	"de/graphics/evidence-details/case5/goodmans-autopsy-report.png"	32	4
+0x01fb4efc	3	"it/graphics/evidence-details/case5/goodmans-autopsy-report.png"	32	4
+0x01fb5f8c	3	"es/graphics/evidence-details/case5/goodmans-autopsy-report.png"	32	4
+0x01fb7000	3	"de/graphics/evidence-details/case5/neils-autopsy-report.png"	32	4
+0x01fb8110	3	"it/graphics/evidence-details/case5/neils-autopsy-report.png"	32	4
+0x01fb9264	3	"es/graphics/evidence-details/case5/neils-autopsy-report.png"	32	4
+0x01fba35c	3	"de/graphics/evidence-details/case5/goodmans-lost-item-report.png"	32	4
+0x01fbdc20	3	"it/graphics/evidence-details/case5/goodmans-lost-item-report.png"	32	4
+0x01fc163c	3	"es/graphics/evidence-details/case5/goodmans-lost-item-report.png"	32	4
+0x01fc4fd0	4	"de/graphics/patches/case2/map-mias-office-murderer-icon.png"		3	3	0x01b4f208	0
+0x01fc506c	4	"it/graphics/patches/case2/map-mias-office-murderer-icon.png"		3	3	0x01b4f208	0
+0x01fc5100	4	"es/graphics/patches/case2/map-mias-office-murderer-icon.png"		3	3	0x01b4f208	0
+0x01fc5194	4	"de/graphics/patches/case2/map-mias-office-victim-icon.png"		2	2	0x01b4f208	0
+0x01fc51fc	4	"it/graphics/patches/case2/map-mias-office-victim-icon.png"		2	2	0x01b4f208	0
+0x01fc5264	4	"es/graphics/patches/case2/map-mias-office-victim-icon.png"		2	2	0x01b4f208	0
+0x01fc52cc	4	"de/graphics/patches/case5/map-evidence-lockers-murderer-icon.png"		2	3	0x01eca0d4	0
+0x01fc5348	4	"it/graphics/patches/case5/map-evidence-lockers-murderer-icon.png"		2	3	0x01eca0d4	0
+0x01fc53c0	4	"es/graphics/patches/case5/map-evidence-lockers-murderer-icon.png"		2	3	0x01eca0d4	0
+0x01fc5438	4	"de/graphics/patches/case5/map-evidence-lockers-victim-icon.png"		2	2	0x01eca0d4	0
+0x01fc54a0	4	"it/graphics/patches/case5/map-evidence-lockers-victim-icon.png"		2	2	0x01eca0d4	0
+0x01fc5508	4	"es/graphics/patches/case5/map-evidence-lockers-victim-icon.png"		2	2	0x01eca0d4	0
+0x01fc5570	4	"de/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol.png"		2	2	0x01eca0d4	0
+0x01fc55e0	4	"it/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol.png"		2	2	0x01eca0d4	0
+0x01fc564c	4	"es/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol.png"		2	2	0x01eca0d4	0
+0x01fc56b8	4	"de/graphics/patches/case5/map-evidence-lockers-badger.png"		8	4	0x01eca0d4	0
+0x01fc57f8	4	"it/graphics/patches/case5/map-evidence-lockers-badger.png"		8	4	0x01eca0d4	0
+0x01fc5910	4	"es/graphics/patches/case5/map-evidence-lockers-badger.png"		8	4	0x01eca0d4	0
+
+0x01fc5a44	3	"common/graphics/backgrounds/bg240-victim-in-car-trunk.png"	32	4
+
+0x01fca2f0	3	"common/graphics/backgrounds/bg222-keypad-display.png"	32	4
+0x01fcda3c	3	"de/graphics/evidence-details/case5/law-book-contents.png"	32	4
+0x01fceaa0	3	"it/graphics/evidence-details/case5/law-book-contents.png"	32	4
+0x01fcfa9c	3	"es/graphics/evidence-details/case5/law-book-contents.png"	32	4
+0x01fd0b38	3	"jp/graphics/interface/topscreen/gba-save-transfer.png"	32	4
+0x01fd9148	3	"jp/graphics/interface/touchscreen/gba-save-transfer.png"	32	4
+0x01fe13c4	3	"common/graphics/backgrounds/bg226-vase-missing-piece-completed-writing.png"	32	4
+0x01fe40e0	3	"common/graphics/interface/main-menu-poster-unfinished-case.png"	32	8
+
+0x01ff4d18	3	"common/graphics/backgrounds/bg228-city.png"	32	4
+0x01ffb56c	3	"common/graphics/backgrounds/case5/city-lightning.png"	32	4
+0x01ffc90c	3	"common/graphics/backgrounds/bg235-police-station-entrance-no-badger.png"	32	4
+
+0x020050b8	3	"common/graphics/backgrounds/case5/background-for-dancing-badger-with-badger.png"	32	4
+
+0x02008080	3	"common/graphics/backgrounds/bg232-king-of-prosecutors-trophy.png"	32	4
+
+0x0200bbec	3	"de/graphics/backgrounds/case5/title.png"	32	4
+
+0x0200ca48	3	"common/graphics/unknown-black.png"	32	4
+
+0x0200d62c	3	"it/graphics/backgrounds/case5/title.png"	32	4
+
+0x0200e584	3	"common/graphics/backgrounds/bg234-emas-drawing-vertical.png"	32	4
+
+0x02011590	3	"common/graphics/backgrounds/bg236-neil-flying-towards-statue-1.png"	32	4
+0x02015794	3	"common/graphics/backgrounds/bg237-neil-flying-towards-statue-2.png"	32	4
+0x02019810	3	"common/graphics/backgrounds/bg238-neil-flying-towards-statue-3.png"	32	4
+
+//~ 0x0201d4c0	1	""	0x00003600	uncompressed	error messages regarding loading			4		yes
+
+0x02020ac0	3	"de/graphics/evidence-details/case5/goodmans-note-flipped.png"	32	4
+0x020238b4	3	"it/graphics/evidence-details/case5/goodmans-note-flipped.png"	32	4
+0x020266a8	3	"es/graphics/evidence-details/case5/goodmans-note-flipped.png"	32	4
+
+//~ 0x0202949c	1	""	0x00003780	uncompressed	error messages regarding saving			4		yes	
+
+0x0202cc1c	3	"common/graphics/backgrounds/case5/parking-garage-right.png"	32	4
+
+//~ 0x0202dc04	1	""	0x0000acc0	uncompressed	case 5 intro skyscrapers			8		yes	
+//~ 0x020388c4	1	""	0x00003620	uncompressed	case 5 intro skyscrapers 2			4		yes	
+//~ 0x0203bee4	1	""	0x00002040	uncompressed	case 5 intro skyscrapers 3			4		yes	
+//~ 0x0203df24	1	""	0x00006240	uncompressed	clouds			4		yes	
+//~ 0x02044164	1	""	0x00000ba0	uncompressed	unknown			4		yes	
+//~ 0x02044d04	1	""	0x000013a0	uncompressed	unknown			4		yes	
+//~ 0x020460a4	1	""	0x00006620	uncompressed	case 5 video static 1			4		yes	
+//~ 0x0204c6c4	1	""	0x00006620	uncompressed	case 5 video static 2			4		yes	
+//~ 0x02052ce4	1	""	0x0000a220	uncompressed	case 5 video static 3			4		yes	
+//~ 0x0205cf04	1	""	0x00000020	uncompressed	grayscale palette			4			
+//~ 0x0205cf24	1	""	0x00002500	uncompressed	phoenix objection closeup			4			
+//~ 0x0205f424	1	""	0x00002bc0	uncompressed	edgeworth objection closeup			4			
+//~ 0x02061fe4	1	""	0x00005400	uncompressed	unknown effect			4			
+0x020673e4	0	"common/unknown-blob-1.bin"	0x00000704
+0x02067ae8	3	"jp/graphics/interface/keypad-complete.png"	32	8
+//~ 0x0206e8c8	1	""	0x0000f320	uncompressed	courtroom swoosh	81	24	4			
+0x0207dbe8	0	"common/characters.bin"	0x00348e5c
+//~ 0x023c6a44	1	""	0x0001e200	uncompressed	main menu case titles touchscreen				yes	yes	"palette is for 8bpp	 images use only 4bpp"
+//~ 0x023e4c44	1	""	0x000dca5c	uncompressed	various gameplay elements						contains striped uncompressed images and control info
+0x024c16a0	0	"it/archives/choices-archive.bin"	0x0006930f
+0x0252a9b0	0	"de/archives/choices-archive.bin"	0x0006bd89
+0x02596740	0	"es/archives/choices-archive.bin"	0x0006696b
+0x025fd0ac	5	""	0x001607a0	uncom-header	location/talk choices (italian-german-spanish)			4	yes	yes	"uncompressed images with header	 128x32 pixels"
+0x0275d84c	5	""	0x001674cc	uncom-header	location previews (multi3)			8	yes	yes	"uncompressed images with header	 128x128 pixels"
+0x028c4d18	5	""	0x0000609c	uncom-header	location preview static			4	yes	yes	"uncompressed images with header	 128x128 pixels"
+0x028cadb4	1	""	0x00000040	uncompressed	palette data						
+0x028cadf4	0	""	0x000585c0	evidence	evidence and profile pictures			4	yes	yes	
+0x029233b4	5	""	0x000b26b0	uncom-header	evidence and profile pictures (with resizes)			4	yes	yes	"uncompressed images with header	 64x64 pixels"
+0x029d5a64	0	"it/archives/evidence-profile-names-grayscale-archive.bin"	0x00009288	archive	evidence and profile names grayscale (italian)			4	yes	no	"tiled images	 4bpp	 4x8 tiles per image (striped?)"
+0x029decec	0	"it/archives/evidence-profile-names-details-left-archive.bin"	0x000253ca	archive	evidence and profile details left (italian)			4	yes	no	"tiled images	 4bpp	 8x8 tiles per image"
+0x02a040b8	5	""	0x000d9134	uncom-header	evidence and profile names color (italian)			4	yes	yes	"uncompressed images with header	 128x16 pixels"
+0x02add1ec	5	""	0x001623c0	uncom-header	evidence and profile descriptions (italian)			4	yes	yes	"uncompressed images with header	 256x64 pixels"
+0x02c3f5ac	0	"de/archives/evidence-profile-names-grayscale-archive.bin"	0x00008e2f	archive	evidence and profile names grayscale (german)			4	yes	no	"tiled images	 4bpp	 4x8 tiles per image (striped?)"
+0x02c483dc	0	"de/archives/evidence-profile-names-details-left-archive.bin"	0x000250ba	archive	evidence and profile details left (german)			4	yes	no	"tiled images	 4bpp	 8x8 tiles per image"
+0x02c6d498	5	""	0x000d9134	uncom-header	evidence and profile names color (german)			4	yes	yes	"uncompressed images with header	 128x16 pixels"
+0x02d465cc	5	""	0x001623c0	uncom-header	evidence and profile descriptions (german)			4	yes	yes	"uncompressed images with header	 256x64 pixels"
+0x02ea898c	0	"es/archives/evidence-profile-names-grayscale-archive.bin"	0x00009044	archive	evidence and profile names grayscale (spanish)			4	yes	no	"tiled images	 4bpp	 4x8 tiles per image (striped?)"
+0x02eb19d0	0	"es/archives/evidence-profile-names-details-left-archive.bin"	0x00025c2a	archive	evidence and profile details left (spanish)			4	yes	no	"tiled images	 4bpp	 8x8 tiles per image"
+0x02ed75fc	5	""	0x000d9134	uncom-header	evidence and profile names color (spanish)			4	yes	yes	"uncompressed images with header	 128x16 pixels"
+0x02fb0730	5	""	0x001623c0	uncom-header	evidence and profile descriptions (spanish)			4	yes	yes	"uncompressed images with header	 256x64 pixels"
+//~ 0x03112af0	1	""	0x00000400	uncompressed	various palettes			4			
+//~ 0x03112ef0	1	""	0x000256d4	uncompressed	various gameplay elements 2			4	yes	yes	use 2nd palette of previous row of data
+0x031385c4	5	"common/graphics/unknown/white-uch.png"
+0x03138678	0	"common/models/phoenix-badge-with-screw.bin"	0x000020c8
+0x0313a740	5	""	0x00003d04	uncom-header	phoenix badge model textures						"front 128x128	 backs (multi3) 64x64	 screw 32x64"
+0x0313e444	0	"common/models/edgeworths-knife.bin"	0x00000f80
+0x0313f3c4	5	""	0x00002088	uncom-header	edgeworth knife model textures						blade and handle both 64x128
+0x0314144c	0	"common/models/luminol-bottle.bin"	0x00001e9c
+0x031432e8	5	""	0x00003088	uncom-header	luminol bottle model textures						"bottle 128x128	 cap 64x128"
+0x03146370	0	"common/models/luminol-bottle-bottom.bin"	0x00000ab8
+0x03146e28	5	""	0x00004068	uncom-header	luminol bottle bottom textures						both jap and international 128x128
+0x0314ae90	0	"common/models/gumshoes-letter.bin"	0x00000798
+0x0314b628	5	""	0x00002054	uncom-header	gumshoes letter model textures						128x128
+0x0314d67c	0	"common/models/gumshoes-letter-2.bin"	0x00000798
+0x0314de14	5	""	0x00002034	uncom-header	gumshoes letter model textures 2						128x128
+0x0314fe48	0	"common/models/goodmans-shoe.bin"	0x00002058
+0x03151ea0	5	""	0x000030a8	uncom-header	victims shoe model textures						
+0x03154f48	0	"common/models/king-of-prosecutors-trophy.bin"	0x00007740
+0x0315c688	5	""	0x00004124	uncom-header	king of prosecutors trophy models textures						"backside 64x128	 stand 64x64	 k w/ plate 64x128	 btm plate 64x64	 shield 64x128"
+0x031607ac	0	"jp/models/security-video-tape.bin"	0x000002e8
+0x03160a94	5	""	0x00002054	uncom-header	security video tape jap model textures						128x128
+0x03162ae8	0	"common/models/security-video-tape.bin"	0x000002e8
+0x03162dd0	5	""	0x00002054	uncom-header	security video tape int model textures						128x128
+0x03164e24	0	"common/models/screwdriver.bin"	0x00001a6c
+0x03166890	5	""	0x000020bc	uncom-header	screwdriver model textures						"handle 64x128	 driver 64x64	 note 64x64"
+0x0316894c	0	"common/models/unknown-model.bin"	0x0000321c
+0x0316bb68	5	""	0x00003910	uncom-header	unknown model textures						"tex1 128x128	 tex2	 tex3	 tex4 64x64"
+0x0316f478	0	"common/models/edgeworths-resignation-letter.bin"	0x00001260
+0x031706d8	5	""	0x00004068	uncom-header	edgeworths resignation letter model testures						"tex1	 tex2 128x128"
+0x03174740	0	"common/models/edgeworths-parking-ticket.png"	0x00000718
+0x03174e58	5	""	0x0000609c	uncom-header	edgeworths parking ticket model textures						multi3 textures 128x128
+0x0317aef4	0	"common/models/fingerprint-powder-set.bin"	0x000020d0
+0x0317cfc4	5	""	0x00004068	uncom-header	fingerprint powder set model textures						bottle and brush 128x128
+0x0318102c	0	"common/models/lanas-muffler.bin"	0x00001ffc
+0x03183028	5	""	0x00004088	uncom-header	lanas muffler model textures						"tex1	 tex2 128x128"
+0x031870b0	0	"common/models/cloth-with-print.bin"	0x00000a60
+0x03187b10	5	""	0x00002054	uncom-header	leather cutout with print model textures						128x128
+0x03189b64	0	"common/models/lanas-cellphone.bin"	0x000072d4
+0x03190e38	5	""	0x00002888	uncom-header	lanas cellphone model textures						"basemodel 128x128	 bluebutton 64x64"
+0x031936c0	0	"common/models/switchblade-knife.bin"	0x00006680
+0x03199d40	5	""	0x00002d10	uncom-header	switchblade knife model textures						"tag 64x128	 handle 64x128	 button side 64x64	 button top 64x32"
+0x0319ca50	0	"common/models/goodmans-wallet-with-card.bin"	0x0000bcf8
+0x031a8748	5	""	0x00007924	uncom-header	victims wallet and card models textures						"wallet 64x128	 badge 64x64	 card multi3 128x128	 "
+0x031b006c	0	"common/models/goodmans-id-card.bin"	0x00000718
+0x031b0784	5	""	0x0000609c	uncom-header	goodmans id card model textures						multi3 128x128
+0x031b6820	0	"common/models/steak-lunch.bin"	0x00008628
+0x031bee48	5	""	0x00004104	uncom-header	steak lunch model textures						"steak 128x128	 morefood 64x64	 salad and box 64x64	 label jap and int 64x64"
+0x031c2f4c	0	""	0x00037d18	3d model?	vase piece models						
+0x031fac64	5	""	0x00005984	uncom-header	vase piece models textures						"tex1	 tex2 128x128	 tex3	 tex4	 tex5 64x64"
+0x032005e8	0	"common/models/rubber-glove.bin"	0x00002884
+0x03202e6c	5	""	0x00002868	uncom-header	rubber glove model textures						"gloves 128x128	 tag 64x64"
+0x032056d4	0	"common/models/gumshoes-is-card.bin"	0x00000718
+0x03205dec	5	""	0x000060fc	uncom-header	gumshoes id card model textures						multi3 128x128
+0x0320bee8	0	"common/models/evidence-law-book.bin"	0x00003dac
+0x0320fc94	5	""	0x00009138	uncom-header	evidence law book model textures						"cover multi3 128x128	 content	 wrapper w/ photo and bottom 128x64"
+0x03218dcc	0	"common/models/evidence-list-with-drawing.bin"	0x00000744
+0x03219510	5	""	0x00004068	uncom-header	evidence list w/ picture model textures						front and back 128x128
+0x0321d578	0	"common/models/scientific-investigation-book.bin"	0x000045d8
+0x03221b50	5	""	0x0000c1a0	uncom-header	scientific investigation book model textures						"cover multi3	 open letter 128x128	 content	 wrapper w/photo	 closed letter 128x64"
+0x0322dcf0	0	"common/models/scientific-investigation-book-2.bin"	0x0000007c
+0x0322dd6c	5	""	0x00003068	uncom-header	scientific investigation book model textures 2						"wrapper 128x64	 circle 128x128"
+//~ 0x03230dd4	1	""	0x000018a0	uncompressed	luminol splatters					yes	"uses 4bpp	 works only as 8bpp"
+//~ 0x03232674	1	""	0x000c0000	uncompressed	fingerprints from set						
+//~ 0x032f2674	1	""	0x00010020	uncompressed	fingerprint dusting animation						
+0x03302694	5	""	0x00000114	uncom-header	red dot						8x8
+//~ 0x033027a8	1	""	0x00003200	uncompressed	unknown things 2						"uses 4bpp	 works only as 8bpp"
+0x033059a8	0	""	0x00054160	3d model?	vase puzzle models						
+0x03359b08	5	""	0x0002b2b8	uncom-header	vase puzzle models textures						"first 12 tex 128x128	 tex13 64x64	 tex14-tex22 128x128"
+//~ 0x03384dc0	1	""	0x000008c0	uncompressed	unknown things 3			8			
+//~ 0x03385680	1	""	0x0000db4c	uncompressed	vase pieces						include palettes and tilemaps (16bit)
+//~ 0x033931cc	1	""	0x00018034	uncompressed	vase circle bottom?						
+0x033ab200	5	""	0x00008034	uncom-header	vase circle bottom?						256x256
+0x033b3234	0	"common/unknown-blob-2.bin"	0x00018000	unknown							
+0x033cb234	5	""	0x00002924	uncom-header	keypad buttons						"numbuttons 32x32	 cancelbutton 64x32"
+//~ 0x033cdb58	1	""	0x0000c220	uncompressed	keypad topscreen			8		yes	linear
+//~ 0x033d9d78	1	""	0x00002260	uncompressed	keypad display numbers						"linear	 numbers are 22px wide"
+//~ 0x033dbfd8	1	""	0x00000080	uncompressed	unknown animated objects						8x8
+//~ 0x033dc058	1	""	0x00001110	uncompressed	keypad display verifying animation						
+//~ 0x033dd168	1	""	0x000000a0	uncompressed	unknown						
+//~ 0x033dd208	1	""	0x000056a0	uncompressed	keypad instructions multi3						154x16
+0x033e28a8	0	"common/archives/unknown-archive-end.bin"	0x0002e52c
+0x03410dd4		end of file							

@@ -1,0 +1,497 @@
+
+0x00000000	2	"logo1.png"	32	24	8
+0x0000403c	2	"logo2.png"	32	24	8
+
+// 0x00008078	1	""	0x00000800	uncompressed	font	no (uses message box tiles)
+// 0x00008878	1	""	0x00001020	uncompressed	message box tiles	yes
+// 0x00009898	1	""	0x00000480	uncompressed	message box tiles 2	yes
+// 0x00009d18	1	""	0x0000b000	uncompressed	name tags	no (uses message box tiles)
+// 0x00014d18	1	""	0x00000220	uncompressed	green dot	yes
+// 0x00014f38	1	""	0x00000300	uncompressed	arrows	no
+// 0x00015238	1	""	0x00000480	uncompressed	exclamation marks	no
+// 0x000156b8	1	""	0x00008000	uncompressed	unknown japanese text	no
+// 0x0001d6b8	1	""	0x00000400	uncompressed	gba buttons	no
+// 0x0001dab8	1	""	0x00001000	uncompressed	testemony text	no
+// 0x0001eab8	1	""	0x00000a00	uncompressed	gba cross examination elements	
+// 0x0001f4b8	1	""	0x00000500	uncompressed	gba pointer finger	
+// 0x0001f9b8	1	""	0x00000200	uncompressed	correct tick	
+// 0x0001fbb8	1	""	0x000002e0	uncompressed	unknown court wall	
+// 0x0001fe98	1	""	0x00002800	uncompressed	japanese guilty-not guilty text	
+// 0x00022698	1	""	0x00000020	uncompressed	unknown dot	
+// 0x000226b8	1	""	0x00000080	uncompressed	unknown arrow	
+// 0x00022738	1	""	0x00002500	uncompressed	court furniture	
+// 0x00024c38	1	""	0x00003000	uncompressed	french not guilty	
+// 0x00027c38	1	""	0x00000200	uncompressed	lock	
+// 0x00027e38	1	""	0x00003000	uncompressed	english not guilty	
+// 0x0002ae38	1	""	0x00000380	uncompressed	unknown tiles	
+// 0x0002b1b8	1	""	0x00000920	uncompressed	unknown garbage	
+// 0x0002bad8	1	""	0x00041000	uncompressed	main font	
+// 0x0006cad8	1	""	0x00005820	uncompressed	"german, spanish/italian not guilty"	yes
+// 0x000722f8	1	""	0x000004e0	uncompressed	killer/victim icons	yes
+// 0x000727d8	1	""	0a000004a0	uncompressed	"various map icons (car, snowmobile, red dot, gem)"	
+// 0x00072c78	1	""	0x00000400	uncompressed	line and selection highlight
+
+0x00073078	2	"touchscreen background phoenix.png"	32	24	4
+0x00075378	2	"touchscreen background prosecution.png"	32	24	4
+0x00077dc0	2	"courtroom background.png"	32	24	4
+0x0007bdd0	2	"blurred courtroom.png"	32	24	4
+0x0007d9c0	2	"speedlines with border.png"	32	24	4
+0x0007e924	2	"touchscreen background mia.png"	32	24	4
+0x00081100	2	"touchscreen background edgeworth.png"	32	24	4
+0x00083a1c	3	"capcom logo (no license).png"	32	4
+0x00085e94	3	"capcom logo.png"	32	4
+0x000885dc	3	"capcom logo grayscale.png"	32	4
+// 0x0008986c	1	""	0x00000020	uncompressed	unknown palette	
+0x0008988c	3	"defense lobby.png"	32	4
+0x00090d4c	3	"courtroom defense bench.png"	32	4
+0x00092d18	3	"courtroom prosecution bench.png"	32	4
+0x00094b70	3	"courtroom witness stand.png"	32	4
+0x00096fc0	3	"courtroom judge bench.png"	32	4
+0x0009ecd4	3	"courtroom defense aid bench.png"	32	4
+0x000a5a64	3	"courtroom full view.png"	32	4
+0x000ae6fc	3	"courtroom bluescale.png"	32	4
+0x000b3034	3	"gavel slam background.png"	32	4
+0x000b5554	3	"speedlines.png"	32	4
+0x000b6660	3	"detention center.png"	32	4
+0x000bc594	3	"phoenix office.png"	32	4
+0x000c39f0	3	"police hq inside.png"	32	4
+0x000caf74	3	"police hq inside duplicate.png"	32	4
+0x000d24f8	3	"courtroom background with scanlines.png"	32	4
+0x000d6570	3	"phoenix thinking courtroom grayscale.png"	32	4
+0x000d8e30	3	"maya thinking courtroom grayscale.png"	32	4
+0x000db63c	3	"edgeworth thinking courtroom grayscale.png"	32	4
+0x000ddf38	3	"phoenix thinking blank grayscale.png"	32	4
+0x000dfbd8	3	"edgeworth thinking blank grayscale.png"	32	4
+0x000e1870	3	"judge bench with judge base.png"	32	4
+0x000e8ad0	3	"japanese save transfer topscreen.png"	32	4
+0x000f006c	3	"japanese save transfer touchscreen.png"	32	4
+0x000f8304	3	"french save error message.png"	32	4
+
+// 0x000f9074	1	""	0x000013a0	uncompressed	french save error message with garbage before	yes
+
+0x000fa414	3	"german save error message.png"	32	4
+
+// 0x000fb1c0	1	""	0x000015e0	uncompressed	german save error message with garbage before	yes
+
+0x000fc7a0	3	"french write error message.png"	32	4
+
+// 0x000fd51c	1	""	0x00001380	uncompressed	french write error message with garbage before	yes
+
+0x000fe89c	3	"german write error message.png"	32	4
+
+// 0x000ff67c	1	""	0x000015a0	uncompressed	german write error message with garbage before	yes
+
+0x00100c1c	3	"main menu case 1 background.png"	32	8
+0x00114a58	3	"main menu case 2 background.png"	32	8
+0x0012779c	3	"main menu case 3 background.png"	32	8
+0x0013ab14	3	"main menu case 4 background.png"	32	8
+0x0014e0a4	3	"main menu case 5 background.png"	32	8
+0x0015f784	3	"main menu locked background.png"	32	8
+0x001703bc	3	"case 1 intro dead victim.png"	32	4
+0x00176080	3	"case 1 intro scared phoenix.png"	32	4
+0x0017ade4	3	"case 1 intro bw background of conversation.png"	32	4
+0x0017f040	2	"case 1 intro phoenix lower body over victim.png"	12	10	4
+0x0017f7cc	2	"case 1 intro bw phoenix and victim conversing.png"	8	32	8
+0x00180648	3	"case 1 photo of victim on ground.png"	32	4
+0x001839fc	3	"case 1 photo of victims hand with medicine french.png"	32	4
+0x00186344	3	"case 1 phoenix with culprit.png"	32	4
+0x0018aa5c	3	"case 1 victim with culprit.png"	32	4
+0x0018efe0	3	"case 1 newspaper article french.png"	32	4
+0x001900cc	3	"case 1 files of old case 1-2 french.png"	32	4
+0x00191068	3	"case 1 files of old case 2-2 french.png"	32	4
+0x001921fc	3	"case 1 photo of victims hand with medicine german.png"	32	4
+0x00194b44	3	"case 1 newspaper article german.png"	32	4
+0x00195c60	3	"case 1 files of old case 1-2 german.png"	32	4
+0x00196bf8	3	"case 1 files of old case 2-2 german.png"	32	4
+0x00197e04	3	"case 2 lordly tailor french.png"	32	4
+0x001a0e38	3	"case 2 lordly tailor basement french.png"	64	4
+0x001b07ac	3	"case 2 luke atmeys office.png"	32	4
+0x001b9954	3	"case 2 mask de masque lair.png"	32	4
+0x001c217c	3	"case 2 kb security presidents office.png"	32	4
+0x001ca3b8	3	"case 2 kb security guard office.png"	32	4
+0x001d2924	3	"case 2 calling card text french.png"	32	4
+0x001d3a10	3	"case 2 blackmail letter french.png"	32	4
+0x001d4aa0	3	"case 2 intro safe.png"	32	4
+0x001d6c3c	3	"case 2 intro open safe with calling french.png"	32	4
+0x001d7f34	3	"case 2 intro calling card close up french.png"	32	4
+0x001de824	3	"case 2 intro stage lights.png"	32	4
+0x001e19b0	3	"case 2 intro moon.png"	32	4
+0x001e3ed4	3	"case 2 intro gumshoe silhouette.png"	32	4
+0x001e4c2c	2	"case 2 intro de masque flying left side.png"	12	24	4
+0x001e5364	2	"case 2 intro de masque flying right side 1.png"	10	24	4
+0x001e5960	2	"case 2 intro de masque flying right side 2.png"	10	24	4
+0x001e5f30	3	"case 2 list of stolen items french.png"	32	4
+0x001e6e80	3	"case 2 poster of exhibition french.png"	32	4
+0x001eb090	3	"case 2 dead mia from phoenix 1.png"	32	4
+0x001eeb68	3	"case 2 kurain village from phoenix 2.png"	32	4
+0x001f36c8	3	"case 2 pearl fixing urn french.png"	32	4
+0x001f7360	3	"case 2 atmey and de masque.png"	32	4
+0x001fec98	3	"case 2 photo of de masque with box french.png"	32	4
+0x002031fc	3	"case 2 de masque looking awesome.png"	32	4
+0x0020b354	3	"case 2 maya with victim from case 2 phoenix 2.png"	32	4
+0x0020ef4c	3	"case 2 run delite with muggers and desiree.png"	32	4
+0x0021327c	3	"case 2 newspaper article with ron and atmey french.png"	32	4
+0x0021c77c	3	"case 2 atmey hiding french.png"	32	4
+0x002205e0	3	"case 2 kb security president dead.png"	32	4
+0x002240e8	3	"case 2 clumsy adrian french.png"	32	4
+0x00228784	3	"case 2 adrian with broken urn french.png"	32	4
+0x0022c67c	3	"case 2 de masque in basement.png"	32	4
+0x002316cc	3	"case 2 maya and pearl with fixed urn french.png"	32	4
+0x0023859c	3	"case 2 lordly tailor german.png"	32	4
+0x00241578	3	"case 2 lordly tailor basement german.png"	64	4
+0x00250eec	3	"case 2 calling card text german.png"	32	4
+0x00251fbc	3	"case 2 blackmail letter german.png"	32	4
+0x00253090	3	"case 2 intro calling card close up german.png"	32	4
+0x00259980	3	"case 2 list of stolen items german.png"	32	4
+0x0025a8cc	3	"case 2 poster of exhibition german.png"	32	4
+0x0025eac8	3	"case 2 pearl fixing urn german.png"	32	4
+0x0026275c	3	"case 2 photo of de masque with box german.png"	32	4
+0x00266cc0	3	"case 2 newspaper article with ron and atmey german.png"	32	4
+0x00270564	3	"case 2 atmey hiding german.png"	32	4
+0x002743c8	3	"case 2 clumsy adrian german.png"	32	4
+0x00278a60	3	"case 2 maya and pearl with fixed urn german.png"	32	4
+0x0027f930	3	"case 2 intro open safe with calling card german.png"	32	4
+0x00280c28	3	"case 2 adrian with broken urn german.png"	32	4
+0x00284b20	3	"case 3 tres bien french.png"	64	4
+0x00295574	3	"case 3 tres bien kitchen.png"	32	4
+0x0029e578	3	"case 3 vitamin square french.png"	32	4
+0x002a5e0c	3	"case 3 blue screen inc.png"	32	4
+0x002ae318	3	"case 3 tender lender french.png"	32	4
+0x002b77f4	3	"case 3 intro victim in restaurant.png"	32	4
+0x002bfef8	2	"case 3 victim inverted.png"	21	22	4
+0x002c17cc	2	"case 3 intro victim in restaurant top part of victim.png"	32	10	8
+0x002c4d0c	3	"case 3 intro hand of culprit.png"	32	4
+0x002c680c	3	"case 3 intro cup of coffee.png"	32	4
+0x002c83e8	3	"case 3 map of tres bien french.png"	32	4
+0x002c938c	3	"case 3 victim at table.png"	32	4
+0x002ccc48	3	"case 3 maggey unconscious.png"	32	4
+0x002cfd98	3	"case 3 newspaper with scribbles french.png"	32	4
+0x002d4040	3	"case 3 dead victim at table french.png"	32	4
+0x002d71ec	3	"case 3 photo of victim at table.png"	32	4
+0x002da304	3	"case 3 viola as waitress.png"	32	4
+0x002ddab0	3	"case 3 tigres accident.png"	32	4
+0x002e0e84	3	"case 3 victim listening to radio french.png"	32	4
+0x002e4bc4	3	"case 3 victim wins french.png"	32	4
+0x002e90d0	3	"case 3 gumshoe saves the day.png"	32	4
+0x002f08a4	3	"case 3 maggey munching french.png"	32	4
+0x002f82a0	3	"case 3 empty lunchbox french.png"	32	4
+0x002fca7c	3	"case 3 tres bien german.png"	64	4
+0x0030d4d0	3	"case 3 vitamin square german.png"	32	4
+0x00314d84	3	"case 3 tender lender german.png"	32	4
+0x0031e270	3	"case 3 map of tres bien german.png"	32	4
+0x0031f1f8	3	"case 3 newspaper with scribbles german.png"	32	4
+0x003235a0	3	"case 3 dead victim at table german.png"	32	4
+0x0032674c	3	"case 3 victim listening to radio german.png"	32	4
+0x0032a48c	3	"case 3 victim wins german.png"	32	4
+0x0032e998	3	"case 3 maggey munching german.png"	32	4
+0x00336394	3	"case 3 empty lunchbox german.png"	32	4
+0x0033ab70	3	"case 4 intro bridge.png"	32	8
+0x003409a4	3	"case 4 intro kidnapper with victim in focus.png"	32	4
+0x00343dcc	3	"case 4 intro policewoman in focus.png"	32	4
+0x00347944	3	"case 4 intro phoenix in hospital.png"	32	4
+0x00349bf8	3	"case 4 victims notes french.png"	32	4
+0x0034ab4c	3	"case 4 map of bridge french.png"	32	4
+0x0034c7b4	3	"case 4 photo of victim in trunk.png"	32	4
+0x0034ffec	3	"case 4 photo of fawles on bridge.png"	32	4
+0x003542b8	3	"case 4 policewoman with kidnapper and victim.png"	32	4
+0x00358ac0	3	"case 4 victims notes german.png"	32	4
+0x003599e8	3	"case 4 map of bridge german.png"	32	4
+0x0035b650	3	"case 5 hazakura temple entrance.png"	32	4
+0x00363878	3	"case 5 hazakura temple courtyard.png"	32	4
+0x0036c0e4	3	"case 5 hazakura temple main hall.png"	32	4
+0x003768a8	3	"case 5 dusky bridge french.png"	32	4
+0x0037f954	3	"case 5 dusky bridge burnt down french.png"	32	4
+0x00388cc4	3	"case 5 dusky bridge at night french.png"	32	4
+0x00391664	3	"case 5 heavenly hall french.png"	32	4
+0x0039a4b8	3	"case 5 outside of inner temple french.png"	64	4
+0x003ab634	3	"case 5 inside inner temple.png"	32	4
+0x003b59f8	3	"case 5 inner temple garden french.png"	32	4
+0x003bff4c	3	"case 5 old photo of mia and maya french.png"	32	4
+0x003c9154	3	"case 5 intro victim in front of statue.png"	32	8
+0x003ce25c	3	"case 5 weather report french.png"	32	4
+0x003cf2fc	3	"case 5 larrys letter french.png"	32	4
+0x003d01e4	3	"case 5 map of hazakura temple french.png"	32	4
+0x003d2294	3	"case 5 morgans instructions 1-3 french.png"	32	4
+0x003d446c	3	"case 5 morgans instructions 2-3 french.png"	32	4
+0x003d65a0	3	"case 5 morgans instructions 3-3 french.png"	32	4
+0x003d89e4	3	"case 5 magazine article french.png"	32	4
+0x003dcb64	3	"case 5 picture of elise.png"	32	4
+0x003e44cc	3	"case 5 scroll french.png"	32	4
+0x003e61f0	3	"case 5 summoning.png"	32	4
+0x003e9124	3	"case 5 larry at heavenly hall.png"	32	4
+0x003ee8b0	3	"case 5 iris stabbing victim.png"	32	4
+0x003f37d4	3	"case 5 photo of tracks.png"	32	4
+0x003f6f84	3	"case 5 photo of victim.png"	32	4
+0x003fa748	3	"case 5 larrys drawing.png"	32	4
+0x004050f8	3	"case 5 scroll with sauce.png"	32	4
+0x00407290	3	"case 5 burning bridge.png"	32	8
+0x0040d3fc	3	"case 5 godot with sword staff.png"	32	4
+0x0041158c	3	"case 5 photo of burned down bridge.png"	32	4
+0x0041510c	3	"case 5 edgeworth in elevator from case 4 from phoenix 1.png"	32	4
+0x00419a00	2	"case 5 larry looking down with stretched out hand.png"	16	16	8
+0x0041c960	3	"case 5 hazakura temple courtyard at night.png"	32	4
+0x0041fb54	3	"case 5 maya attacking elise.png"	32	4
+0x004245f0	3	"case 5 ghost of dahlia.png"	32	4
+0x00425dd4	3	"case 5 ghost of dahlia angry 1.png"	32	4
+0x00427f88	3	"case 5 ghost of dahlia angry 2.png"	32	4
+0x0042a01c	3	"case 5 ghost of dahlia angry 3.png"	32	4
+0x0042c00c	3	"case 5 blue magatama.png"	32	4
+0x0042ea30	3	"case 5 larrys drawing of everyone.png"	32	8
+0x0043c130	3	"case 5 dusky bridge on fire bw french.png"	32	4
+0x004410f4	3	"case 5 dusky bridge german.png"	32	4
+0x0044a15c	3	"case 5 dusky bridge burnt down german.png"	32	4
+0x0045348c	3	"case 5 dusky bridge at night german.png"	32	4
+0x0045bdd8	3	"case 5 heavenly hall german.png"	32	4
+0x00464c4c	3	"case 5 outside of inner temple german.png"	64	4
+0x00475d88	3	"case 5 inner temple garden german.png"	32	4
+0x004802dc	3	"case 5 old photo of mia and maya german.png"	32	4
+0x004894e4	3	"case 5 weather report german.png"	32	4
+0x0048a50c	3	"case 5 larrys letter german.png"	32	4
+0x0048b518	3	"case 5 map of hazakura temple german.png"	32	4
+0x0048d5d4	3	"case 5 morgans instructions 1-3 german.png"	32	4
+0x0048f354	3	"case 5 morgans instructions 2-3 german.png"	32	4
+0x0049123c	3	"case 5 morgans instructions 3-3 german.png"	32	4
+0x00493318	3	"case 5 magazine article german.png"	32	4
+0x00497434	3	"case 5 scroll german.png"	32	4
+0x00499158	3	"case 5 dusky bridge on fire bw german.png"	32	4
+0x0049e108	2	"case 5 godots red visor in court.png"	32	24	4
+0x0049ef98	3	"case 1 intro touchscreen french.png"	32	4
+0x0049fff0	3	"case 2 intro touchscreen french.png"	32	4
+0x004a0fd0	3	"case 3 intro touchscreen french.png"	32	4
+0x004a2008	3	"case 4 intro touchscreen french.png"	32	4
+0x004a3008	3	"case 5 intro touchscreen french.png"	32	4
+0x004a402c	3	"case 1 intro touchscreen german.png"	32	4
+0x004a5084	3	"case 2 intro touchscreen german.png"	32	4
+0x004a6120	3	"case 3 intro touchscreen german.png"	32	4
+0x004a7150	3	"case 4 intro touchscreen german.png"	32	4
+0x004a8258	3	"case 5 intro touchscreen german.png"	32	4
+
+0x004a9280	4	"case 2 lordly tailor basement (statue 1-3).png"	6	4	SOURCEOFFSET	8
+0x004a97f0	4	"case 2 lordly tailor basement (statue 2-3).png"	6	4	SOURCEOFFSET	8
+0x004a9cf8	4	"case 2 lordly tailor basement (statue 3-3).png"	6	3	SOURCEOFFSET	8
+0x004aa0a4	4	"case 2 lordly tailor basement (moved statue 1-2).png"	5	5	SOURCEOFFSET	8
+0x004aa634	4	"case 2 lordly tailor basement (moved statue 2-2).png"	5	5	SOURCEOFFSET	8
+0x004aab88	4	"case 2 lordly tailor basement (bent shichishito).png"	6	2	SOURCEOFFSET	8
+0a004aae04	4	"case 2 lordly tailor basement (dropped box).png"	5	4	SOURCEOFFSET	8
+0x004ab108	4	"case 2 luke atmeys office (bag on table 1-2).png"	6	4	SOURCEOFFSET	8
+0x004ab628	4	"case 2 luke atmeys office (bag on table 2-2).png"	6	4	SOURCEOFFSET	8
+0x004aba20	4	"case 2 kb security presidents office (floor in front of safe).png"	8	3	SOURCEOFFSET	8
+0x004abe6c	4	"case 2 kb security presidents office (floor above carpet).png"	3	1	SOURCEOFFSET	8
+0x004abf14	4	"case 3 vitamin square (tigres scooter 1-3).png"	6	2	SOURCEOFFSET	8
+0x004ac13c	4	"case 3 vitamin square (tigres scooter 2-3).png"	9	3	SOURCEOFFSET	8
+0x004ac6e4	4	"case 3 vitamin square (tigres scooter 3-3).png"	9	3	SOURCEOFFSET	8
+0x004acc58	4	"case 3 tres bien kitchen (magatama on table).png"	3	1	SOURCEOFFSET	8
+0x004acd08	4	"case 3 tender lender (piece of paper below shogi piece).png"	1	2	SOURCEOFFSET	8
+0x004acd84	4	"case 4 intro bridge (person on bridge).png"	2	4	SOURCEOFFSET	4
+0x004ace50	4	"case 5 map of hazakura temple (location of heavenly hall).png"	6	5	SOURCEOFFSET	4
+0x004acfc0	4	"case 5 dusky bridge burnt down (safety planks top-left).png"	5	3	SOURCEOFFSET	8
+0x004ad398	4	"case 5 dusky bridge burnt down (safety planks top-mid).png"	7	2	SOURCEOFFSET	8
+0x004ad708	4	"case 5 dusky bridge burnt down (safety planks top-right).png"	5	2	SOURCEOFFSET	8
+0x004ad9a8	4	"case 5 dusky bridge burnt down (safety planks center).png"	8	3	SOURCEOFFSET	8
+0x004adf28	4	"case 5 dusky bridge burnt down (safety planks bottom-left).png"	3	4	SOURCEOFFSET	8
+0x004ae25c	4	"case 5 dusky bridge burnt down (safety planks bottom-left 2).png"	2	1	SOURCEOFFSET	8
+0x004ae2e8	4	"case 5 dusky bridge burnt down (safety planks bottom-right).png"	2	3	SOURCEOFFSET	8
+0x004ae470	4	"case 5 dusky bridge burnt down (gumshoes fix near).png"	4	3	SOURCEOFFSET	8
+0x004ae790	4	"case 5 dusky bridge burnt down (gumshoes fix mid).png"	3	4	SOURCEOFFSET	8
+0x004aeadc	4	"case 5 dusky bridge burnt down (gumshoes fix far).png"	2	3	SOURCEOFFSET	8
+0x004aec90	4	"case 5 hazakura temple main hall (larrys letter in left corner).png"	2	2	SOURCEOFFSET	8
+0x004aed98	4	"case 5 hazakura temple entrance (snow mobile with snow 1).png"	4	3	SOURCEOFFSET	8
+0x004af0b8	4	"case 5 hazakura temple entrance (snow mobile with snow 2).png"	5	2	SOURCEOFFSET	8
+0x004af318	4	"case 5 hazakura temple entrance (snow mobile with snow 3).png"	4	3	SOURCEOFFSET	8
+0x004af5a8	4	"case 5 hazakura temple entrance (snow mobile with snow 4).png"	6	3	SOURCEOFFSET	8
+0x004af9d4	4	"case 5 hazakura temple entrance (snow mobile with snow 5).png"	6	3	SOURCEOFFSET	8
+0x004afe20	4	"case 5 hazakura temple entrance (snow mobile with snow 6).png"	8	1	SOURCEOFFSET	8
+0x004aff14	4	"case 5 inside inner temple (scroll on the right top).png"	3	6	SOURCEOFFSET	8
+0x004b031c	4	"case 5 inside inner temple (scroll on the right bottom).png"	3	6	SOURCEOFFSET	8
+0x004b0754	4	"case 5 inside inner temple (trick lock chains 1).png"	2	2	SOURCEOFFSET	8
+0x004b0868	4	"case 5 inside inner temple (trick lock chains 1).png"	2	2	SOURCEOFFSET	8
+0x004b097c	4	"case 5 inside inner temple (trick lock chains 1).png"	5	2	SOURCEOFFSET	8
+0x004b0c4c	4	"case 5 inside inner temple (trick lock chains 1).png"	2	2	SOURCEOFFSET	8
+0x004b0d60	4	"case 5 inside inner temple (trick lock chains 1).png"	2	2	SOURCEOFFSET	8
+0x004b0e78	4	"case 5 inside inner temple (trick lock chains 1).png"	3	2	SOURCEOFFSET	8
+0x004b1008	4	"case 5 inside inner temple (trick lock chains 1).png"	5	2	SOURCEOFFSET	8
+0x004b12c4	4	"case 5 inside inner temple (trick lock chains 1).png"	5	2	SOURCEOFFSET	8
+0x004b1580	4	"case 5 inside inner temple (trick lock chains 2).png"	2	2	SOURCEOFFSET	8
+0x004b1688	4	"case 5 inside inner temple (trick lock chains 2).png"	2	2	SOURCEOFFSET	8
+0x004b1790	4	"case 5 inside inner temple (trick lock chains 2).png"	5	2	SOURCEOFFSET	8
+0x004b1a2c	4	"case 5 inside inner temple (trick lock chains 2).png"	2	2	SOURCEOFFSET	8
+0x004b1b38	4	"case 5 inside inner temple (trick lock chains 2).png"	6	3	SOURCEOFFSET	8
+0x004b2018	4	"case 5 inside inner temple (trick lock chains 2).png"	2	2	SOURCEOFFSET	8
+0x004b213c	4	"case 5 inside inner temple (trick lock chains 2).png"	4	2	SOURCEOFFSET	8
+0x004b2374	4	"case 5 inside inner temple (trick lock chains 2).png"	9	1	SOURCEOFFSET	8
+0x004b25f4	4	"case 5 inside inner temple (trick lock chains 2).png"	6	2	SOURCEOFFSET	8
+0x004b2938	4	"case 5 inside inner temple (trick lock chains 2).png"	5	2	SOURCEOFFSET	8
+0x004b2bf4	4	"case 5 inside inner temple (trick lock chains 2).png"	1	4	SOURCEOFFSET	8
+0x004b2cfc	4	"case 5 inside inner temple (trick lock chains 2).png"	4	3	SOURCEOFFSET	8
+0x004b3018	4	"case 5 inside inner temple (trick lock chains 2).png"	6	2	SOURCEOFFSET	8
+0x004b336c	4	"case 5 inside inner temple (trick lock chains 2).png"	4	3	SOURCEOFFSET	8
+0x004b3664	4	"case 5 outside of inner temple (rope on pole).png"	6	2	SOURCEOFFSET	8
+0x004b3988	4	"case 5 outside of inner temple (snow on oven 1).png"	2	3	SOURCEOFFSET	8
+0x004b3b30	4	"case 5 outside of inner temple (snow on oven 2).png"	5	3	SOURCEOFFSET	8
+0x004b3e5c	4	"case 5 outside of inner temple (snow on oven 3).png"	6	1	SOURCEOFFSET	8
+0x004b3fd4	4	"case 5 outside of inner temple (snow on oven 4).png"	7	2	SOURCEOFFSET	8
+0x004b4284	4	"case 5 map of hazakura temple (spot before heavenly hall).png"	3	2	SOURCEOFFSET	4
+0x004b42c0	4	"case 5 map of hazakura temple (bridge with all ropes).png"	7	2	SOURCEOFFSET	4
+0x004b43d0	4	"case 5 map of hazakura temple (rest of bottom right rope).png"	2	1	SOURCEOFFSET	4
+0x004b4400	4	"case 5 map of hazakura temple (bottom right rope w/ bridge).png"	2	2	SOURCEOFFSET	4
+0x004b445c	4	"case 4 map of bridge (blank out car).png"	3	2	SOURCEOFFSET	4
+0x004b447c	4	"case 4 map of bridge (bridge without planks left).png"	7	2	SOURCEOFFSET	4
+0x004b4508	4	"case 4 map of bridge (bridge without planks right).png"	7	2	SOURCEOFFSET	4
+0x004b45dc	4	"case 4 map of bridge (without bottom right rope 1).png"	2	2	SOURCEOFFSET	4
+0x004b4618	4	"case 4 map of bridge (without bottom right rope 2).png"	2	2	SOURCEOFFSET	4
+0x004b4650	4	"case 4 map of bridge (without bottom right rope 3).png"	2	2	SOURCEOFFSET	4
+0x004b46b4	4	"case 5 inner temple garden (snow around lantern 1).png"	3	4	SOURCEOFFSET	8
+0x004b4898	4	"case 5 inner temple garden (snow around lantern 2).png"	4	2	SOURCEOFFSET	8
+0x004b49f4	4	"case 5 inner temple garden (snow around lantern 3).png"	5	1	SOURCEOFFSET	8
+0x004b4ac4	4	"case 5 inner temple garden (snow around lantern 4).png"	7	2	SOURCEOFFSET	8
+0x004b4bd8	4	"case 5 inner temple garden (snow around lantern 5).png"	6	2	SOURCEOFFSET	8
+0x004b4d34	4	"case 5 inner temple garden (snow around lantern 6).png"	6	2	SOURCEOFFSET	8
+0x004b4ea0	4	"case 4 map of bridge (red dot on bottom right pole).png"	1	1	SOURCEOFFSET	4
+0x004b4ec8	4	"case 4 map of bridge (red dot on rocks 1).png"	2	1	SOURCEOFFSET	4
+0x004b4f08	4	"case 4 map of bridge (pole without dot).png"	1	1	SOURCEOFFSET	4
+0x004b4f30	4	"case 4 map of bridge (red dot on rocks 2).png"	2	1	SOURCEOFFSET	4
+0x004b4f6c	4	"case 4 map of bridge (rocks without dot 1).png"	1	1	SOURCEOFFSET	4
+0x004b4f8c	4	"case 4 map of bridge (red dot at water).png"	2	1	SOURCEOFFSET	4
+0x004b4fd0	4	"case 4 map of bridge (rocks without dot 2).png"	1	1	SOURCEOFFSET	4
+0x004b4ff0	4	"case 4 map of bridge (red dot below bridge).png"	2	1	SOURCEOFFSET	4
+0x004b501c	4	"case 4 map of bridge (little corner of coast).png"	1	1	SOURCEOFFSET	4
+0x004b503c	4	"case 4 map of bridge (red dot along rope).png"	2	1	SOURCEOFFSET	4
+0x004b506c	4	"case 4 map of bridge (part of rope).png"	1	1	SOURCEOFFSET	4
+0x004b508c	4	"case 4 map of bridge (red dot along rope).png"	2	1	SOURCEOFFSET	4
+0x004b50b4	4	"case 4 map of bridge (part of rope).png"	1	1	SOURCEOFFSET	4
+0x004b50d4	4	"case 4 map of bridge (red dot along rope).png"	2	1	SOURCEOFFSET	4
+0x004b50fc	4	"case 4 map of bridge (part of rope).png"	1	1	SOURCEOFFSET	4
+0x004b5110	4	"case 4 map of bridge (red dot along rope).png"	2	1	SOURCEOFFSET	4
+0x004b5150	4	"case 4 map of bridge (part of rope).png"	1	1	SOURCEOFFSET	4
+0x004b5164	4	"case 5 map of hazakura temple (complete bridge).png"	7	2	SOURCEOFFSET	4
+0x004b5270	4	"case 5 inner temple garden (talisman under tree).png"	2	2	SOURCEOFFSET	8
+0x004b532c	4	"case 5 inner temple garden (unknown).png"	2	2	SOURCEOFFSET	8
+0x004b53c8	4	"case 5 inner temple garden (part of blank lantern).png"	2	2	SOURCEOFFSET	8
+0x004b5428	4	"case 5 inner temple garden (middle blank lantern).png"	2	4	SOURCEOFFSET	8
+0x004b555c	4	"case 5 inner temple garden (unknown).png"	3	2	SOURCEOFFSET	8
+0x004b5630	4	"case 5 inner temple garden (snow around lantern 7).png"	8	2	SOURCEOFFSET	8
+0x004b5828	4	"case 5 inner temple garden (snow around lantern 8).png"	4	3	SOURCEOFFSET	8
+0x004b59fc	4	"case 5 inner temple garden (snow around lantern 9).png"	3	2	SOURCEOFFSET	8
+0x004b5af0	4	"case 5 map of hazakura temple (location of crystal).png"	2	1	SOURCEOFFSET	4
+0x004b5b2c	4	"case 2 lordly tailor basement (statue 1-3).png"	6	4	SOURCEOFFSET	8
+0x004b609c	4	"case 2 lordly tailor basement (moved statue 1-2).png"	5	5	SOURCEOFFSET	8
+0x004b6628	4	"case 2 lordly tailor basement (dropped box).png"	5	4	SOURCEOFFSET	8
+0x004b692c	4	"case 5 dusky bridge burnt down (gumshoes fix mid).png"	3	4	SOURCEOFFSET	8
+0x004b6c78	4	"case 5 dusky bridge burnt down (gumshoes fix far).png"	2	3	SOURCEOFFSET	8
+0x004b6e2c	4	"case 2 luke atmeys office (bag on table complete).png"	6	8	SOURCEOFFSET	8
+0x004b7720	4	"case 3 vitamin square (magazine on table).png"	6	3	SOURCEOFFSET	8
+0x004b7af8	4	""case 3 tender lender (""badge"" on suit)".png"	1	1	SOURCEOFFSET	8
+0x004b7b38	4	"case 3 tres bien (magazine stuck behind stand).png"	3	4	SOURCEOFFSET	8
+0x004b7d68	4	"case 3 tender lender (matchbook).png"	2	2	SOURCEOFFSET	8
+0x004b7e7c	4	"case 5 hazakura temple main hall (larrys letter in left corner).png"	2	2	SOURCEOFFSET	8
+0x004b7f90	4	"case 4 map of bridge french (with attacker/victim icons).png"	5	3	SOURCEOFFSET	4
+0x004b80c0	4	"case 4 map of bridge (blank out car).png"	3	2	SOURCEOFFSET	4
+0x004b80e0	4	"case 3 vitamin square (magazine on table).png"	6	3	SOURCEOFFSET	8
+0x004b84b8	4	"case 4 map of bridge german (with attacker/victim icons).png"	5	3	SOURCEOFFSET	4
+
+// 0x004b85e4	1	""	0x00010cc0	uncompressed	bustups and effects with tilemaps	yes
+// 0x004c92a4	1	""	0x0000f320	uncompressed	courtroom defense side with blur	yes
+
+0x004d85c4	4	"psychelock chains (unknown reference).png"	256	2	SOURCEOFFSET	8
+
+0x004d9818	0	"characters.bin"	0x002ca2dc
+
+// 0x007a3af4	1	""	0x00000200	uncompressed	unknown palette	
+
+0x007a3cf4	5	0x00002094	main menu choice ???
+
+// 0x007a5d88	1	""	0x0000a000	uncompressed	main menu case titles touchscreen french
+
+0x007afd88	5	0x0000c378	main menu case titles touchscreen french
+0x007bc100	5	0x00001034	main menu episode title and numbers with arrows french
+0x007bd134	5	0x00001128	main menu language change buttons
+0x007be25c	5	0x00001034	french press start to save message
+0x007bf290	5	0x00018f18	french touchscreen control elements
+0x007d81a8	5	0x000080bc	court doors and evidence windows
+0x007e0264	5	0x00002034	text advance animation
+0x007e2298	5	0x000135c0	new game and continue menu elements french and japanese
+
+// 0x007f5858	1	""	0x0000a000	uncompressed	main menu case titles touchscreen german
+
+0x007ff858	5	0x0000a2e4	main menu case titles touchscreen german
+0x00809b3c	5	0x00001094	main menu episode title and numbers with arrows german
+0x0080abd0	5	0x00001034	german press start to save message
+0x0080bc04	5	0x000181bc	german touchscreen control elements
+0x00823dc0	5	0x0000e59c	new game and continue menu elements german
+0x0083235c	5	0x000090fc	delete savegame elements
+0x0083b458	5	0x0001809c	"defense bustups (phoenix, mia, edgeworth)"
+0x008534f4	5	0x0000889c	gba court speechbubbles and buttons
+0x0085bd90	5	0x0000e16c	cross-examination bustups
+0x00869efc	5	0x00002468	cross-examination bustup background bar
+0x0086c364	5	0x00001068	unknown dust
+0x0086d3cc	5	0x00054ee8	various character poses
+
+0x008c22b4	0	"compressed-blob-01.bin"	0x00000262
+0x008c2518	0	"compressed-blob-02.bin"	0x000004c9
+0x008c29e4	0	"compressed-blob-03.bin"	0x00000512
+0x008c2ef8	0	"compressed-blob-04.bin"	0x0000066a
+0x008c3564	0	"compressed-blob-05.bin"	0x00000919
+0x008c3e80	0	"compressed-blob-06.bin"	0x000008cd
+0x008c4750	0	"compressed-blob-07.bin"	0x000001da
+0x008c492c	0	"compressed-blob-08.bin"	0x000002be
+0x008c4bec	0	"compressed-blob-09.bin"	0x0000058c
+0x008c5178	0	"compressed-blob-10.bin"	0x0000054a
+0x008c56c4	0	"compressed-blob-11.bin"	0x000008af
+0x008c5f74	0	"compressed-blob-12.bin"	0x00000853
+0x008c67c8	0	"compressed-blob-13.bin"	0x000002bd
+0x008c6a88	0	"compressed-blob-14.bin"	0x00000441
+0x008c6ecc	0	"compressed-blob-15.bin"	0x00000481
+0x008c7350	0	"compressed-blob-16.bin"	0x00000511
+0x008c7864	0	"compressed-blob-17.bin"	0x0000064f
+0x008c7eb4	0	"compressed-blob-18.bin"	0x0000069c
+0x008c8550	0	"compressed-blob-19.bin"	0x000001ec
+0x008c873c	0	"compressed-blob-20.bin"	0x00000315
+0x008c8a54	0	"compressed-blob-21.bin"	0x00000408
+0x008c8e5c	0	"compressed-blob-22.bin"	0x00000455
+0x008c92b4	0	"compressed-blob-23.bin"	0x0000051b
+0x008c97d0	0	"compressed-blob-24.bin"	0x000004d1
+
+0x008c9ca4	0	"unknown archive1.bin"	0x0003243f
+0x008fc0e4	0	"unknown archive2.bin"	0x00043cc7
+
+0x0093fdac	5	0x0000bf78	locations french
+0x0094bd24	5	0x0000bf78	locations german
+0x00957c9c	5	0x00045a00	talk topics french
+0x0099d69c	5	0x00045a00	talk topics german
+0x009e309c	5	0x001295a0	location previews
+0x00b0c63c	5	0x0000609c	location preview static
+
+// 0x00b126d8	1	""	0x00000040	uncompressed	unknown palette	
+
+0x00b12718	0	""	0x00053480	evidence and profile pictures
+
+0x00b65b98	5	0x000a82a0	evidence and profile pictures (with resizes)
+
+0x00c0de38	0	"unknown archive3.bin"	0x00008c64
+0x00c16a9c	0	"unknown archive4.bin"	0x0002c8de
+
+0x00c4337c	5	0x00026174	evidence and profile names french
+0x00c694f0	5	0x000d6b10	evidence and profile details french
+
+0x00d40000	0	"unknown archive5.bin"	0x00008bc8
+0x00d48bc8	0	"unknown archive6.bin"	0x0002ce4e
+
+0x00d75a18	5	0x00026174	evidence and profile names german
+0x00d9bb8c	5	0x000d6b10	evidence and profile details german
+0x00e7269c	5	0x001aab10	evidence and profile descriptions french
+0x0101d1ac	5	0x001aab10	evidence and profile descriptions german
+
+0x011c7cbc	0	""	0x000005cd	compressed evidence and profile pictures
+
+// 0x011c8d30	1	""	0x00001300	uncompressed	uncompressed fonts
+
+0x011dbd30	5	0x00000834	circle
+0x011dc564	5	0x000004d4	more circle
+
+// 0x011dca38	1	""	0x00010000	uncompressed	fingerprint dusting animation	
+// 0x011eca38	1	""	0x00008350	uncompressed	unknown	
+// 0x011f4d88	1	""	0x000004a0	uncompressed	palette data	
+// 0x011f5228	1	""	0x0001e1a0	uncompressed	"various gameplay elements (buttons, frames, 3dviewer, etc)"	no (uses palette before)
+
+0x012133c8	0	"unknown archive7.bin"	0x00035d5c
+0x01249124	0	"unknown content1.bin"	0x000173e0

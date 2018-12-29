@@ -1,0 +1,44 @@
+﻿Nitro FS in a nutshell
+
+This document explains how the file system works in DS games.
+
+All games come in the nds file format. This file format has a leading header
+with fixed positioned fields. The various pointed to parts of the file come
+afterwards. The file system data is two of those parts. More specifically,
+the file system uses the file allocation table (FAT for short) and the
+file directory data, also known as the file name table (FNT for short).
+
+You can find pointers to these sections in the NDS file header (offset 0x48 for
+the FAT and offset 0x40 for the FNT), along with the sizes of the sections.
+
+The FAT is a traditional start pointer (4 byte) + length table (4 byte) for each of the files
+in the file system. The pointers are relative to the start of the NDS file.
+
+The FNT is composed by one main list of all the directories followed by
+file name lists for each of the directories. The main list is composed of records
+with three fields, the offset to the name list (4 byte pointer, relative to
+the start of the FNT), the id of the first file in the directory (2 byte int)
+and the id of the parent folder (2 byte int).
+
+The first record is for the root folder of the file system and uses the
+parent folder id field as the number of directories instead.
+
+Each pointed to file name list contains variable length records for
+each item in the directory. First in each record comes a byte where the
+low 7 bits is the file name length and the high 8 bit is a flag if it is
+a sub directory or a file. After the flag/length byte comes just that many
+characters of text that forms the file name. There is no terminating character;
+the length is the only way to know where the file name ends. For directory
+records follows a two byte directory id. File records have no such id field
+and instead get incremental ids based on the first id field from the main
+directory list. The record ends after the possible sub dir id.
+
+The entry in the directory list corresponding to a given subdirectory id
+can be found by clearing the uppermost nibble in the 2 byte directory id
+to zeros and using that as the index in the directory list.
+Remember that each such entry is 8 bytes long.
+
+Sources:
+GBATEK – The definitive guide to all things DS related
+
+Written by henke37 2011.

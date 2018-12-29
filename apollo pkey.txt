@@ -1,0 +1,3 @@
+0x1e begin table
+one 4byte int per thing (read as BE)
+apply 40004A8h - Cmd 2Ah - TEXIMAGE_PARAM - Set Texture Parameters (W) see GBATEK

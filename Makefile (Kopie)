@@ -1,0 +1,45 @@
+# NITROCOMPRESSION = ntrcom/lze.o ntrcom/blz.o ntrcom/huffman.o ntrcom/lzss.o ntrcom/lzx.o ntrcom/rle.o ntrcom/ndscompression.o
+NITROCOMPRESSION = ntrcom/huffman.o ntrcom/lzss.o ntrcom/lzx.o ntrcom/rle.o ntrcom/nitrocompression.o
+LODEPNG = lodepng/lodepng.o
+PHOENIXLIB = phoenixgfx.o
+
+# all: compression phoenix apollo edgeworth
+all: compression general phoenix phoenix-offset apollo edgeworth citrus dgs
+compression: ntrcom/simpleunpak.exe ntrcom/simpleunpak-offset.exe
+general: extract-raw-file.exe
+phoenix: convert-text-messages.exe convert-uncompressed-image-header.exe extract-archive.exe extract-mes_all-bin.exe
+phoenix-offset: convert-uncompressed-image-header-offset.exe extract-video-offset.exe extract-image-offset.exe extract-archive-offset.exe
+apollo: extract-apollo-cpac.exe convert-apollo-image.exe convert-apollo-raw.exe
+edgeworth: extract-edgeworth-romfile.exe extract-edgeworth-archive.exe convert-edgeworth-raw.exe generate-edgeworth-tilemap.exe convert-edgeworth-overlay.exe
+citrus: extract-trilogy-pack.exe 3dsetc/etc1util.exe
+dgs: parse-dgs-gui.exe
+
+extract-video-offset.exe: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) extract-video-offset.c
+	$(CC) -Wall -g -o extract-video-offset.exe extract-video-offset.c $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION)
+	
+extract-image-offset.exe: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) extract-image-offset.c
+	$(CC) -Wall -g -o extract-image-offset.exe extract-image-offset.c $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION)
+	
+3dsetc/etc1util.exe: 3dsetc/main.c
+	$(CXX) -Wall -g -o 3dsetc/etc1util.exe 3dsetc/main.c 3dsetc/rg_etc1.cpp
+	
+ntrcom/%.exe: $(NITROCOMPRESSION) ntrcom/%.c
+	$(CC) -Wall -g -o $@ $^
+	
+extract-raw-file.exe: $(NITROCOMPRESSION) extract-raw-file.c
+	$(CC) -Wall -g -o $@ $^
+	
+extract-%.exe: $(NITROCOMPRESSION) extract-%.c
+	$(CC) -Wall -g -o $@ $^
+	
+convert-%.exe: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) convert-%.c
+	$(CC) -Wall -g -o $@ $^
+	
+%.exe: %.c
+	$(CC) -Wall -g -o $@ $<
+	
+%.o: %.c
+	$(CC) -c -Wall -g -o $@ $<
+
+clean:
+	-rm ntrcom/*.o ntrcom/*.exe *.exe lodepng/*.o

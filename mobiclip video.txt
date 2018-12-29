@@ -1,0 +1,77 @@
+from https://gbatemp.net/threads/player-of-vx-file.125374/
+
+deosn't really have to do with the vx as I only studied that for camparison purposes... but here is what I got for .vx mods the later version of .vx. I haven't gotten oll the information out yet but I was going to ask normmatt to use the same method he used to grab the decompression routine out of the one game to grab the video routine in C... just to see what is does....
+
+see the problem is that mobiclip has produced players and simulators for certain phones but those codecs were already public. these are not. They had no plans on making a public free player as that would probably void there contract with nintendo. 
+
+this codec (for both vx and mods) is supposed to take a 4 by 4 sample of the picture rearrange the values form lowest to highest then use a pretty simple system to output it. This is significant and I need to edit this later as I have more on it and as it isn't compression but sampling. which is what is done by other video codecs and the way it gets done is a very big key...
+
+anyways here is my unfinished look into .mods note there seems to be slightly more information in .mods then there is in .vx but the same principals apply. AS I have already stated I was looking into.mods. what is going to need to be figured out is listed here. If you see a ? after a section it means we need that to have any chance of building a codec that will work...
+
+
+
+bytes 0-5 file signature: 'MODSN3'
+
+byte 6 '0A' same for all mods
+
+bytes 7-8 hex number
+add.mods C605
+000.mods 7206
+004.mods 5B02
+007.mods E613
+opening.mods 270B
+
+bytes c-d '100' 256 in hex video width
+
+bytes 10-11 'C0' 192 in hex video height
+
+bytes 17-18 two two byte hex number reverse
+add.mods '0B00' 
+000.mods '1E00'
+004.mods '1E01'
+opening.mods '1E02'
+Byte 1A '00', '02' as of yet unknown value
+00 files have FFFFFF00C0000000001300FF7FFFFF segmentation at the end of file (thinking pallete or sound notatation play this when here)
+01 files have ?
+02 files fave pointers at the end of file (accompanied by size?) 
+opening.mods pointers point to stuff that start with 0400
+004.mods does not have the sections on the bottom
+
+bytes 1C-1D sometimes there is a value here 4byte 
+add.mods 0's 
+000.mods 0's
+004.mods '44AC'
+opening.mods '3075'
+
+bytes 20-21
+add.mods '7C2F'
+000.mods 'EC25'
+004.mods '5811'
+opening.mods '4829'
+
+bytes 28-2b file size 
+0004.mods 448364 06D76C 437 KB (448,372 bytes), on disk 440 KB (450,560 bytes)
+000.mods 589c1a 1A9C58 '1743960' 1.66mb 1743968
+opening mods 588138 5800248 5.53 mb
+add.mods 28a89C 2664604 size actual 2.54 MB (2,664,620 bytes)on disk 2.54 MB (2,666,496 bytes)
+
+byte 2c changes from file '01', '02', 'C6'
+
+byte 30-31 '4845' HE same for every Mods file
+
+bytes ? total number of video frames in file
+
+bytes? possibly video depth (8-bit, palettized video)
+
+.vx files 
+have to 5byte header VXDS 
+have the screen sizes 256 (0010) at 08-09, 192 (C0) at 0B 0C
+size of file seems to be different in rom max size(28-2b) is smaller than actual size on disk
+the packed files size(24-27) is listed before it
+
+as I am seeing 44AC in these files I am thinking that this important (file investigated list in file name 20fps, 44khz stereo at 6db...not sure if I found the pallette or sound stuff. 
+
+regular .mo files prefer a 208 by 160 size, they list file size at 1C-1F. have the same 5 byte type header. According to mobiclip change log the version of the encoder is included in the file...
+
+
+sorry there isn't more...

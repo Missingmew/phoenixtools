@@ -1,0 +1,10 @@
+TEX textures are 24bit (tiled?)
+	magic[4] header begins with "TEX[NULL]" 54 45 58 00
+	uint32_t 0x200000A5 constant?
+
+GUI files
+	magic[4] "GUI[NULL]"
+0x4	version? (GS5 is 0x12, DGS is 0x13, GS6 is 0x14)
+
+0xF4	offset to stringthing in GS5
+0x104	offset to stringthing in DGS/GS6
