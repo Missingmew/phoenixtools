@@ -30,25 +30,15 @@ Minimal error checking is in place, but assume that any unexpected input will re
 
 For the sake of simplicity, games may have their names shortened or be referred to by their entry number, see the following table:
 
-+----------------------------------------------------------------+----------------+----+---+
 |Phoenix Wright: Ace Attorney                                    |phoenix1        |aa1 |gs1|
-+----------------------------------------------------------------+----------------+----+---+
 |Phoenix Wright: Ace Attorney - Justice for All                  |phoenix2/justice|aa2 |gs2|
-+----------------------------------------------------------------+----------------+----+---+
 |Phoenix Wright: Ace Attorney - Trials and Tribulations          |phoenix3/trials |aa3 |gs3|
-+----------------------------------------------------------------+----------------+----+---+
 |Apollo Justice: Ace Attorney                                    |phoenix4/apollo |aa4 |gs4|
-+----------------------------------------------------------------+----------------+----+---+
 |Phoenix Wright: Ace Attorney - Dual Destinies                   |phoenix5        |aa5 |gs5|
-+----------------------------------------------------------------+----------------+----+---+
 |Phoenix Wright: Ace Attorney - Spirits of Justice               |phoenix6        |aa6 |gs6|
-+----------------------------------------------------------------+----------------+----+---+
 |Miles Edgeworth: Ace Attorney Investigations                    |edgeworth1      |aai1|gk1|
-+----------------------------------------------------------------+----------------+----+---+
 |Miles Edgeworth: Ace Attorney Investigations - Prosecutor's Path|edgeworth2      |aai2|gk2|
-+----------------------------------------------------------------+----------------+----+---+
 |Phoenix Wright: Ace Attorney Trilogy                            |trilogy         |    |   |
-+----------------------------------------------------------------+----------------+----+---+
 
 Not all AA related games are included here, and not all of the above listed games have tools in this repo.
 
