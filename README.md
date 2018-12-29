@@ -139,3 +139,8 @@ Generates tilemaps to be used with convert-edgeworth-raw from textfiles
 
 ## phoenixgfx.*
 Various functions/structs for handling graphics data found in the games (tiled, linear, indexed, etc.)
+
+# Credits
+Some NDS and AA specific code was based on code and documentation made by henke37
+Other bits and pieces were gathered from GBATeK
+And probably more that i forgot over time
