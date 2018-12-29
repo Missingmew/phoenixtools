@@ -30,6 +30,8 @@ Minimal error checking is in place, but assume that any unexpected input will re
 
 For the sake of simplicity, games may have their names shortened or be referred to by their entry number, see the following table:
 
+| Full Title                                                       | short name       |      |     |
+| ---------------------------------------------------------------- | ---------------- | ---- | --- |
 | Phoenix Wright: Ace Attorney                                     | phoenix1         | aa1  | gs1 |
 | Phoenix Wright: Ace Attorney - Justice for All                   | phoenix2/justice | aa2  | gs2 |
 | Phoenix Wright: Ace Attorney - Trials and Tribulations           | phoenix3/trials  | aa3  | gs3 |
