@@ -1,0 +1,410 @@
+
+0x00000000	2	"common/graphics/logo1.png"	32	24	8
+0x00003e40	2	"common/graphics/logo2.png"	32	24	8
+
+// 0x00007c80	1	""	0x00000800	uncompressed	font	no (uses message box tiles)
+// 0x00008480	1	""	0x00001020	uncompressed	message box tiles	yes
+// 0x000094a0	1	""	0x00000480	uncompressed	message box tiles 2	yes
+// 0x00009920	1	""	0x00010800	uncompressed	name tags	no (uses message box tiles)
+// 0x0001a120	1	""	0x00000220	uncompressed	green dot	yes
+// 0x0001a340	1	""	0x00000300	uncompressed	arrows	no
+// 0x0001a640	1	""	0x00000400	uncompressed	exclamation marks	no
+// 0x0001aac0	1	""	0x00008000	uncompressed	unknown japanese text	no
+// 0x00022ac0	1	""	0x00000400	uncompressed	gba buttons	no
+// 0x00022ec0	1	""	0x00001800	uncompressed	testemony text	no
+// 0x000246c0	1	""	0x00000a00	uncompressed	gba cross examination elements
+// 0x000250c0	1	""	0x00000500	uncompressed	gba pointer finger
+// 0x000255c0	1	""	0x00000200	uncompressed	correct tick
+// 0x000257c0	1	""	0x000002e0	uncompressed	unknown court wall
+// 0x00025aa0	1	""	0x00002800	uncompressed	japanese guilty-not guilty text
+// 0x000282a0	1	""	0x00000020	uncompressed	unknown dot
+// 0x000282c0	1	""	0x00000080	uncompressed	unknown arrow
+// 0x00028340	1	""	0x00002500	uncompressed	court furniture
+// 0x0002a840	1	""	0x00003000	uncompressed	french not guilty
+// 0x0002d840	1	""	0x00000200	uncompressed	lock
+// 0x0002da40	1	""	0x00003000	uncompressed	english not guilty
+// 0x00030a40	1	""	0x00000380	uncompressed	unknown tiles
+// 0x00030dc0	1	""	0x00000900	uncompressed	unknown garbage
+// 0x000316c0	1	""	0x0003d000	uncompressed	main font
+// 0x0006e6c0	1	""	0x00005820	uncompressed	"german, spanish/italian not guilty"
+// 0x00073ee0	1	""	0x000003e0	uncompressed	killer/victim icons
+// 0x000742c0	1	""	0x00000700	uncompressed	fey manor map patches?
+// 0x000749c0	1	""	0x00000020	uncompressed	unknown dot
+// 0x000749e0	1	""	0x00000200	uncompressed	selection highlight
+
+0x00074be0	2	"common/graphics/touchscreen background phoenix.png"	32	24	4
+0x00076ee0	2	"common/graphics/touchscreen background prosecution.png"	32	24	4
+0x00079928	2	"common/graphics/courtroom background.png"	32	24	4
+0x0007d938	2	"common/graphics/blurred courtroom.png"	32	24	4
+0x0007f528	2	"common/graphics/speedlines with border.png"	32	24	4
+0x0008048c	3	"common/graphics/capcom logo (no license).png"	32	4
+0x000815f0	3	"common/graphics/capcom logo.png"	32	4
+0x00083630	3	"common/graphics/backgrounds/bg002-capcom-logo-grayscale.png"	32	4
+0x00084810	3	"common/graphics/backgrounds/bg003-defense-lobby.png"	32	4
+0x0008bcd0	3	"common/graphics/backgrounds/bg004-courtroom-defense-bench.png"	32	4
+0x0008dc9c	3	"common/graphics/backgrounds/bg005-courtroom-prosecution-bench.png"	32	4
+0x0008faf4	3	"common/graphics/backgrounds/bg006-courtroom-witness-stand.png"	32	4
+0x00091f44	3	"common/graphics/backgrounds/bg007-courtroom-judge-bench.png"	32	4
+0x00099c58	3	"common/graphics/backgrounds/bg008-courtroom-defense-aid-bench.png"	32	4
+0x000a09e8	3	"common/graphics/backgrounds/bg009-courtroom-full-view.png"	32	4
+0x000a9680	3	"common/graphics/courtroom grayscale.png"	32	4
+0x000ad9a8	3	"common/graphics/backgrounds/bg011-gavel-slam-background.png"	32	4
+0x000afec8	3	"common/graphics/gavel slam with borders.png"	32	4
+0x000b39dc	3	"common/graphics/unknown effect.png"	32	4
+0x000b66d0	3	"common/graphics/unknown effect.png"	32	4
+0x000b93c4	3	"common/graphics/unknown effect.png"	32	4
+0x000bc0b8	3	"common/graphics/backgrounds/bg016-speedlines.png"	32	4
+0x000bd1c4	3	"common/graphics/backgrounds/bg017-detention-center.png"	32	4
+0x000c30f8	3	"common/graphics/backgrounds/bg018-phoenix-office.png"	32	4
+0x000ca554	3	"common/graphics/backgrounds/bg019-police-hq-inside.png"	32	4
+0x000d2584	3	"common/graphics/franziska close up base.png"	32	4
+0x000d3d24	3	"common/graphics/courtroom background with scanlines.png"	32	4
+0x000d7d9c	3	"common/graphics/phoenix thinking courtroom grayscale.png"	32	4
+0x000da65c	3	"common/graphics/phoenix thinking blank grayscale.png"	32	4
+0x000dc2fc	2	"common/graphics/to be continued italic.png"	32	24	4
+0x000dd218	3	"common/graphics/main menu case 1 background.png"	32	8
+0x000ee170	3	"common/graphics/main menu case 2 background.png"	32	8
+0x001014ac	3	"common/graphics/main menu case 3 background.png"	32	8
+0x00111e98	3	"common/graphics/main menu case 4 background.png"	32	8
+0x001243c0	3	"common/graphics/main menu locked background.png"	32	8
+0x00134ff8	3	"common/graphics/backgrounds/bg021-case-1-photo-of-victim.png"	32	4
+0x00138898	3	"fr/graphics/backgrounds/bg022-case-1-photo-of-written-message.png"	32	4
+0x0013baa8	3	"de/graphics/backgrounds/bg022-case-1-photo-of-written-message.png"	32	4
+0x0013ed18	3	"en/graphics/backgrounds/bg022-case-1-photo-of-written-message.png"	32	4
+0x00141f88	3	"fr/graphics/backgrounds/bg023-case-1-maggey-with-victim.png"	32	4
+0x001463dc	3	"de/graphics/backgrounds/bg023-case-1-maggey-with-victim.png"	32	4
+0x0014a834	3	"en/graphics/backgrounds/bg023-case-1-maggey-with-victim.png"	32	4
+0x0014ec8c	3	"common/graphics/backgrounds/bg024-case-1-maggey-seeing-victim-and-culprit.png"	32	4
+0x00153914	3	"common/graphics/case 1 intro culprit with phoenix in lobby.png"	64	4
+0x0015fc10	3	"common/graphics/backgrounds/bg026-case-1-intro-phoenix-nightmare-background.png"	32	4
+0x00162340	3	"common/graphics/backgrounds/bg027-case-1-intro-culprit-after-hitting-phoenix.png"	32	4
+0x001670ec	3	"common/graphics/backgrounds/bg028-case-2-kurain-village.png"	32	4
+0x00170418	3	"common/graphics/backgrounds/bg029-case-2-kurain-main-hall.png"	32	4
+0x0017a15c	3	"common/graphics/backgrounds/bg030-case-2-summoning-room.png"	64	4
+0x0018c944	3	"common/graphics/case 2 summoning room with blood spot.png"	64	4
+0x0019f1d0	3	"common/graphics/backgrounds/bg031-case-2-winding-way.png"	32	4
+0x001a81a0	3	"common/graphics/case 2 kurain spare room with box.png"	32	4
+0x001b0ad8	3	"common/graphics/backgrounds/bg032-case-2-kurain-spare-room.png"	32	4
+0x001b8b4c	3	"fr/graphics/backgrounds/bg034-case-2-hotti-clinic.png"	32	4
+0x001bf160	3	"de/graphics/backgrounds/bg034-case-2-hotti-clinic.png"	32	4
+0x001c5938	3	"en/graphics/backgrounds/bg034-case-2-hotti-clinic.png"	32	4
+0x001cbf44	3	"common/graphics/backgrounds/bg035-case-2-intro-car-1.png"	32	4
+0x001d2168	3	"common/graphics/backgrounds/bg035-case-2-intro-car-2.png"	32	4
+0x001d838c	3	"common/graphics/backgrounds/bg035-case-2-intro-car-3.png"	32	4
+0x001de5b0	3	"common/graphics/backgrounds/bg036-case-2-intro-accident.png"	32	8
+0x001e9c14	3	"common/graphics/backgrounds/bg037-case-2-intro-phoenix-maya-detention.png"	32	4
+0x001efaa0	3	"common/graphics/unknown japanese message (samurai).png"	32	4
+0x001f0d2c	3	"fr/graphics/case 2 newspaper article 1-3.png"	32	4
+0x001f1d98	3	"de/graphics/case 2 newspaper article 1-3.png"	32	4
+0x001f2df0	3	"en/graphics/case 2 newspaper article 1-3.png"	32	4
+0x001f3e30	3	"fr/graphics/case 2 newspaper article 2-3.png"	32	4
+0x001f4eac	3	"de/graphics/case 2 newspaper article 2-3.png"	32	4
+0x001f5edc	3	"en/graphics/case 2 newspaper article 2-3.png"	32	4
+0x001f6f2c	3	"fr/graphics/case 2 newspaper article 3-3.png"	32	4
+0x001f7ee0	3	"de/graphics/case 2 newspaper article 3-3.png"	32	4
+0x001f8f38	3	"en/graphics/case 2 newspaper article 3-3.png"	32	4
+0x001f9f94	3	"common/graphics/backgrounds/bg042-case-2-map-of-summoning-room.png"	32	4
+0x001face8	3	"fr/graphics/backgrounds/bg043-case 2 map of fey manor.png"	32	4
+0x001fbd98	3	"de/graphics/backgrounds/bg043-case 2 map of fey manor.png"	32	4
+0x001fce08	3	"en/graphics/backgrounds/bg043-case 2 map of fey manor.png"	32	4
+0x001fde7c	3	"common/graphics/backgrounds/bg044-case 2 intro car lights.png"	32	4
+0x001ff278	3	"common/graphics/backgrounds/bg045-case 2 dead mia from phoenix 1.png"	32	4
+0x0020246c	3	"common/graphics/backgrounds/bg046-case 2 maya with victim.png"	32	4
+0x00206064	3	"common/graphics/backgrounds/bg047-case 2 shocked nurse in hospital.png"	32	4
+0x0020b04c	3	"common/graphics/backgrounds/bg048-case 2 mayas uniform.png"	32	4
+0x0020d158	3	"common/graphics/backgrounds/bg049-case 2 photo of culprit (back).png"	32	4
+0x0021064c	3	"common/graphics/backgrounds/bg050-case 2 photo of culprit (front).png"	32	4
+0x00213e94	3	"common/graphics/backgrounds/bg051-case 2 photo of mia being summoned by maya.png"	32	4
+0x00219624	3	"fr/graphics/backgrounds/bg052-case 2 pearl fixing urn.png"	32	4
+0x0021d2bc	3	"de/graphics/backgrounds/bg052-case 2 pearl fixing urn.png"	32	4
+0x00220f50	3	"en/graphics/backgrounds/bg052-case 2 pearl fixing urn.png"	32	4
+0x00224be8	3	"common/graphics/backgrounds/bg053-case 2 morgan with photo and evil look.png"	32	4
+0x0022c5a8	3	"common/graphics/backgrounds/bg054-case 2 culprit and ini.png"	32	4
+0x00230290	3	"common/graphics/backgrounds/bg055-case 2 ini with knocked out maya.png"	32	4
+0x00233c94	3	"common/graphics/backgrounds/bg056-case 2 box behind screen.png"	32	4
+0x002370c8	3	"common/graphics/backgrounds/bg057-case 2 victim with gun.png"	32	4
+0x0023b3e0	3	"common/graphics/backgrounds/bg058-case 2 maya and mia summoned by pearl.png"	32	4
+0x0024164c	3	"common/graphics/backgrounds/bg059-case 3 circus tent.png"	32	4
+0x0024a274	3	"fr/graphics/backgrounds/bg060-case 3 circus cafeteria.png"	32	4
+0x0025357c	3	"de/graphics/backgrounds/bg060-case 3 circus cafeteria.png"	32	4
+0x0025c7e0	3	"en/graphics/backgrounds/bg060-case 3 circus cafeteria.png"	32	4
+0x00265a4c	3	"common/graphics/backgrounds/bg061-case 3 mr berries office.png"	32	4
+0x0026dd24	3	"fr/graphics/case 3 berry big circus entrance.png"	32	4
+0x00275354	3	"de/graphics/case 3 berry big circus entrance.png"	32	4
+0x0027c8d0	3	"en/graphics/case 3 berry big circus entrance.png"	32	4
+0x00283ee0	3	"fr/graphics/backgrounds/bg063-case 3 berry big circus entrance night.png"	32	4
+0x0028b9c4	3	"de/graphics/backgrounds/bg063-case 3 berry big circus entrance night.png"	32	4
+0x00293448	3	"en/graphics/backgrounds/bg063-case 3 berry big circus entrance night.png"	32	4
+0x0029aee0	3	"common/graphics/backgrounds/bg064-case 3 circus courtyard.png"	32	4
+0x002a1ea4	3	"common/graphics/backgrounds/bg065-case 3 moes room.png"	32	4
+0x002aa4fc	3	"common/graphics/backgrounds/bg066-case 3 acros room.png"	32	4
+0x002b1890	3	"common/graphics/case 3 intro lion blue yellow lights.png"	32	8
+0x002b75b4	3	"common/graphics/case 3 intro lion red green lights.png"	32	8
+0x002bcc08	3	"fr/graphics/backgrounds/bg069-case 3 intro circus full view.png"	64	4
+0x002ce658	3	"de/graphics/backgrounds/bg069-case 3 intro circus full view.png"	64	4
+0x002e0120	3	"en/graphics/backgrounds/bg069-case 3 intro circus full view.png"	64	4
+0x002f1dd0	3	"common/graphics/backgrounds/bg070-case 3 intro max galactica.png"	32	4
+0x002f86cc	3	"fr/graphics/case 3 threatening note.png"	32	4
+0x002f95d8	3	"de/graphics/case 3 threatening note.png"	32	4
+0x002fa4fc	3	"en/graphics/case 3 threatening note.png"	32	4
+0x002fb3e0	3	"fr/graphics/backgrounds/bg072-case 3 max galactica poster.png"	32	4
+0x00301558	3	"de/graphics/backgrounds/bg072-case 3 max galactica poster.png"	32	4
+0x003076f4	3	"en/graphics/backgrounds/bg072-case 3 max galactica poster.png"	32	4
+0x0030d838	3	"common/graphics/backgrounds/bg073-case 3 photo of max with award.png"	32	4
+0x003149fc	3	"fr/graphics/backgrounds/bg074-case 3 max with victim at negotiations.png"	32	4
+0x00318e44	3	"de/graphics/backgrounds/bg074-case 3 max with victim at negotiations.png"	32	4
+0x0031d28c	3	"en/graphics/backgrounds/bg074-case 3 max with victim at negotiations.png"	32	4
+0x003216d8	3	"fr/graphics/backgrounds/bg075-case 3 map of circus.png"	32	4
+0x00322f6c	3	"de/graphics/backgrounds/bg075-case 3 map of circus.png"	32	4
+0x003247c0	3	"en/graphics/backgrounds/bg075-case 3 map of circus.png"	32	4
+0x00325fac	3	"common/graphics/backgrounds/bg076-case 3 photo of victim.png"	32	4
+0x00328a58	3	"common/graphics/backgrounds/bg077-case 3 victim slumped over box.png"	32	4
+0x0032ba6c	3	"common/graphics/backgrounds/bg078-case 3 victim lifting box.png"	32	4
+0x0032e2f8	3	"common/graphics/backgrounds/bg079-case 3 victim being hit with statue.png"	32	4
+0x003313c0	3	"common/graphics/backgrounds/bg080-case 3 lion with past victim.png"	32	8
+0x0033705c	3	"fr/graphics/backgrounds/bg081-case 3 victim as seen by trilo.png"	32	4
+0x0033b21c	3	"de/graphics/backgrounds/bg081-case 3 victim as seen by trilo.png"	32	4
+0x0033f350	3	"en/graphics/backgrounds/bg081-case 3 victim as seen by trilo.png"	32	4
+0x0034346c	3	"common/graphics/backgrounds/bg082-case 3 acro witnessing max.png"	32	4
+0x00346680	3	"common/graphics/backgrounds/bg083-case 3 max statue.png"	32	4
+0x0034c1fc	3	"common/graphics/backgrounds/bg084-case 3 acro dropping statue.png"	32	4
+0x00350dd4	3	"fr/graphics/backgrounds/bg085-case 3 max grabbing bottle.png"	32	4
+0x00355ac4	3	"de/graphics/backgrounds/bg085-case 3 max grabbing bottle.png"	32	4
+0x0035a724	3	"en/graphics/backgrounds/bg085-case 3 max grabbing bottle.png"	32	4
+0x0035f3e8	3	"common/graphics/backgrounds/bg086-case 3 acro lower half in court.png"	32	8
+0x00361a6c	3	"common/graphics/backgrounds/bg087-case 3 edgeworth at airport.png"	64	4
+0x0036bde0	3	"common/graphics/backgrounds/bg088-case 4 gatewater hotel ballroom.png"	32	4
+0x00376038	3	"fr/graphics/backgrounds/bg089-case 4 gatewater hotel hallway.png"	32	4
+0x0037ec28	3	"de/graphics/backgrounds/bg089-case 4 gatewater hotel hallway.png"	32	4
+0x00387818	3	"en/graphics/backgrounds/bg089-case 4 gatewater hotel hallway.png"	32	4
+0x00390408	3	"common/graphics/backgrounds/bg090-case 4 matt engardes room.png"	32	4
+0x00398fc8	3	"common/graphics/backgrounds/bg091-case 4 juan corridas room.png"	64	4
+0x003a8960	3	"common/graphics/unknown japanese message 2 (samurai).png"	32	4
+0x003a9c2c	3	"fr/graphics/backgrounds/bg093-case 4 gatewater hotel lobby.png"	32	4
+0x003b3234	3	"de/graphics/backgrounds/bg093-case 4 gatewater hotel lobby.png"	32	4
+0x003bc84c	3	"en/graphics/backgrounds/bg093-case 4 gatewater hotel lobby.png"	32	4
+0x003c5e64	3	"common/graphics/backgrounds/bg094-case 4 matt engardes house.png"	32	4
+0x003cf3dc	3	"common/graphics/backgrounds/bg095-case 4 secret room.png"	32	4
+0x003d683c	3	"common/graphics/backgrounds/bg096-case 4 wine cellar.png"	32	4
+0x003de9e0	3	"common/graphics/backgrounds/bg097-case 4 clouds.png"	32	4
+0x003e6238	3	"fr/graphics/backgrounds/bg098-case 4 jammin ninja poster.png"	32	4
+0x003eed18	3	"de/graphics/backgrounds/bg098-case 4 jammin ninja poster.png"	32	4
+0x003f7880	3	"en/graphics/backgrounds/bg098-case 4 jammin ninja poster.png"	32	4
+0x004003f8	3	"common/graphics/backgrounds/bg099-case 4 airport.png"	32	4
+0x004080d0	3	"common/graphics/backgrounds/bg100-case 4 photo of victim.png"	32	4
+0x0040b50c	3	"fr/graphics/case 4 map of hotel.png"	32	4
+0x0040c7ec	3	"de/graphics/case 4 map of hotel.png"	32	4
+0x0040dafc	3	"en/graphics/case 4 map of hotel.png"	32	4
+0x0040ee10	3	"common/graphics/backgrounds/bg102-case 4 photo of andrews in costume.png"	32	4
+0x004127ac	3	"fr/graphics/backgrounds/bg103-case 4 nickel samurai poster.png"	32	4
+0x0041b144	3	"de/graphics/backgrounds/bg103-case 4 nickel samurai poster.png"	32	4
+0x00423b34	3	"en/graphics/backgrounds/bg103-case 4 nickel samurai poster.png"	32	4
+0x0042c524	3	"common/graphics/backgrounds/bg104-case 4 juan witnessing suicide.png"	32	4
+0x0042fc14	3	"common/graphics/backgrounds/bg105-case 4 andrews dressing up in costume.png"	32	4
+0x00433f0c	3	"common/graphics/backgrounds/bg106-case 4 andrews waking up matt.png"	32	4
+0x00437dd8	3	"common/graphics/backgrounds/bg107-case 4 matt with celeste base.png"	32	4
+0x0043b174	3	"common/graphics/backgrounds/bg108-case 4 edgeworth with gun from phoenix 1.png"	32	8
+0x0044348c	3	"fr/graphics/backgrounds/bg109-case 4 matt with butler.png"	32	4
+0x00448460	3	"de/graphics/backgrounds/bg109-case 4 matt with butler.png"	32	4
+0x0044d434	3	"en/graphics/backgrounds/bg109-case 4 matt with butler.png"	32	4
+0x00452408	3	"common/graphics/backgrounds/bg110-case 4 franziska entering court.png"	32	4
+0x00459ab0	3	"fr/graphics/backgrounds/bg111-case 4 butler recieving bear.png"	32	4
+0x0045d5a4	3	"de/graphics/backgrounds/bg111-case 4 butler recieving bear.png"	32	4
+0x00461098	3	"en/graphics/backgrounds/bg111-case 4 butler recieving bear.png"	32	4
+0x00464b8c	3	"common/graphics/backgrounds/bg112-case 4 phoenix with maya and pearl.png"	32	4
+0x0046c68c	3	"fr/graphics/backgrounds/bg113-case 4 calling card with drawing.png"	32	4
+0x0046ef68	3	"de/graphics/backgrounds/bg113-case 4 calling card with drawing.png"	32	4
+0x00471844	3	"en/graphics/backgrounds/bg113-case 4 calling card with drawing.png"	32	4
+0x00474120	3	"common/graphics/backgrounds/bg114-case 4 phoenix leaving at bad end.png"	32	4
+0x00478808	3	"common/graphics/backgrounds/bg115-case 4 andrews finding juan.png"	32	4
+0x0047cd00	3	"fr/graphics/backgrounds/bg116-case 4 shelly de killer calling card.png"	32	4
+0x0047dee4	3	"de/graphics/backgrounds/bg116-case 4 shelly de killer calling card.png"	32	4
+0x0047f0c8	3	"en/graphics/backgrounds/bg116-case 4 shelly de killer calling card.png"	32	4
+0x004802ac	3	"fr/graphics/backgrounds/bg117-case 4 steel samurai poster.png"	32	4
+0x00488530	3	"de/graphics/backgrounds/bg117-case 4 steel samurai poster.png"	32	4
+0x00490844	3	"en/graphics/backgrounds/bg117-case 4 steel samurai poster.png"	32	4
+0x00498b58	3	"fr/graphics/case 4 gossip column.png"	32	4
+0x00499b1c	3	"de/graphics/case 4 gossip column.png"	32	4
+0x0049ab1c	3	"en/graphics/case 4 gossip column.png"	32	4
+0x0049bab8	3	"common/graphics/backgrounds/bg119-case 4 young edgeworth from phoenix 1.png"	32	4
+0x0049f120	3	"common/graphics/backgrounds/bg120-case 4 intro heroes lineup.png"	64	4
+0x004ae290	3	"common/graphics/backgrounds/bg121-case 4 intro nickel samurai with spotlight.png"	32	4
+0x004b0870	3	"fr/graphics/backgrounds/bg122-case 4 intro nickel samurai with fan 1.png"	32	4
+0x004b83c4	3	"de/graphics/backgrounds/bg122-case 4 intro nickel samurai with fan 2.png"	32	4
+0x004bfec4	3	"en/graphics/backgrounds/bg122-case 4 intro nickel samurai with fan 3.png"	32	4
+0x004c7a44	3	"fr/graphics/case 1 intro touchscreen.png"	32	4
+0x004c8a34	3	"de/graphics/case 1 intro touchscreen.png"	32	4
+0x004c9a5c	3	"en/graphics/case 1 intro touchscreen.png"	32	4
+0x004caa0c	3	"fr/graphics/case 2 intro touchscreen.png"	32	4
+0x004cba70	3	"de/graphics/case 2 intro touchscreen.png"	32	4
+0x004ccb18	3	"en/graphics/case 2 intro touchscreen.png"	32	4
+0x004cdb94	3	"fr/graphics/case 3 intro touchscreen.png"	32	4
+0x004ceb50	3	"de/graphics/case 3 intro touchscreen.png"	32	4
+0x004cfb9c	3	"en/graphics/case 3 intro touchscreen.png"	32	4
+0x004d0b7c	3	"fr/graphics/case 4 intro touchscreen.png"	32	4
+0x004d1b60	3	"de/graphics/case 4 intro touchscreen.png"	32	4
+0x004d2b14	3	"en/graphics/case 4 intro touchscreen.png"	32	4
+0x004d3b88	3	"common/graphics/japanese save transfer topscreen.png"	32	4
+0x004dcc28	3	"common/graphics/japanese save transfer touchscreen.png"	32	4
+0x004e4ec0	3	"common/graphics/french save error message.png"	32	4
+
+// 0x004e5c74	1	""	0x00000fe0	uncompressed	french save error message with garbage before	yes garbage may be tilemap
+
+0x004e6c54	3	"common/graphics/german save error message.png"	32	4
+
+// 0x004e79f8	1	""	0x00001380	uncompressed	german save error message with garbage before	yes garbage may be tilemap
+
+0x004e8d78	3	"common/graphics/english save error message.png"	32	4
+
+// 0x004e9ad8	1	""	0x00000e00	uncompressed	english save error message with garbage before	yes garbage may be tilemap
+
+0x004ea8d8	3	"common/graphics/french write error message.png"	32	4
+
+// 0x004eb6bc	1	""	0x00001460	uncompressed	french write error message with garbage before	yes garbage may be tilemap
+
+0x004ecb1c	3	"common/graphics/german write error message.png"	32	4
+
+// 0x004ed948	1	""	0x000015e0	uncompressed	german write error message with garbage before	yes garbage may be tilemap
+
+0x004eef28	3	"common/graphics/english write error message.png"	32	4
+
+// 0x004efcb0	1	""	0x000010e0	uncompressed	english write error message with garbage before	yes garbage may be tilemap
+
+0x004f0d90	4	"common/graphics/patches/case 2 summoning room (blood spot).png"	7	3	SOURCEOFFSET	8
+0x004f11e0	4	"common/graphics/patches/case 2 winding way (cloth on oven).png"	2	5	SOURCEOFFSET	8
+
+0x004f141c	4	"fr/graphics/patches/case 2 kurain spare room with box (pearls ball).png"	4	3	SOURCEOFFSET	8
+0x004f16cc	4	"de/graphics/patches/case 2 kurain spare room with box (pearls ball).png"	4	3	SOURCEOFFSET	8
+0x004f1978	4	"en/graphics/patches/case 2 kurain spare room with box (pearls ball).png"	4	3	SOURCEOFFSET	8
+
+0x004f1c24	4	"common/graphics/patches/case 3 mr berries office (suit pocket).png"	2	2	SOURCEOFFSET	8
+0x004f1cdc	4	"common/graphics/patches/case 4 wine cellar (calling card).png"	3	1	SOURCEOFFSET	8
+
+0x004f1d98	4	"fr/graphics/patches/case 4 juan corridas room (autograph).png"	5	2	SOURCEOFFSET	8
+0x004f2008	4	"de/graphics/patches/case 4 juan corridas room (autograph).png"	5	2	SOURCEOFFSET	8
+0x004f2278	4	"en/graphics/patches/case 4 juan corridas room (autograph).png"	5	2	SOURCEOFFSET	8
+
+0x004f24e8	4	"common/graphics/patches/case 4 secret room (photo on table) (has transparancy?).png"	2	3	SOURCEOFFSET	8
+0x004f2670	4	"common/graphics/patches/case 4 wine cellar (photo at stairs).png"	3	3	SOURCEOFFSET	8
+0x004f28b4	4	"common/graphics/patches/case 4 secret room (bear on couch).png"	2	3	SOURCEOFFSET	8
+0x004f2a00	4	"common/graphics/patches/case 4 matt engardes house (bear at door).png"	2	3	SOURCEOFFSET	8
+0x004f2b88	4	"common/graphics/patches/case 4 juan corridas room (big bear on the left).png"	6	11	SOURCEOFFSET	8
+
+0x004f386c	4	"fr/graphics/patches/case 2 phoenix office (newpaper on table).png"	5	3	SOURCEOFFSET	8
+0x004f3bf4	4	"de/graphics/patches/case 2 phoenix office (newpaper on table).png"	5	3	SOURCEOFFSET	8
+0x004f3f7c	4	"en/graphics/patches/case 2 phoenix office (newpaper on table).png"	5	3	SOURCEOFFSET	8
+
+0x004f4304	4	"common/graphics/patches/case 2 map of summoning room (mark of hole in screen).png"	2	2	SOURCEOFFSET	4
+
+0x004f4358	4	"fr/graphics/patches/case 2 map of summoning room (victim icon).png"	3	2	SOURCEOFFSET	4
+0x004f43cc	4	"de/graphics/patches/case 2 map of summoning room (victim icon).png"	3	2	SOURCEOFFSET	4
+0x004f443c	4	"en/graphics/patches/case 2 map of summoning room (victim icon).png"	3	2	SOURCEOFFSET	4
+
+// 0x004f44b0	1	""	0x0000c3c0	uncompressed	bustups and effect with tilemaps				yes	yes garbage may be tilemap
+
+0x00500870	4	"common/graphics/patches/unknown reference.png"	76	1	SOURCEOFFSET	8
+0x00500fa8	4	"common/graphics/patches/unknown reference.png"	4	1	SOURCEOFFSET	8
+0x00501030	4	"common/graphics/patches/unknown reference.png"	8	1	SOURCEOFFSET	8
+
+0x00501094	3	"common/graphics/courtroom judge bench with judge parts.png"	32	4
+
+// 0x005088f8	1	""	0x0000f320	uncompressed	courtroom defense side with blur	81	24	4	no	yes
+
+0x00517c18	4	"common/graphics/patches/psychelock chains (unknown reference).png"	256	2	SOURCEOFFSET	8
+
+0x00518e6c	0	"common/characters.bin"	0x00308144
+
+// 0x00820fb0	1	""	0x00018200	uncompressed	main menu case titles touchscreen,		4	yes	yes	"has 8bit palette images are 4bit"
+
+0x008391b0	5	0x00004128	coices ??? and blank
+0x0083d2d8	5	0x00000528	arrows left and right
+0x0083d800	5	0x000080bc	court doors and evidence windows
+0x008458bc	5	0x00002034	touchscreen text advance button arrow animations
+0x008478f0	5	0x00000494	blank button elements
+0x00847d84	5	0x00001128	new game and continue buttons english
+0x00848eac	5	0x0000cb64	japanese and english save/load messages
+0x00855a10	5	0x00008250	french case titles touchscreen
+
+0x0085dc60	5	0x0001e208	french main menu and gameplay touchscreen elements
+0x0087be68	5	0x00026458	german main menu and gameplay touchscreen elements
+0x008a22c0	5	0x000195a8	english main menu and gameplay touchscreen elements
+
+0x008bb868	5	0x00008034	phoenix bust up
+0x008c389c	5	0x0000889c	gba court speechbubbles
+0x008cc138	5	0x000080d0	cross-examination bust ups
+0x008d4208	5	0x00004868	phoenix objection with stretched out arm
+0x008d8a70	5	0x00002468	cross-examination bustup background bar
+0x008daed8	5	0x0002730c	various character poses in court
+0x009021e4	5	0x00001068	unknown dust
+
+0x0090324c	0	"common/compressed-blob01.bin"	0x00000262
+0x009034b0	0	"common/compressed-blob02.bin"	0x000004c9
+0x0090397c	0	"common/compressed-blob03.bin"	0x00000512
+0x00903e90	0	"common/compressed-blob04.bin"	0x0000066a
+0x009044fc	0	"common/compressed-blob05.bin"	0x00000919
+0x00904e18	0	"common/compressed-blob06.bin"	0x000001dc
+0x00904ff4	0	"common/compressed-blob07.bin"	0x000002e0
+0x009052d4	0	"common/compressed-blob08.bin"	0x00000570
+0x00905844	0	"common/compressed-blob09.bin"	0x00000525
+0x00905d6c	0	"common/compressed-blob10.bin"	0x00000844
+0x009065b0	0	"common/compressed-blob11.bin"	0x000002bd
+0x00906870	0	"common/compressed-blob12.bin"	0x00000441
+0x00906cb4	0	"common/compressed-blob13.bin"	0x00000481
+0x00907138	0	"common/compressed-blob14.bin"	0x00000511
+0x0090764c	0	"common/compressed-blob15.bin"	0x00000648
+0x00907c94	0	"common/compressed-blob16.bin"	0x000001ee
+0x00907e84	0	"common/compressed-blob17.bin"	0x00000321
+0x009081a8	0	"common/compressed-blob18.bin"	0x000003e4
+0x0090858c	0	"common/compressed-blob19.bin"	0x0000044f
+0x009089dc	0	"common/compressed-blob20.bin"	0x000004e1
+
+0x00908ec0	0	"fr/choices.bin"	0x0004cba3	bppyes	images are 128x32
+0x00955a64	0	"de/choices.bin"	0x0004c377	bppyes	images are 128x32
+0x009a1ddc	0	"en/choices english.bin"	0x00049a1f	bppyes	images are 128x32
+
+0x009eb7fc	5	0x0000e248	locations french
+0x009f9a44	5	0x0000e248	locations german
+0x00a07c8c	5	0x0000e248	locations english
+0x00a15ed4	5	0x0004d3d8	talk topics french
+0x00a632ac	5	0x0004d3d8	talk topics german
+0x00ab0684	5	0x0004d3d8	talk topics english
+0x00afda5c	5	0x0014e854	location previews (multi3)
+0x00c4c2b0	5	0x0000609c	location preview static
+
+// 0x00c5234c	1	""	0x00000040	uncompressed	palette data
+
+0x00c5238c	0	""	0x00047180,evidence,evidence and profile pictures,,,4,no,yes,
+
+0x00c9950c	5	0x0008f8e0	evidence and profile pictures (with resizes)
+
+0x00d28dec	0	"fr/evidence and profile names (grayscale).bin"	0x000072f1	bpp4,yes,no	 4x8 tiles per image (striped?)"
+0x00d300e0	0	"fr/evidence and profile details (no palette).bin"	0x000215ee	bpp4,yes,yes	 8x8 tiles (striped?)"
+
+0x00d516d0	5	0x000204fc	evidence and profile names french (color)
+0x00d71bcc	5	0x0009efe4	evidence and profile details french
+0x00e10bb0	5	0x00139fb0	evidence and profile descriptions french
+
+0x00f4ab60	0	"de/evidence and profile names (grayscale).bin"	0x00007070	bpp4,yes,no	 4x8 tiles per image (striped?)"
+0x00f51bd0	0	"de/evidence and profile details (no palette).bin"	0x00020a82	bpp4,yes,yes	 8x8 tiles (striped?)"
+
+0x00f72654	5	0x000204fc	evidence and profile names german (color)
+0x00f92b50	5	0x0009efe4	evidence and profile details german
+0x01031b34	5	0x00139fb0	evidence and profile descriptions german
+
+0x0116bae4	0	"en/evidence and profile names (grayscale).bin"	0x000074b2	bpp4,yes,no	 4x8 tiles per image (striped?)"
+0x01172f98	0	"en/evidence and profile details (no palette).bin"	0x000211ee	bpp4,yes,yes	 8x8 tiles (striped?)"
+
+0x01194188	5	0x000204fc	evidence and profile names english (color)
+0x011b4684	5	0x0009efe4	evidence and profile details english
+0x01253668	5	0x00139fb0	evidence and profile descriptions english
+0x0138d618	5	0x00000834	unknown sphere
+0x0138de4c	5	0x000000b4	white square
+
+// 0x0138df00	1	""	0x00000400	uncompressed	unknown circle			8	yes	no
+// 0x0138e300	1	""	0x00010020	uncompressed	fingerprint dusting animation			4	no	yes
+// 0x0139e320	1	""	0x00008350	uncompressed	unknown
+// 0x013a6670	1	""	0x000004a0	uncompressed	palette data
+// 0x013a6b10	1	""	0x0002afa0	uncompressed	"various gameplay elements (buttons, frames, 3dviewer, etc)"			4	yes	no (uses palette before)
+
+0x013d1ab0	0	"common/unknown archive1.bin"	0x0001ccbc
+0x013ee76c	0	"common/unknown content1.bin"	0x00021db0

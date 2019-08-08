@@ -1,8 +1,7 @@
 [offset (in hex)] [typ] [ausgabepfad] [argumente]
 typen:
 0 - rawdump: gibt daten as-is aus, nimmt size als argument
-1 - rawgraphics: gibt rohgrafiken als png aus (to be done)
-2 - compressedgraphics: gibt komprimierte grafiken als png aus, nimmt größe in tiles w h und bpp als argumente
-3 - stripedgraphics: gibt striped grafiken als png aus, nimmt größe in tiles w h
-4 - patchgraphics: gibt patch grafik als png aus, nimmt größe in tiles w h, source offset und typ (0 für striped, 4/8 für einfache bilder mit bpp)
-5 - uncompressedheadergraphics: gibt rohgrafiken mit header als png aus, nimmt keine argumente
+1 - compressedgraphics: gibt komprimierte grafiken als png aus, nimmt größe in tiles w h und bpp als argumente
+2 - stripedgraphics: gibt striped grafiken als png aus, nimmt größe in tiles w h
+3 - patchgraphics: gibt patch grafik als png aus, nimmt größe in tiles w h, source offset und typ (0 für striped, 4/8 für einfache bilder mit bpp)
+4 - uncompressedheadergraphics: gibt rohgrafiken mit header als png aus, nimmt keine argumente
