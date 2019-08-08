@@ -35,8 +35,10 @@ int main( int argc, char **argv ) {
 		fseek( f, script.offset, SEEK_SET );
 		workbuffer = malloc( script.size );
 		fread( workbuffer, script.size, 1, f );
+		compressedsize = script.size;
 		resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
-		if( !(o = fopen( fileName, "wb" ))) {
+		printf("script %03d offset %08x(%08x) compressed %08x(%08x) uncompressed %08x(%08x)\n", i, script.offset, script.offset/4, script.size, script.size/4, resultsize, resultsize/4);
+		if( !(o = fopen( fileName, "wb" ))) { 
 			printf("Couldnt open file %s\n", fileName);
 			return 1;
 		}

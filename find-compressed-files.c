@@ -1,80 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
-unsigned char *LZDecompress(unsigned char *src, int *compressedSize, int *uncompressedSize) {
-	unsigned char *dest = NULL;
-	int srcSize = *compressedSize;
-	if (srcSize < 4)
-		goto fail;
-
-	int destSize = (src[3] << 16) | (src[2] << 8) | src[1];
-
-	dest = malloc(destSize);
-
-	if (dest == NULL)
-		goto fail;
-
-	int srcPos = 4;
-	int destPos = 0;
-
-	for (;;) {
-		if (srcPos >= srcSize)
-			goto fail;
-
-		unsigned char flags = src[srcPos++];
-
-		for (int i = 0; i < 8; i++) {
-			if (flags & 0x80) {
-				if (srcPos + 1 >= srcSize)
-					goto fail;
-
-				int blockSize = (src[srcPos] >> 4) + 3;
-				int blockDistance = (((src[srcPos] & 0xF) << 8) | src[srcPos + 1]) + 1;
-
-				srcPos += 2;
-
-				int blockPos = destPos - blockDistance;
-
-				// Some Ruby/Sapphire tilesets overflow.
-				if (destPos + blockSize > destSize) {
-					blockSize = destSize - destPos;
-					//~ fprintf(stderr, "Destination buffer overflow.\n");
-				}
-
-				if (blockPos < 0)
-					goto fail;
-
-				for (int j = 0; j < blockSize; j++)
-					dest[destPos++] = dest[blockPos + j];
-			} else {
-				if (srcPos >= srcSize || destPos >= destSize)
-					goto fail;
-
-				dest[destPos++] = src[srcPos++];
-			}
-
-			if (destPos == destSize) {
-				while(srcPos%4) srcPos++;
-				*compressedSize = srcPos;
-				*uncompressedSize = destSize;
-				return dest;
-			}
-
-			flags <<= 1;
-		}
-	}
-
-fail:
-	if(dest) free(dest);
-	//~ fprintf(stderr, "couldnt decompress srcPos %06x destSize %06x\n", srcPos, destSize);
-	return 0;
-}
+#include "ntrcom/nitrocompression.h"
 
 int main( int argc, char** argv ) {
 	
-	int extract, offset, start, end, resultsize, compressedsize;
-	unsigned int size;
+	unsigned int size, extract, offset, start = 0, end = 0, resultsize, compressedsize;
 	
 	if ( argc < 3 )
 	{
@@ -102,9 +33,12 @@ int main( int argc, char** argv ) {
 	fclose(f);
 	f = NULL;
 	
-	//~ printf("extract %x offset %x end %x\n", extract, offset, end);
-	
 	offset = start;
+	
+	if(!end) end = size;
+	
+	printf("extract %x offset %x end %x\n", extract, offset, end);
+	
 	
 	while(offset < end) {
 		//~ fprintf(stderr, "offset %x\n", offset);
@@ -113,7 +47,7 @@ int main( int argc, char** argv ) {
 			compressedsize = (data[offset+3] << 16) | (data[offset+2] << 8) | data[offset+1];
 			if(compressedsize < 0x10000) {
 				compressedsize *= 2;
-				resultbuffer = LZDecompress(data+offset, &compressedsize, &resultsize);
+				resultbuffer = unpackBuffer(data+offset, &compressedsize, &resultsize);
 				if(resultbuffer) {
 					//~ printf("0x%08X hit compressed 0x%04X uncompressed 0x%04X\n", offset, compressedsize, resultsize);
 					printf("%08X: 0x%08X hit compressed 0x%04X uncompressed 0x%04X\n", start, offset, compressedsize, resultsize);
