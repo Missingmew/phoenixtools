@@ -1,1 +1,0 @@
-"move" menu opens map (locations as points connected by lines), changing selection begins loading, upon finishing load location bg will fade in
