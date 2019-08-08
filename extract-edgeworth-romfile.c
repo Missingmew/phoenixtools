@@ -45,20 +45,29 @@ int main( int argc, char** argv ) {
 	}
 	
 	for( i = 0; i < numFiles; i++ ) {
-		printf("Current file offset: %08x - Current file size %08x\n", filelist[i].offset, filelist[i].size);
+		printf("Current file %u offset: %08x - Current file size %08x\n", i, filelist[i].offset, filelist[i].size);
 		fflush(stdout);
-		workbuf = malloc(filelist[i].size);
-		fseek( f, filelist[i].offset, SEEK_SET );
-		fread( workbuf, filelist[i].size, 1, f );
 		
-		resultbuf = unpackBuffer( workbuf, &resultsize, &compressedsize );
-		if(!resultbuf) {
-			printf("file %08d is uncompressed!\n", i);
-			resultsize = 0;
+		if(filelist[i].size) {
+			workbuf = malloc(filelist[i].size);
+			fseek( f, filelist[i].offset, SEEK_SET );
+			fread( workbuf, filelist[i].size, 1, f );
+			
+			compressedsize = filelist[i].size;
+			
+			resultbuf = unpackBuffer( workbuf, &resultsize, &compressedsize );
+			if(!resultbuf) {
+				//~ printf("file %08d is uncompressed!\n", i);
+				resultsize = 0;
+			}
+			if(resultsize < compressedsize) {
+				if(resultbuf) printf("unpak less then pak %08x vs %08x\n", resultsize, compressedsize);
+				if(resultsize) free(resultbuf);
+				resultsize = 0;
+			}
 		}
-		if(resultsize < compressedsize) {
+		else {
 			resultsize = 0;
-			free(resultbuf);
 		}
 		if(resultsize) {
 			/* NITRO common filetypes */
@@ -110,11 +119,12 @@ int main( int argc, char** argv ) {
 		if(!resultsize) fwrite( workbuf, filelist[i].size, 1, o );
 		else fwrite( resultbuf, resultsize, 1, o );
 		fclose(o);
-		free( workbuf );
+		if(filelist[i].size) free( workbuf );
 		
 		
 		if(resultsize) free( resultbuf );
 	}
+	free(filelist);
 	printf("Done.\n");
 	fclose(f);
 	return 0;

@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
+
 uint32_t presets[9] = {
 	0x02248000,
 	0x02289A20,
@@ -37,7 +39,8 @@ int compare (const void * a, const void * b) {
 	return ( *(int*)a - *(int*)b );
 }
 
-char *charset[90] = {
+// that ~ will never be used because NULL seems to be terminator...
+char *charset[] = {
 	"~", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
 	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
 	"L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", 
@@ -60,14 +63,13 @@ int main( int argc, char **argv ) {
 	char *textfile = NULL;
 	
 	/* transcribed things here */
-	int folgen = 0, jumpout = 0;
-	unsigned int i, j, k;
+	unsigned int folgen = 0, i, j;
 	unsigned char *overbufbyte = NULL;
 	unsigned char changer = 0;
 	
 	unsigned int numpointers, endofpage;
 	uint32_t newpointerbuf[0x1000];
-	uint32_t newmaxpointer;
+	uint32_t newmaxpointer, minpointer = -1;
 	uint32_t firstpointeroffset = 0;
 	
 	if( argc < 3 ) {
@@ -118,40 +120,41 @@ int main( int argc, char **argv ) {
 	
 	for(i = 0; i < numpointers; i++) {
 		//~ if(pointer[i].set0 != newpointerbuf[i]) printf("pointer %d differs %08x vs %08x ", i, pointer[i].set0, newpointerbuf[i]);
-		printf("newpointerbuf points to %08x, word there is %08x\n", newpointerbuf[i], *(uint32_t *)(overbufbyte+newpointerbuf[i]));
+		//~ printf("newpointerbuf points to %08x, word there is %08x\n", newpointerbuf[i], *(uint32_t *)(overbufbyte+newpointerbuf[i]));
 		//~ if(pointer[i].set2 != newpointeroffsets[i]*4) printf("index %d differs %08x vs %08x(%08x)", i, pointer[i].set2, newpointeroffsets[i]*4, newpointeroffsets[i]);
+		if(newpointerbuf[i] < minpointer) minpointer = newpointerbuf[i];
 	}
+	
+	printf("minpointer %08x\n", minpointer);
 	
 	//~ for(i = 0; i < numptypes; i++) printf("ptype %03d points to %08x with type %d\n", i, ptypes[i].pointer, ptypes[i].type);
 	
 	// DEBUG
 	//~ return 0;
 	
-	folgen = -1;
-	k = 0;
 	for(i = 0; i < numpointers; i++) {
-		if(textidx > textsize/2) {
-			textsize *= 2;
-			textfile = realloc(textfile, textsize);
-		}
-		printf("i %d numpointers %d\n", i, numpointers);
-		uint32_t targetword = *(uint32_t *)(overbufbyte+newpointerbuf[i]);
-		if((targetword & 0x00FFFFFF) < 0x100) {
-			printf("skipping potentially useless pointer\n");
-			continue;
-		}
+		//~ printf("i %d numpointers %d target %08x\n", i, numpointers, newpointerbuf[i]);
+		//~ uint32_t targetword = *(uint32_t *)(overbufbyte+newpointerbuf[i]);
+		//~ if((targetword & 0x00FFFFFF) < 0x100) {
+			//~ printf("skipping potentially useless pointer\n");
+			//~ continue;
+		//~ }
 		endofpage = 0;
-		for(j = newpointerbuf[i]; !endofpage && (j < oversize); j++) {
-			//~ printf("j %08x addr %p limit %p to %p\n", j, overbufbyte+j, overbufbyte, overbufbyte+oversize);
+		//~ for(j = newpointerbuf[i]; !endofpage && (j < oversize); j++) {
+		// comment j++ when switching to FOR
+		j = newpointerbuf[i];
+		//~ while(overbufbyte[j] && (j < oversize)) {
+		while((overbufbyte[j] || folgen) && (j < oversize)) {
+			if(textidx > textsize/2) {
+				textsize *= 2;
+				textfile = realloc(textfile, textsize);
+			}
+		//~ while(overbufbyte[j]) {
+			//~ printf("j %08x addr %p limit %p to %p textidx %08x of %08x\n", j, overbufbyte+j, overbufbyte, overbufbyte+oversize, textidx, textsize);
 			fflush(stdout);
 			changer = overbufbyte[j];
-			if(folgen == 0) {
-				sprintf(textfile+textidx, "]");
-				textidx++;
-				folgen = -1;
-			}
-			//~ if(folgen > 0) folgen--;
-			if(folgen > 0) {
+			
+			if(folgen) {
 				sprintf(textfile+textidx, "(");
 				textidx++;
 				while(folgen > 1) {
@@ -160,13 +163,15 @@ int main( int argc, char **argv ) {
 					textidx+=4;
 					folgen--;
 				}
-				sprintf(textfile+textidx, "%02x)", overbufbyte[j]);
-				//~ j++;
-				folgen--;
-				textidx+=3;
+				sprintf(textfile+textidx, "%02x)]", overbufbyte[j]);
+				folgen = 0;
+				textidx+=4;
+				
+				j++;
 				continue;
 			}
-			if((changer >= 0xFE) && (folgen < 0)) {
+			
+			if(changer >= 0xFE) {
 				//~ printf("changer is %x\n", changer);
 				if(changer == 0xFE) {
 					sprintf(textfile+textidx, "\n");
@@ -178,13 +183,15 @@ int main( int argc, char **argv ) {
 						case 0x03: {
 							sprintf(textfile+textidx, "[NewPage?]\n");
 							textidx+=11;
-							j+=2;
+							//~ j+=2;
+							j++;
 							break;
 						}
 						case 0x04: {
 							sprintf(textfile+textidx, "[NewPage]\n");
 							textidx+=10;
-							j+=2;
+							//~ j+=2;
+							j++;
 							endofpage = 1;
 							break;
 						}
@@ -261,7 +268,7 @@ int main( int argc, char **argv ) {
 						case 0x1B: {
 							sprintf(textfile+textidx, "[STR|Q]");
 							textidx+=7;
-							folgen=-1;
+							folgen=0;
 							j++;
 							break;
 						}
@@ -343,13 +350,26 @@ int main( int argc, char **argv ) {
 							break;
 						}
 						default: {
-							sprintf(textfile+textidx, "{0x%2x}", overbufbyte[j+1]);
-							textidx+=6;
+							sprintf(textfile+textidx, "[{0x%02x}]", overbufbyte[j+1]);
+							textidx+=8;
 							break;
 						}
 					}
 				}
 			}
+			else {
+				//~ printf("changer is %02x\n", changer);
+				//~ fflush(stdout);
+				if((changer < sizeofarr(charset)) && (charset[changer] != 0)) {
+					sprintf( textfile+textidx, "%s", charset[changer]);
+					textidx += strlen(charset[changer]);
+				}
+				else {
+					sprintf( textfile+textidx, "{0x%02x}", changer );
+					textidx += 6;
+				}
+			}
+			/* this should not be needed as the original game does not contain any of the special characters that any TL wouldve introduced...
 			else {
 				k = 1;
 				while(k<90 && !jumpout) {
@@ -377,7 +397,9 @@ int main( int argc, char **argv ) {
 					textidx++;
 				}
 			}
-			
+			*/
+			// used for WHILE
+			j++;
 		}
 		sprintf(textfile+textidx, "\n");
 		textidx++;
