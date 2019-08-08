@@ -47,6 +47,8 @@ int main( int argc, char** argv ) {
 	while((start+curoff) < end) {
 		header = (controlHeader *)(sourcedata+curoff);
 		printf("0x%08x\t5\t\"uncomheader-%08x-%03d.png\"\n", curoff+start, start, i);
+		fprintf(stderr, "header %08x image %08x paletteOff %08x paletteSize %08x\n", header->headerSize, header->imageSize, header->paletteOffset, header->paletteSize);
+		fprintf(stderr, "type %u pixelsX %u pixelsY %u\n", header->magic[0], header->magic[1] << 5, header->magic[2] << 5);
 		curoff += (header->paletteOffset + header->paletteSize);
 		i++;
 	}
