@@ -15,18 +15,18 @@ typedef struct {
 	03 - show
 	04 - hide
 */
+/* numbers in comments are arguments as stated in MessageSystem.cs from unity */
 operator opcodeList[144] = {
 	{ "noop", 0 },						/* does nothing */
 	{ "b", 0 },						/* linebreak */
 	{ "p", 0 },						/* paragraph, ends current textbox, waits for player interaction */
 	{ "textcolor", 1 },					/* text color, args: 0 white, 1 red, 2 blue, 3 green */
-	{ "pause", 0 },						/* pause the game, waits for player interaction */
+	{ "pause", 0 },	/* 1 */					/* pause the game, waits for player interaction */
 	{ "music", 2 },						/* change the music, args sequence(SDAT index) - fadein time frames (on resume only?) */
 	{ "sound", 2 },						/* play a sound effect, args ? - ? */
 	{ "fullscreen_text", 0 },				/* switches to fullscreen display, GBA only? */
 	{ "finger_choice_2_args_jmp", 2 },			/* select between two choices (either in FS mode with previous opcode or from touchscreen), args: pointers to respective choices in script, followed by endjump? */
 	{ "finger_choice_3_args_jmp", 3 },			/* see above with 3 choices */
-	/* 10 */
 	{ "rejmp", 1 },						/* pointer to jump to for multiple choice questions failed once */
 	{ "speed", 1 },						/* change text speed, args: frames/character */
 	{ "wait", 1 },						/* wait for specified time units, args: frames to wait */
@@ -37,7 +37,6 @@ operator opcodeList[144] = {
 	{ "evidence_window_plain", 0 },				/* show evidence window without lifebar (as when pressing R) */
 	{ "bgcolor", 3 },					/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
 	{ "showevidence", 1 },					/* displays little evidence box with SFX, args: evidence to show? */
-	/* 20 */
 	{ "removeevidence", 0 },				/* removes above box with SFX */
 	{ "special_jmp", 0 },					/* used at the end of testimony boxes for saves and resets? */
 	{ "savegame", 0 },					/* displays saving screen */
@@ -48,7 +47,6 @@ operator opcodeList[144] = {
 	{ "bg", 1 },						/* change background image, args: background to display */
 	{ "hidetextbox", 1 },					/* show textbox(border?), args: 0 show, 1 hide */
 	{ "shift_background", 1 },				/* shifts background?, args: x*256 for direction + pixels/frame */
-	/* 30 */
 	{ "person", 3 },					/* change the character image shown on-screen, args: ?,?,? */
 	{ "hideperson", 0 },					/* instantly hide the character image */
 	{ "20", 1 },						/* ? */
@@ -59,7 +57,6 @@ operator opcodeList[144] = {
 	{ "25", 1 },						/* ? */
 	{ "hide_court_record_button", 1 },			/* shows court-record button, args: 0 show, 1 hide */
 	{ "shake", 2 },						/* shakes the screen?, args: ? - ? (first seems to be 1e only and second is changing?) */
-	/* 40 */
 	{ "testemony_animation", 1 },				/* display "testimony" animation shown before witness testifies, args: ? */
 	{ "return_to_testimony", 1 },				/* returns from a wrong answer to the point in testimony, where objection was called?, args: ? */
 	{ "2A", 3 },						/* ?, always followed by endjmp? */
@@ -70,16 +67,15 @@ operator opcodeList[144] = {
 	{ "animation", 2 },					/* display animation (such as "objection!"), args: ? */
 	{ "30", 1 },						/* ? */
 	{ "personvanish", 2 },					/* makes characer vanish, args: ? */
-	/* 50 */
 	{ "32", 2 },						/* ? */
-	{ "33", 2 },						/* unknown jump, args: ? */
+	{ "33", 2 },	/* 5 */					/* unknown jump, args: ? */
 	{ "fadetoblack", 1 },					/* fades to black, args: ? */
 	{ "35", 2 },						/* ? */
-	{ "36", 0 },						/* ?, unclear description in python */
+	{ "36", 0 },	/* 1 */					/* ?, unclear description in python */
 	{ "37", 2 },						/* ? */
 	{ "38", 1 },						/* ? */
 	{ "littlesprite", 1 },					/* makes blip for characters on map in case 4 appear?, args: blip to show? */
-	{ "3A", 2 },						/* ? */
+	{ "3A", 2 }, /* 3 */					/* ? */
 	{ "3B", 2 },						/* Animation related (begin animation?) */
 	{ "3C", 1 },						/* Animation related (makes argument blip flash?) */
 	{ "3D", 1 },						/* Animation related (stop animation?) */
@@ -95,7 +91,7 @@ operator opcodeList[144] = {
 	{ "47", 2 },						/* ? */
 	{ "48", 2 },						/* ? */
 	{ "wingame", 0 },					/* return to title, unlock all cases */
-	{ "4A", 0 },						/* ?, crash? */
+	{ "4A", 0 }, /* 1 */					/* ?, crash? */
 	{ "4B", 1 },						/* ? */
 	{ "4C", 0 },						/* ? */
 	{ "4D", 2 },						/* ?, not tested? */
@@ -106,30 +102,30 @@ operator opcodeList[144] = {
 	{ "52", 1 },						/* ? */
 	{ "53", 0 },						/* ? */
 	{ "lifebarset", 2 },					/* various lifebar related things?, args: ?, ? */
-	{ "55", 2 },						/* ?, crash? */
+	{ "55", 2 }, /* 1 */					/* ?, crash? */
 	{ "56", 2 },						/* ? */
 	{ "psychoblock", 1 },					/* play psychoblock chain and lock appearance animation, args: locks to show */
 	{ "58", 0 },						/* ? */
 	{ "59", 1 },						/* ? */
 	{ "5A", 1 },						/* ? */
 	{ "5B", 2 },						/* ? */
-	{ "5C", 0 },						/* ?, crash? */
-	{ "toggle_center_text", 1 },				/* toggles text centering, args: 0 normal alignment - 1 centered */
-	{ "5E", 1 },						/* ? */
+	{ "5C", 0 }, /* 3 */					/* ?, crash? */
+	{ "toggle_center_text", 1 }, /* 0 */			/* toggles text centering, args: 0 normal alignment - 1 centered */
+	{ "5E", 1 }, /* 0 */					/* ? */
 	{ "5F", 3 },						/* ? */
-	{ "60", 0 },						/* ?, crash? */
+	{ "60", 0 }, /* 4 */					/* ?, crash? */
 	{ "61", 3 },						/* ? */
 	{ "62", 0 },						/* ? */
 	{ "63", 0 },						/* ?, crash? */
 	{ "64", 1 },						/* show special effect?, args: ? */
 	{ "65", 2 },						/* ? */
-	{ "66", 2 },						/* ? */
+	{ "66", 2 }, /* 3 */					/* ? */
 	{ "67", 0 },						/* ? */
 	{ "68", 0 },						/* ? */
-	{ "bganim", 2 },					/* play fullscreen animation, args: ? */
+	{ "bganim", 2 }, /* 4 */				/* play fullscreen animation, args: ? */
 	{ "switchscript", 1 },					/* loads new script and jumps to beginning, args: current case? (python is unclear) */
 	{ "6B", 3 },						/* Animation related (load animation? used for maps?) */
-	{ "6C", 1 },						/* ? */
+	{ "6C", 1 }, /* 0 */					/* ? */
 	{ "6D", 1 },						/* ? */
 	{ "6E", 1 },						/* ? */
 	{ "6F", 1 },						/* ? */
@@ -137,18 +133,18 @@ operator opcodeList[144] = {
 	{ "71", 3 },						/* ? */
 	{ "72", 0 },						/* ? */
 	{ "73", 0 },						/* ?, crash? */
-	{ "74", 0 },						/* ?, crash? */
+	{ "74", 0 }, /* 2 */					/* ?, crash? */
 	{ "75", 4 },						/* ?, crash? */
-	{ "76", 0 },						/* ?, crash? */
-	{ "77", 0 },						/* ?, crash? */
-	{ "78", 0 },						/* ?, crash? */
+	{ "76", 0 }, /* 2 */					/* ?, crash? */
+	{ "77", 0 }, /* 2 */					/* ?, crash? */
+	{ "78", 0 }, /* 1 */					/* ?, crash? */
 	{ "79", 0 },						/* ?, crash? */
-	{ "7A", 0 },						/* reset to capcom animation? */
-	{ "7B", 0 },						/* ?, crash? */
+	{ "7A", 0 }, /* 1 */					/* reset to capcom animation? */
+	{ "7B", 0 }, /* 2 */					/* ?, crash? */
 	{ "7C", 0 },						/* ?, crash? */
-	{ "7D", 0 },						/* reset to capcom animation? */
-	{ "7E", 0 },						/* ?, crash? */
-	{ "7F", 0 },						/* ?, crash? */
+	{ "7D", 0 }, /* 1 */					/* reset to capcom animation? */
+	{ "7E", 0 }, /* 1 */					/* ?, crash? */
+	{ "7F", 0 }, /* 1 */					/* ?, crash? */
 	{ "80", 0 },						/* dummy for apollotesting */
 	{ "81", 0 },						/* dummy for apollotesting */
 	{ "82", 0 },						/* dummy for apollotesting */
@@ -1440,18 +1436,22 @@ int getMemidxIndex( unsigned int memidx, uint32_t *list, unsigned int count ) {
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int fileSize, i, j, gamenum, memidx, textidx, scriptsize, missingargs;
+	unsigned int fileSize, i, j, gamenum, memidx, textidx, scriptsize, missingargs, isunity = 0;
 	uint32_t numScripts, *scriptOffsets = NULL;
 	//~ uint16_t token, *arguments = NULL, *scriptfile = NULL;
 	uint16_t token, arguments[10] = {0}, *scriptfile = NULL;
 	operator curop;
 	char textfile[0x100000] = {0}; /* 1M should be enough */
 	if( argc < 3 ) {
-	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n", argv[0]);
+	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\nadd 10 to enable unity mode", argv[0]);
 		return 1;
 	}
 	
 	gamenum = strtoul(argv[2], NULL, 10) - 1;
+	if(gamenum > 9) {
+		isunity = 1;
+		gamenum -= 10;
+	}
 	if( gamenum > 3 ) {
 		printf("unsupported gamenum %d\n", gamenum+1);
 		return 1;
@@ -1497,19 +1497,26 @@ int main( int argc, char **argv ) {
 		token = scriptfile[memidx];
 		memidx++;
 		if( gamenum < 3 && token > 127 ) {
-			token -= 128;
+			if(isunity) {
+				token -= (128-32);
+				sprintf( textfile+textidx, "%c", (char)token);
+				textidx += 1;
+			}
+			else {
+				token -= 128;
+				if( (token < sizeofarr(charset)) && (charset[token] != 0) ) {
+					sprintf( textfile+textidx, "%s", charset[token]);
+					textidx += strlen(charset[token]);
+				}
+				else {
+					sprintf( textfile+textidx, "{%05u}", token+128 );
+					textidx += 7;
+				}
+			}
 			//~ if( token > 1 && token < 256 && !(charset[token] == 0) ) {
 				//~ sprintf( textfile+textidx, "{%05u}", token+128 );
 				//~ textidx += 7;
 			//~ }
-			if( (token < sizeofarr(charset)) && (charset[token] != 0) ) {
-				sprintf( textfile+textidx, "%s", charset[token]);
-				textidx += strlen(charset[token]);
-			}
-			else {
-				sprintf( textfile+textidx, "{%05u}", token+128 );
-				textidx += 7;
-			}
 		}
 		else if( gamenum == 3 && token > (127+16) ) {
 			token -= (128+16);
