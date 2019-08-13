@@ -7,15 +7,14 @@ PHOENIXLIB = phoenixgfx.o
 .PHONY: tools
 
 # all: compression phoenix apollo edgeworth
-all: compression general phoenix phoenix-offset apollo edgeworth citrus dgs phoenixpc tools
+all: compression general phoenix phoenix-offset apollo edgeworth citrus phoenixpc tools
 compression: ntrcom/simpleunpak.elf ntrcom/simpleunpak-offset.elf find-compressed-files.elf
-general: extract-raw-file.elf gen-uncomheadermap.elf oamdmp.elf
+general: extract-raw-file.elf gen-uncomheadermap.elf
 phoenix: convert-text-messages.elf convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf
 phoenix-offset: convert-uncompressed-image-header-offset.elf extract-video-offset.elf extract-image-offset.elf extract-archive-offset.elf
 apollo: extract-apollo-cpac.elf convert-apollo-image.elf convert-apollo-raw.elf
 edgeworth: extract-edgeworth-romfile.elf extract-edgeworth-archive.elf convert-edgeworth-raw.elf generate-edgeworth-tilemap.elf convert-edgeworth-overlay.elf
 citrus: extract-trilogy-pack.elf 3dsetc/etc1util.elf
-dgs: parse-dgs-gui.elf
 phoenixpc: extract-pc-file.elf
 	
 tools:
