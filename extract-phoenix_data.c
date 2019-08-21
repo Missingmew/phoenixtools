@@ -77,7 +77,7 @@ void makepath(char *path) {
 	return;
 }
 
-void dumpRaw(FILE *f, outputinfo *info) {
+void dumpRaw(FILE *f, FILE *batch, outputinfo *info) {
 	FILE *o;
 	unsigned char *tempbuf = NULL;
 	
@@ -95,7 +95,7 @@ void dumpRaw(FILE *f, outputinfo *info) {
 	fclose(o);
 }
 
-void dumpCompressed(FILE *f, outputinfo *info) {
+void dumpCompressed(FILE *f, FILE *batch, outputinfo *info) {
 	FILE *o;
 	uint32_t tempsize = 0;
 	unsigned char *workbuf = NULL, *resultbuf = NULL;
@@ -138,12 +138,15 @@ void dumpCompressed(FILE *f, outputinfo *info) {
 	else  fwrite(resultbuf+32, (info->width*8*info->height*8)/2, 1, o);
 	fclose(o);
 	
+	fprintf(batch, "gbagfx %s %s.png -palette %s -width %d\n", info->gfxpath, info->gfxpath, info->palpath, info->width);
+	fprintf(batch, "gbagfx %s %s.pal\n", info->palpath, info->palpath); 
+	
 	free(workbuf);
 	free(resultbuf);
 	return;
 }
 
-void dumpStriped(FILE *f, outputinfo *info) {
+void dumpStriped(FILE *f, FILE *batch, outputinfo *info) {
 	FILE *o;
 	pacEntry *entrylist;
 	uint32_t numfiles;
@@ -202,13 +205,16 @@ void dumpStriped(FILE *f, outputinfo *info) {
 	fwrite(fullbuffer, fullsize, 1, o);
 	fclose(o);
 	
+	fprintf(batch, "gbagfx %s %s.png -palette %s -width %d\n", info->gfxpath, info->gfxpath, info->palpath, info->width);
+	fprintf(batch, "gbagfx %s %s.pal\n", info->palpath, info->palpath); 
+	
 	free(fullbuffer);
 	free(palettedata);
 	free(entrylist);
 	return;
 }
 
-void dumpPatch(FILE *f, outputinfo *info) {
+void dumpPatch(FILE *f, FILE *batch, outputinfo *info) {
 	pacEntry entry;
 	uint32_t tempsize = 0;
 	unsigned char *workbuf = NULL, *resultbuf = NULL;
@@ -243,6 +249,7 @@ void dumpPatch(FILE *f, outputinfo *info) {
 	}
 	if(!resultbuf) VOIDBREAK("couldnt decompress\n");
 	
+	strcat(info->gfxpath, (bpp == image8bpp) ? ".8bpp" : ".4bpp");
 	if(!(o = fopen(info->gfxpath, "wb"))) {
 		printf("dumpRaw: Couldnt open %s for writing\n", info->gfxpath);
 		return;
@@ -250,12 +257,14 @@ void dumpPatch(FILE *f, outputinfo *info) {
 	fwrite(resultbuf, ressize, 1, o);
 	fclose(o);
 	
+	fprintf(batch, "gbagfx %s %s.png -width %d # palette from 0x%08x\n", info->gfxpath, info->gfxpath, info->width, info->sourceoffset);
+	
 	free(workbuf);
 	free(resultbuf);
 	return;
 }
 
-void dumpUncompressed(FILE *f, outputinfo *info) {
+void dumpUncompressed(FILE *f, FILE *batch, outputinfo *info) {
 	controlHeader header;
 	unsigned char *workbuf = NULL, *palettedata = NULL, *rgbapixeldata = NULL;
 	unsigned int pixelsX, pixelsY, bpp;
@@ -345,7 +354,7 @@ void dumpUncompressed(FILE *f, outputinfo *info) {
 	return;
 }
 
-void (*dumpfuncs[])(FILE *, outputinfo *) = {
+void (*dumpfuncs[])(FILE *, FILE *, outputinfo *) = {
 	dumpRaw,
 	dumpCompressed,
 	dumpStriped,
@@ -354,7 +363,7 @@ void (*dumpfuncs[])(FILE *, outputinfo *) = {
 };
 
 int main(int argc, char** argv) {
-	FILE *data = NULL, *map = NULL;
+	FILE *data = NULL, *map = NULL, *batch = NULL;
 	char mapline[2048] = {0};
 	/* arguments used by all types */
 	char outputpath[2048] = {0}, palettepath[2048] = {0}, graphicspath[2048] = {0};
@@ -380,6 +389,12 @@ int main(int argc, char** argv) {
 	fseek(data, 0, SEEK_SET);
 	if( !(map = fopen(argv[2], "r"))) {
 		printf("Couldnt open %s for reading\n", argv[2]);
+		return 1;
+	}
+	
+	sprintf(outputpath, "%s.log", argv[1]);
+	if(!(batch = fopen(outputpath, "w"))) {
+		printf("couldnt open %s for writing\n", outputpath);
 		return 1;
 	}
 	
@@ -480,10 +495,11 @@ int main(int argc, char** argv) {
 		outinfo.sourcetype = sourcetype;
 		outinfo.sourceoffset = sourceoffset;
 		
-		dumpfuncs[filetype](data, &outinfo);
+		dumpfuncs[filetype](data, batch, &outinfo);
 	}
 	fclose(data);
 	fclose(map);
+	fclose(batch);
 	printf("Done.\n");
 	return 0;
 }

@@ -42,7 +42,8 @@ int main( int argc, char **argv ) {
 			printf("Couldnt open file %s\n", fileName);
 			return 1;
 		}
-		fwrite( resultbuffer, resultsize, 1, o );
+		if(!resultbuffer) fwrite(workbuffer, script.size, 1, o);
+		else fwrite( resultbuffer, resultsize, 1, o );
 		fclose(o);
 		free( workbuffer );
 		free( resultbuffer );

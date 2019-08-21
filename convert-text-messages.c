@@ -15,7 +15,7 @@ typedef struct {
 	03 - show
 	04 - hide
 */
-/* numbers in comments are arguments as stated in MessageSystem.cs from unity */
+/* numbers in comments are arguments as stated in MessageSystem from unity */
 operator opcodeList[144] = {
 	{ "noop", 0 },						/* does nothing */
 	{ "b", 0 },						/* linebreak */
@@ -1443,7 +1443,7 @@ int main( int argc, char **argv ) {
 	operator curop;
 	char textfile[0x100000] = {0}; /* 1M should be enough */
 	if( argc < 3 ) {
-	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\nadd 10 to enable unity mode", argv[0]);
+	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\nadd 10 to enable unity mode\n", argv[0]);
 		return 1;
 	}
 	

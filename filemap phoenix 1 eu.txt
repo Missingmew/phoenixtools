@@ -204,12 +204,12 @@
 0x01dc1230	2	"common/graphics/backgrounds/bg117-evidence-locker-room.gbapal"	"common/graphics/backgrounds/bg117-evidence-locker-room"	 64	4
 0x01dcfcb8	2	"common/graphics/backgrounds/bg118-police-station-security-room.gbapal"	"common/graphics/backgrounds/bg118-police-station-security-room"	 32	4
 
-0x01dd8838	3	"common/graphics/patches/case3/staff-area-shutter-left.png"		4	7	0x01b3c508	0
-0x01dd8cd8	3	"common/graphics/patches/case2/mia-office-night-note.png"		2	2	0x01aeb6d4	0
-0x01dd8d98	3	"common/graphics/patches/case3/staff-area-shutter-right.png"		3	5	0x01b3c508	0
-0x01dd90d0	3	"common/graphics/patches/case2/grossbergs-office-no-painting-notes-table.png"		4	2	0x01be8c5c	0
-0x01dd9244	3	"common/graphics/patches/case4/gourd-lake-park-items-bench.png"		3	3	0x01ca1638	0
-0x01dd9418	3	"common/graphics/patches/case4/police-station-evidence-room-drawer.png"		4	6	0x01ccf9c0	0
+0x01dd8838	3	"common/graphics/patches/case3/staff-area-shutter-left"		4	7	0x01b3c508	0
+0x01dd8cd8	3	"common/graphics/patches/case2/mia-office-night-note"		2	2	0x01aeb6d4	0
+0x01dd8d98	3	"common/graphics/patches/case3/staff-area-shutter-right"		3	5	0x01b3c508	0
+0x01dd90d0	3	"common/graphics/patches/case2/grossbergs-office-no-painting-notes-table"		4	2	0x01be8c5c	0
+0x01dd9244	3	"common/graphics/patches/case4/gourd-lake-park-items-bench"		3	3	0x01ca1638	0
+0x01dd9418	3	"common/graphics/patches/case4/police-station-evidence-room-drawer"		4	6	0x01ccf9c0	0
 
 0x01dd97a4	1	"common/graphics/interface/touchscreen/background-phoenix.gbapal"	"common/graphics/interface/touchscreen/background-phoenix.4bpp"	 32	24	4
 0x01ddbaa4	1	"common/graphics/interface/touchscreen/background-prosecution.gbapal"	"common/graphics/interface/touchscreen/background-prosecution.4bpp"	 32	24	4
@@ -218,26 +218,26 @@
 0x01de3458	1	"common/graphics/interface/touchscreen/3d-interface-no-controls.gbapal"	"common/graphics/interface/touchscreen/3d-interface-no-controls.4bpp"	 32	24	4
 0x01de4000	1	"common/graphics/backgrounds/common/blurred-courtroom.gbapal"	"common/graphics/backgrounds/common/blurred-courtroom.4bpp"	 32	24	4
 
-0x01de5bf0	3	"common/graphics/patches/case5/map-parking-garage-car-luminol.png"		2	3	0x01de6828	0
-0x01de5c4c	3	"de/graphics/patches/case5/map-parking-garage-secret-path-01.png"		5	4	0x01de6828	0
-0x01de5ce4	3	"it/graphics/patches/case5/map-parking-garage-secret-path-01.png"		5	4	0x01de7fc4	0
-0x01de5d7c	3	"es/graphics/patches/case5/map-parking-garage-secret-path-01.png"		5	4	0x01de9764	0
-0x01de5e14	3	"common/graphics/patches/case5/map-parking-garage-secret-path-02.png"		6	4	0x01de6828	0
-0x01de5eb4	3	"de/graphics/patches/case5/map-parking-garage-secret-path-03.png"		4	5	0x01de6828	0
-0x01de5fa4	3	"it/graphics/patches/case5/map-parking-garage-secret-path-03.png"		4	5	0x01de7fc4	0
-0x01de608c	3	"es/graphics/patches/case5/map-parking-garage-secret-path-03.png"		4	5	0x01de9764	0
-0x01de6170	3	"common/graphics/patches/case5/map-parking-garage-secret-path-04.png"		4	5	0x01de6828	0
-0x01de61e0	3	"common/graphics/patches/case5/map-parking-garage-secret-path-05.png"		4	4	0x01de6828	0
-0x01de623c	3	"common/graphics/patches/case5/map-parking-garage-secret-path-06.png"		6	4	0x01de6828	0
-0x01de62e0	3	"common/graphics/patches/case5/map-parking-garage-secret-path-07.png"		4	8	0x01de6828	0
-0x01de636c	3	"common/graphics/patches/case5/map-parking-garage-secret-path-08.png"		4	8	0x01de6828	0
-0x01de63f8	3	"common/graphics/patches/case5/map-parking-garage-secret-path-09.png"		4	8	0x01de6828	0
-0x01de6488	3	"common/graphics/patches/case5/map-parking-garage-secret-path-10.png"		2	4	0x01de6828	0
-0x01de64b8	3	"common/graphics/patches/case5/map-parking-garage-secret-path-11.png"		8	4	0x01de6828	0
-0x01de6544	3	"common/graphics/patches/case5/map-parking-garage-secret-path-12.png"		5	4	0x01de6828	0
-0x01de65b8	3	"common/graphics/patches/case5/map-parking-garage-secret-path-13.png"		3	3	0x01de6828	0
-0x01de665c	3	"common/graphics/patches/case5/map-parking-garage-lunchland-van.png"		5	4	0x01de6828	0
-0x01de6704	3	"common/graphics/patches/unknown01.png"	0x00000122	patch image	unknown reference	2	4	
+0x01de5bf0	3	"common/graphics/patches/case5/map-parking-garage-car-luminol"		2	3	0x01de6828	0
+0x01de5c4c	3	"de/graphics/patches/case5/map-parking-garage-secret-path-01"		5	4	0x01de6828	0
+0x01de5ce4	3	"it/graphics/patches/case5/map-parking-garage-secret-path-01"		5	4	0x01de7fc4	0
+0x01de5d7c	3	"es/graphics/patches/case5/map-parking-garage-secret-path-01"		5	4	0x01de9764	0
+0x01de5e14	3	"common/graphics/patches/case5/map-parking-garage-secret-path-02"		6	4	0x01de6828	0
+0x01de5eb4	3	"de/graphics/patches/case5/map-parking-garage-secret-path-03"		4	5	0x01de6828	0
+0x01de5fa4	3	"it/graphics/patches/case5/map-parking-garage-secret-path-03"		4	5	0x01de7fc4	0
+0x01de608c	3	"es/graphics/patches/case5/map-parking-garage-secret-path-03"		4	5	0x01de9764	0
+0x01de6170	3	"common/graphics/patches/case5/map-parking-garage-secret-path-04"		4	5	0x01de6828	0
+0x01de61e0	3	"common/graphics/patches/case5/map-parking-garage-secret-path-05"		4	4	0x01de6828	0
+0x01de623c	3	"common/graphics/patches/case5/map-parking-garage-secret-path-06"		6	4	0x01de6828	0
+0x01de62e0	3	"common/graphics/patches/case5/map-parking-garage-secret-path-07"		4	8	0x01de6828	0
+0x01de636c	3	"common/graphics/patches/case5/map-parking-garage-secret-path-08"		4	8	0x01de6828	0
+0x01de63f8	3	"common/graphics/patches/case5/map-parking-garage-secret-path-09"		4	8	0x01de6828	0
+0x01de6488	3	"common/graphics/patches/case5/map-parking-garage-secret-path-10"		2	4	0x01de6828	0
+0x01de64b8	3	"common/graphics/patches/case5/map-parking-garage-secret-path-11"		8	4	0x01de6828	0
+0x01de6544	3	"common/graphics/patches/case5/map-parking-garage-secret-path-12"		5	4	0x01de6828	0
+0x01de65b8	3	"common/graphics/patches/case5/map-parking-garage-secret-path-13"		3	3	0x01de6828	0
+0x01de665c	3	"common/graphics/patches/case5/map-parking-garage-lunchland-van"		5	4	0x01de6828	0
+0x01de6704	3	"common/graphics/patches/unknown01"	0x00000122	patch image	unknown reference	2	4	
 
 0x01de6828	2	"de/graphics/backgrounds/bg119-parking-garage.gbapal"	"de/graphics/backgrounds/bg119-parking-garage"	 48	4
 0x01de7fc4	2	"it/graphics/backgrounds/bg119-parking-garage.gbapal"	"it/graphics/backgrounds/bg119-parking-garage"	 48	4
@@ -256,8 +256,8 @@
 
 0x01e09e94	2	"common/graphics/backgrounds/case5/police-station-security-room-luminol-2.gbapal"	"common/graphics/backgrounds/case5/police-station-security-room-luminol-2"	 32	4
 0x01e1147c	2	"common/graphics/backgrounds/case5/evidence-lockers-luminol-2.gbapal"	"common/graphics/backgrounds/case5/evidence-lockers-luminol-2"	 32	4
-0x01e17548	3	"common/graphics/patches/case5/map-evidence-lockers-luminol.png"		2	2	0x01eca0d4	0
-0x01e1757c	3	"common/graphics/patches/case5/map-parking-garage-phone-luminol.png"		2	1	0x01de6828	0
+0x01e17548	3	"common/graphics/patches/case5/map-evidence-lockers-luminol"		2	2	0x01eca0d4	0
+0x01e1757c	3	"common/graphics/patches/case5/map-parking-garage-phone-luminol"		2	1	0x01de6828	0
 
 0x01e175a8	2	"common/graphics/backgrounds/bg128-bloody-print-on-locker-stripe.gbapal"	"common/graphics/backgrounds/bg128-bloody-print-on-locker-stripe"	 32	4
 0x01e19df8	1	"common/graphics/backgrounds/bg128-bloody-print-on-locker.gbapal"	"common/graphics/backgrounds/bg128-bloody-print-on-locker.4bpp"	 32	24	4
@@ -269,10 +269,10 @@
 0x01e29418	2	"common/graphics/interface/touchscreen/3d-interface-no-zoom-stripe.gbapal"	"common/graphics/interface/touchscreen/3d-interface-no-zoom-stripe"	 32	4
 0x01e2a3c0	1	"common/graphics/interface/touchscreen/3d-interface-no-zoom.gbapal"	"common/graphics/interface/touchscreen/3d-interface-no-zoom.4bpp"	 32	24	4
 
-0x01e2b250	1	"de/graphics/patches/unknown-witness-icon.png"	0x00000068	compressed	witness icon (no reference)	2	2		yes		
-0x01e2b2b8	1	"it/graphics/patches/unknown-witness-icon.png"	0x00000060	compressed	witness icon (no reference)	2	2		yes		
-0x01e2b318	1	"es/graphics/patches/unknown-witness-icon.png"	0x00000060	compressed	witness icon (no reference)	2	2		yes		
-0x01e2b378	3	"common/graphics/patches/case5/evidence-locker-room-open-locker.png"		8	6	0x01dc1230	0
+0x01e2b250	1	"de/graphics/patches/unknown-witness-icon"	0x00000068	compressed	witness icon (no reference)	2	2		yes		
+0x01e2b2b8	1	"it/graphics/patches/unknown-witness-icon"	0x00000060	compressed	witness icon (no reference)	2	2		yes		
+0x01e2b318	1	"es/graphics/patches/unknown-witness-icon"	0x00000060	compressed	witness icon (no reference)	2	2		yes		
+0x01e2b378	3	"common/graphics/patches/case5/evidence-locker-room-open-locker"		8	6	0x01dc1230	0
 
 0x01e2bddc	2	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-0.gbapal"	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-0"	 32	4
 0x01e30148	2	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-1.gbapal"	"common/graphics/backgrounds/case5/parking-garage-edgeworths-car-luminol-1"	 32	4
@@ -345,11 +345,11 @@
 
 0x01ecad38	2	"jp/graphics/backgrounds/bg200-keypad-stripe.gbapal"	"jp/graphics/backgrounds/bg200-keypad-stripe"	 32	4
 
-0x01ecea70	3	"common/graphics/patches/case5/map-evidence-lockers-luminol-2.png"		3	3	0x01eca0d4	0
-0x01eceae8	3	"de/graphics/patches/case5/map-evidence-lockers-badger-with-luminol.png"		8	4	0x01eca0d4	0
-0x01ecec3c	3	"it/graphics/patches/case5/map-evidence-lockers-badger-with-luminol.png"		8	4	0x01eca0d4	0
-0x01eced6c	3	"es/graphics/patches/case5/map-evidence-lockers-badger-with-luminol.png"		8	4	0x01eca0d4	0
-0x01eceeb8	3	"common/graphics/patches/case5/map-evidence-lockers-luminol-3.png"		2	2		0x01eca0d4	0
+0x01ecea70	3	"common/graphics/patches/case5/map-evidence-lockers-luminol-2"		3	3	0x01eca0d4	0
+0x01eceae8	3	"de/graphics/patches/case5/map-evidence-lockers-badger-with-luminol"		8	4	0x01eca0d4	0
+0x01ecec3c	3	"it/graphics/patches/case5/map-evidence-lockers-badger-with-luminol"		8	4	0x01eca0d4	0
+0x01eced6c	3	"es/graphics/patches/case5/map-evidence-lockers-badger-with-luminol"		8	4	0x01eca0d4	0
+0x01eceeb8	3	"common/graphics/patches/case5/map-evidence-lockers-luminol-3"		2	2		0x01eca0d4	0
 
 0x01eceef4	2	"common/graphics/backgrounds/bg160-vase-closeup-with-bloody-writing-complete.gbapal"	"common/graphics/backgrounds/bg160-vase-closeup-with-bloody-writing-complete"	 32	4
 
@@ -432,24 +432,24 @@
 0x01fba35c	2	"de/graphics/evidence-details/case5/goodmans-lost-item-report.gbapal"	"de/graphics/evidence-details/case5/goodmans-lost-item-report"	 32	4
 0x01fbdc20	2	"it/graphics/evidence-details/case5/goodmans-lost-item-report.gbapal"	"it/graphics/evidence-details/case5/goodmans-lost-item-report"	 32	4
 0x01fc163c	2	"es/graphics/evidence-details/case5/goodmans-lost-item-report.gbapal"	"es/graphics/evidence-details/case5/goodmans-lost-item-report"	 32	4
-0x01fc4fd0	3	"de/graphics/patches/case2/map-mias-office-murderer-icon.png"		3	3	0x01b4f208	0
-0x01fc506c	3	"it/graphics/patches/case2/map-mias-office-murderer-icon.png"		3	3	0x01b4f208	0
-0x01fc5100	3	"es/graphics/patches/case2/map-mias-office-murderer-icon.png"		3	3	0x01b4f208	0
-0x01fc5194	3	"de/graphics/patches/case2/map-mias-office-victim-icon.png"		2	2	0x01b4f208	0
-0x01fc51fc	3	"it/graphics/patches/case2/map-mias-office-victim-icon.png"		2	2	0x01b4f208	0
-0x01fc5264	3	"es/graphics/patches/case2/map-mias-office-victim-icon.png"		2	2	0x01b4f208	0
-0x01fc52cc	3	"de/graphics/patches/case5/map-evidence-lockers-murderer-icon.png"		2	3	0x01eca0d4	0
-0x01fc5348	3	"it/graphics/patches/case5/map-evidence-lockers-murderer-icon.png"		2	3	0x01eca0d4	0
-0x01fc53c0	3	"es/graphics/patches/case5/map-evidence-lockers-murderer-icon.png"		2	3	0x01eca0d4	0
-0x01fc5438	3	"de/graphics/patches/case5/map-evidence-lockers-victim-icon.png"		2	2	0x01eca0d4	0
-0x01fc54a0	3	"it/graphics/patches/case5/map-evidence-lockers-victim-icon.png"		2	2	0x01eca0d4	0
-0x01fc5508	3	"es/graphics/patches/case5/map-evidence-lockers-victim-icon.png"		2	2	0x01eca0d4	0
-0x01fc5570	3	"de/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol.png"		2	2	0x01eca0d4	0
-0x01fc55e0	3	"it/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol.png"		2	2	0x01eca0d4	0
-0x01fc564c	3	"es/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol.png"		2	2	0x01eca0d4	0
-0x01fc56b8	3	"de/graphics/patches/case5/map-evidence-lockers-badger.png"		8	4	0x01eca0d4	0
-0x01fc57f8	3	"it/graphics/patches/case5/map-evidence-lockers-badger.png"		8	4	0x01eca0d4	0
-0x01fc5910	3	"es/graphics/patches/case5/map-evidence-lockers-badger.png"		8	4	0x01eca0d4	0
+0x01fc4fd0	3	"de/graphics/patches/case2/map-mias-office-murderer-icon"		3	3	0x01b4f208	0
+0x01fc506c	3	"it/graphics/patches/case2/map-mias-office-murderer-icon"		3	3	0x01b4f208	0
+0x01fc5100	3	"es/graphics/patches/case2/map-mias-office-murderer-icon"		3	3	0x01b4f208	0
+0x01fc5194	3	"de/graphics/patches/case2/map-mias-office-victim-icon"		2	2	0x01b4f208	0
+0x01fc51fc	3	"it/graphics/patches/case2/map-mias-office-victim-icon"		2	2	0x01b4f208	0
+0x01fc5264	3	"es/graphics/patches/case2/map-mias-office-victim-icon"		2	2	0x01b4f208	0
+0x01fc52cc	3	"de/graphics/patches/case5/map-evidence-lockers-murderer-icon"		2	3	0x01eca0d4	0
+0x01fc5348	3	"it/graphics/patches/case5/map-evidence-lockers-murderer-icon"		2	3	0x01eca0d4	0
+0x01fc53c0	3	"es/graphics/patches/case5/map-evidence-lockers-murderer-icon"		2	3	0x01eca0d4	0
+0x01fc5438	3	"de/graphics/patches/case5/map-evidence-lockers-victim-icon"		2	2	0x01eca0d4	0
+0x01fc54a0	3	"it/graphics/patches/case5/map-evidence-lockers-victim-icon"		2	2	0x01eca0d4	0
+0x01fc5508	3	"es/graphics/patches/case5/map-evidence-lockers-victim-icon"		2	2	0x01eca0d4	0
+0x01fc5570	3	"de/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol"		2	2	0x01eca0d4	0
+0x01fc55e0	3	"it/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol"		2	2	0x01eca0d4	0
+0x01fc564c	3	"es/graphics/patches/case5/map-evidence-lockers-victim-icon-luminol"		2	2	0x01eca0d4	0
+0x01fc56b8	3	"de/graphics/patches/case5/map-evidence-lockers-badger"		8	4	0x01eca0d4	0
+0x01fc57f8	3	"it/graphics/patches/case5/map-evidence-lockers-badger"		8	4	0x01eca0d4	0
+0x01fc5910	3	"es/graphics/patches/case5/map-evidence-lockers-badger"		8	4	0x01eca0d4	0
 
 0x01fc5a44	2	"common/graphics/backgrounds/bg240-victim-in-car-trunk.gbapal"	"common/graphics/backgrounds/bg240-victim-in-car-trunk"	 32	4
 

@@ -270,47 +270,47 @@
 
 // 0x004efcb0	1	""	0x000010e0	uncompressed	english write error message with garbage before	yes garbage may be tilemap
 
-0x004f0d90	3	"common/graphics/patches/case 2 summoning room (blood spot).png"	7	3	1337	8
-0x004f11e0	3	"common/graphics/patches/case 2 winding way (cloth on oven).png"	2	5	1337	8
+0x004f0d90	3	"common/graphics/patches/case 2 summoning room (blood spot)"	7	3	1337	8
+0x004f11e0	3	"common/graphics/patches/case 2 winding way (cloth on oven)"	2	5	1337	8
 
-0x004f141c	3	"fr/graphics/patches/case 2 kurain spare room with box (pearls ball).png"	4	3	1337	8
-0x004f16cc	3	"de/graphics/patches/case 2 kurain spare room with box (pearls ball).png"	4	3	1337	8
-0x004f1978	3	"en/graphics/patches/case 2 kurain spare room with box (pearls ball).png"	4	3	1337	8
+0x004f141c	3	"fr/graphics/patches/case 2 kurain spare room with box (pearls ball)"	4	3	1337	8
+0x004f16cc	3	"de/graphics/patches/case 2 kurain spare room with box (pearls ball)"	4	3	1337	8
+0x004f1978	3	"en/graphics/patches/case 2 kurain spare room with box (pearls ball)"	4	3	1337	8
 
-0x004f1c24	3	"common/graphics/patches/case 3 mr berries office (suit pocket).png"	2	2	1337	8
-0x004f1cdc	3	"common/graphics/patches/case 4 wine cellar (calling card).png"	3	1	1337	8
+0x004f1c24	3	"common/graphics/patches/case 3 mr berries office (suit pocket)"	2	2	1337	8
+0x004f1cdc	3	"common/graphics/patches/case 4 wine cellar (calling card)"	3	1	1337	8
 
-0x004f1d98	3	"fr/graphics/patches/case 4 juan corridas room (autograph).png"	5	2	1337	8
-0x004f2008	3	"de/graphics/patches/case 4 juan corridas room (autograph).png"	5	2	1337	8
-0x004f2278	3	"en/graphics/patches/case 4 juan corridas room (autograph).png"	5	2	1337	8
+0x004f1d98	3	"fr/graphics/patches/case 4 juan corridas room (autograph)"	5	2	1337	8
+0x004f2008	3	"de/graphics/patches/case 4 juan corridas room (autograph)"	5	2	1337	8
+0x004f2278	3	"en/graphics/patches/case 4 juan corridas room (autograph)"	5	2	1337	8
 
-0x004f24e8	3	"common/graphics/patches/case 4 secret room (photo on table) (has transparancy?).png"	2	3	1337	8
-0x004f2670	3	"common/graphics/patches/case 4 wine cellar (photo at stairs).png"	3	3	1337	8
-0x004f28b4	3	"common/graphics/patches/case 4 secret room (bear on couch).png"	2	3	1337	8
-0x004f2a00	3	"common/graphics/patches/case 4 matt engardes house (bear at door).png"	2	3	1337	8
-0x004f2b88	3	"common/graphics/patches/case 4 juan corridas room (big bear on the left).png"	6	11	1337	8
+0x004f24e8	3	"common/graphics/patches/case 4 secret room (photo on table) (has transparancy?)"	2	3	1337	8
+0x004f2670	3	"common/graphics/patches/case 4 wine cellar (photo at stairs)"	3	3	1337	8
+0x004f28b4	3	"common/graphics/patches/case 4 secret room (bear on couch)"	2	3	1337	8
+0x004f2a00	3	"common/graphics/patches/case 4 matt engardes house (bear at door)"	2	3	1337	8
+0x004f2b88	3	"common/graphics/patches/case 4 juan corridas room (big bear on the left)"	6	11	1337	8
 
-0x004f386c	3	"fr/graphics/patches/case 2 phoenix office (newpaper on table).png"	5	3	1337	8
-0x004f3bf4	3	"de/graphics/patches/case 2 phoenix office (newpaper on table).png"	5	3	1337	8
-0x004f3f7c	3	"en/graphics/patches/case 2 phoenix office (newpaper on table).png"	5	3	1337	8
+0x004f386c	3	"fr/graphics/patches/case 2 phoenix office (newpaper on table)"	5	3	1337	8
+0x004f3bf4	3	"de/graphics/patches/case 2 phoenix office (newpaper on table)"	5	3	1337	8
+0x004f3f7c	3	"en/graphics/patches/case 2 phoenix office (newpaper on table)"	5	3	1337	8
 
-0x004f4304	3	"common/graphics/patches/case 2 map of summoning room (mark of hole in screen).png"	2	2	1337	4
+0x004f4304	3	"common/graphics/patches/case 2 map of summoning room (mark of hole in screen)"	2	2	1337	4
 
-0x004f4358	3	"fr/graphics/patches/case 2 map of summoning room (victim icon).png"	3	2	1337	4
-0x004f43cc	3	"de/graphics/patches/case 2 map of summoning room (victim icon).png"	3	2	1337	4
-0x004f443c	3	"en/graphics/patches/case 2 map of summoning room (victim icon).png"	3	2	1337	4
+0x004f4358	3	"fr/graphics/patches/case 2 map of summoning room (victim icon)"	3	2	1337	4
+0x004f43cc	3	"de/graphics/patches/case 2 map of summoning room (victim icon)"	3	2	1337	4
+0x004f443c	3	"en/graphics/patches/case 2 map of summoning room (victim icon)"	3	2	1337	4
 
 // 0x004f44b0	1	""	0x0000c3c0	uncompressed	bustups and effect with tilemaps				yes	yes garbage may be tilemap
 
-0x00500870	3	"common/graphics/patches/unknown reference.png"	76	1	1337	8
-0x00500fa8	3	"common/graphics/patches/unknown reference.png"	4	1	1337	8
-0x00501030	3	"common/graphics/patches/unknown reference.png"	8	1	1337	8
+0x00500870	3	"common/graphics/patches/unknown reference"	76	1	1337	8
+0x00500fa8	3	"common/graphics/patches/unknown reference"	4	1	1337	8
+0x00501030	3	"common/graphics/patches/unknown reference"	8	1	1337	8
 
 0x00501094	2	"common/graphics/courtroom judge bench with judge parts.gbapal"	"common/graphics/courtroom judge bench with judge parts"	 32	4
 
 // 0x005088f8	1	""	0x0000f320	uncompressed	courtroom defense side with blur	81	24	4	no	yes
 
-0x00517c18	3	"common/graphics/patches/psychelock chains (unknown reference).png"	256	1	1337	8
+0x00517c18	3	"common/graphics/patches/psychelock chains (unknown reference)"	256	1	1337	8
 
 0x00518e6c	0	"common/characters.bin"	0x00308144
 

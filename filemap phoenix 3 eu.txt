@@ -266,133 +266,133 @@
 0x004a7150	2	"case 4 intro touchscreen german.gbapal"	"case 4 intro touchscreen german"	 32	4
 0x004a8258	2	"case 5 intro touchscreen german.gbapal"	"case 5 intro touchscreen german"	 32	4
 
-0x004a9280	3	"case 2 lordly tailor basement (statue 1-3).png"	6	4	1337	8
-0x004a97f0	3	"case 2 lordly tailor basement (statue 2-3).png"	6	4	1337	8
-0x004a9cf8	3	"case 2 lordly tailor basement (statue 3-3).png"	6	3	1337	8
-0x004aa0a4	3	"case 2 lordly tailor basement (moved statue 1-2).png"	5	5	1337	8
-0x004aa634	3	"case 2 lordly tailor basement (moved statue 2-2).png"	5	5	1337	8
-0x004aab88	3	"case 2 lordly tailor basement (bent shichishito).png"	6	2	1337	8
-0a004aae04	3	"case 2 lordly tailor basement (dropped box).png"	5	4	1337	8
-0x004ab108	3	"case 2 luke atmeys office (bag on table 1-2).png"	6	4	1337	8
-0x004ab628	3	"case 2 luke atmeys office (bag on table 2-2).png"	6	4	1337	8
-0x004aba20	3	"case 2 kb security presidents office (floor in front of safe).png"	8	3	1337	8
-0x004abe6c	3	"case 2 kb security presidents office (floor above carpet).png"	3	1	1337	8
-0x004abf14	3	"case 3 vitamin square (tigres scooter 1-3).png"	6	2	1337	8
-0x004ac13c	3	"case 3 vitamin square (tigres scooter 2-3).png"	9	3	1337	8
-0x004ac6e4	3	"case 3 vitamin square (tigres scooter 3-3).png"	9	3	1337	8
-0x004acc58	3	"case 3 tres bien kitchen (magatama on table).png"	3	1	1337	8
-0x004acd08	3	"case 3 tender lender (piece of paper below shogi piece).png"	1	2	1337	8
-0x004acd84	3	"case 4 intro bridge (person on bridge).png"	2	4	1337	4
-0x004ace50	3	"case 5 map of hazakura temple (location of heavenly hall).png"	6	5	1337	4
-0x004acfc0	3	"case 5 dusky bridge burnt down (safety planks top-left).png"	5	3	1337	8
-0x004ad398	3	"case 5 dusky bridge burnt down (safety planks top-mid).png"	7	2	1337	8
-0x004ad708	3	"case 5 dusky bridge burnt down (safety planks top-right).png"	5	2	1337	8
-0x004ad9a8	3	"case 5 dusky bridge burnt down (safety planks center).png"	8	3	1337	8
-0x004adf28	3	"case 5 dusky bridge burnt down (safety planks bottom-left).png"	3	4	1337	8
-0x004ae25c	3	"case 5 dusky bridge burnt down (safety planks bottom-left 2).png"	2	1	1337	8
-0x004ae2e8	3	"case 5 dusky bridge burnt down (safety planks bottom-right).png"	2	3	1337	8
-0x004ae470	3	"case 5 dusky bridge burnt down (gumshoes fix near).png"	4	3	1337	8
-0x004ae790	3	"case 5 dusky bridge burnt down (gumshoes fix mid).png"	3	4	1337	8
-0x004aeadc	3	"case 5 dusky bridge burnt down (gumshoes fix far).png"	2	3	1337	8
-0x004aec90	3	"case 5 hazakura temple main hall (larrys letter in left corner).png"	2	2	1337	8
-0x004aed98	3	"case 5 hazakura temple entrance (snow mobile with snow 1).png"	4	3	1337	8
-0x004af0b8	3	"case 5 hazakura temple entrance (snow mobile with snow 2).png"	5	2	1337	8
-0x004af318	3	"case 5 hazakura temple entrance (snow mobile with snow 3).png"	4	3	1337	8
-0x004af5a8	3	"case 5 hazakura temple entrance (snow mobile with snow 4).png"	6	3	1337	8
-0x004af9d4	3	"case 5 hazakura temple entrance (snow mobile with snow 5).png"	6	3	1337	8
-0x004afe20	3	"case 5 hazakura temple entrance (snow mobile with snow 6).png"	8	1	1337	8
-0x004aff14	3	"case 5 inside inner temple (scroll on the right top).png"	3	6	1337	8
-0x004b031c	3	"case 5 inside inner temple (scroll on the right bottom).png"	3	6	1337	8
-0x004b0754	3	"case 5 inside inner temple (trick lock chains 1).png"	2	2	1337	8
-0x004b0868	3	"case 5 inside inner temple (trick lock chains 1).png"	2	2	1337	8
-0x004b097c	3	"case 5 inside inner temple (trick lock chains 1).png"	5	2	1337	8
-0x004b0c4c	3	"case 5 inside inner temple (trick lock chains 1).png"	2	2	1337	8
-0x004b0d60	3	"case 5 inside inner temple (trick lock chains 1).png"	2	2	1337	8
-0x004b0e78	3	"case 5 inside inner temple (trick lock chains 1).png"	3	2	1337	8
-0x004b1008	3	"case 5 inside inner temple (trick lock chains 1).png"	5	2	1337	8
-0x004b12c4	3	"case 5 inside inner temple (trick lock chains 1).png"	5	2	1337	8
-0x004b1580	3	"case 5 inside inner temple (trick lock chains 2).png"	2	2	1337	8
-0x004b1688	3	"case 5 inside inner temple (trick lock chains 2).png"	2	2	1337	8
-0x004b1790	3	"case 5 inside inner temple (trick lock chains 2).png"	5	2	1337	8
-0x004b1a2c	3	"case 5 inside inner temple (trick lock chains 2).png"	2	2	1337	8
-0x004b1b38	3	"case 5 inside inner temple (trick lock chains 2).png"	6	3	1337	8
-0x004b2018	3	"case 5 inside inner temple (trick lock chains 2).png"	2	2	1337	8
-0x004b213c	3	"case 5 inside inner temple (trick lock chains 2).png"	4	2	1337	8
-0x004b2374	3	"case 5 inside inner temple (trick lock chains 2).png"	9	1	1337	8
-0x004b25f4	3	"case 5 inside inner temple (trick lock chains 2).png"	6	2	1337	8
-0x004b2938	3	"case 5 inside inner temple (trick lock chains 2).png"	5	2	1337	8
-0x004b2bf4	3	"case 5 inside inner temple (trick lock chains 2).png"	1	4	1337	8
-0x004b2cfc	3	"case 5 inside inner temple (trick lock chains 2).png"	4	3	1337	8
-0x004b3018	3	"case 5 inside inner temple (trick lock chains 2).png"	6	2	1337	8
-0x004b336c	3	"case 5 inside inner temple (trick lock chains 2).png"	4	3	1337	8
-0x004b3664	3	"case 5 outside of inner temple (rope on pole).png"	6	2	1337	8
-0x004b3988	3	"case 5 outside of inner temple (snow on oven 1).png"	2	3	1337	8
-0x004b3b30	3	"case 5 outside of inner temple (snow on oven 2).png"	5	3	1337	8
-0x004b3e5c	3	"case 5 outside of inner temple (snow on oven 3).png"	6	1	1337	8
-0x004b3fd4	3	"case 5 outside of inner temple (snow on oven 4).png"	7	2	1337	8
-0x004b4284	3	"case 5 map of hazakura temple (spot before heavenly hall).png"	3	2	1337	4
-0x004b42c0	3	"case 5 map of hazakura temple (bridge with all ropes).png"	7	2	1337	4
-0x004b43d0	3	"case 5 map of hazakura temple (rest of bottom right rope).png"	2	1	1337	4
-0x004b4400	3	"case 5 map of hazakura temple (bottom right rope with bridge).png"	2	2	1337	4
-0x004b445c	3	"case 4 map of bridge (blank out car).png"	3	2	1337	4
-0x004b447c	3	"case 4 map of bridge (bridge without planks left).png"	7	2	1337	4
-0x004b4508	3	"case 4 map of bridge (bridge without planks right).png"	7	2	1337	4
-0x004b45dc	3	"case 4 map of bridge (without bottom right rope 1).png"	2	2	1337	4
-0x004b4618	3	"case 4 map of bridge (without bottom right rope 2).png"	2	2	1337	4
-0x004b4650	3	"case 4 map of bridge (without bottom right rope 3).png"	2	2	1337	4
-0x004b46b4	3	"case 5 inner temple garden (snow around lantern 1).png"	3	4	1337	8
-0x004b4898	3	"case 5 inner temple garden (snow around lantern 2).png"	4	2	1337	8
-0x004b49f4	3	"case 5 inner temple garden (snow around lantern 3).png"	5	1	1337	8
-0x004b4ac4	3	"case 5 inner temple garden (snow around lantern 4).png"	7	2	1337	8
-0x004b4bd8	3	"case 5 inner temple garden (snow around lantern 5).png"	6	2	1337	8
-0x004b4d34	3	"case 5 inner temple garden (snow around lantern 6).png"	6	2	1337	8
-0x004b4ea0	3	"case 4 map of bridge (red dot on bottom right pole).png"	1	1	1337	4
-0x004b4ec8	3	"case 4 map of bridge (red dot on rocks 1).png"	2	1	1337	4
-0x004b4f08	3	"case 4 map of bridge (pole without dot).png"	1	1	1337	4
-0x004b4f30	3	"case 4 map of bridge (red dot on rocks 2).png"	2	1	1337	4
-0x004b4f6c	3	"case 4 map of bridge (rocks without dot 1).png"	1	1	1337	4
-0x004b4f8c	3	"case 4 map of bridge (red dot at water).png"	2	1	1337	4
-0x004b4fd0	3	"case 4 map of bridge (rocks without dot 2).png"	1	1	1337	4
-0x004b4ff0	3	"case 4 map of bridge (red dot below bridge).png"	2	1	1337	4
-0x004b501c	3	"case 4 map of bridge (little corner of coast).png"	1	1	1337	4
-0x004b503c	3	"case 4 map of bridge (red dot along rope).png"	2	1	1337	4
-0x004b506c	3	"case 4 map of bridge (part of rope).png"	1	1	1337	4
-0x004b508c	3	"case 4 map of bridge (red dot along rope).png"	2	1	1337	4
-0x004b50b4	3	"case 4 map of bridge (part of rope).png"	1	1	1337	4
-0x004b50d4	3	"case 4 map of bridge (red dot along rope).png"	2	1	1337	4
-0x004b50fc	3	"case 4 map of bridge (part of rope).png"	1	1	1337	4
-0x004b5110	3	"case 4 map of bridge (red dot along rope).png"	2	1	1337	4
-0x004b5150	3	"case 4 map of bridge (part of rope).png"	1	1	1337	4
-0x004b5164	3	"case 5 map of hazakura temple (complete bridge).png"	7	2	1337	4
-0x004b5270	3	"case 5 inner temple garden (talisman under tree).png"	2	2	1337	8
-0x004b532c	3	"case 5 inner temple garden (unknown).png"	2	2	1337	8
-0x004b53c8	3	"case 5 inner temple garden (part of blank lantern).png"	2	2	1337	8
-0x004b5428	3	"case 5 inner temple garden (middle blank lantern).png"	2	4	1337	8
-0x004b555c	3	"case 5 inner temple garden (unknown).png"	3	2	1337	8
-0x004b5630	3	"case 5 inner temple garden (snow around lantern 7).png"	8	2	1337	8
-0x004b5828	3	"case 5 inner temple garden (snow around lantern 8).png"	4	3	1337	8
-0x004b59fc	3	"case 5 inner temple garden (snow around lantern 9).png"	3	2	1337	8
-0x004b5af0	3	"case 5 map of hazakura temple (location of crystal).png"	2	1	1337	4
-0x004b5b2c	3	"case 2 lordly tailor basement (statue 1-3).png"	6	4	1337	8
-0x004b609c	3	"case 2 lordly tailor basement (moved statue 1-2).png"	5	5	1337	8
-0x004b6628	3	"case 2 lordly tailor basement (dropped box).png"	5	4	1337	8
-0x004b692c	3	"case 5 dusky bridge burnt down (gumshoes fix mid).png"	3	4	1337	8
-0x004b6c78	3	"case 5 dusky bridge burnt down (gumshoes fix far).png"	2	3	1337	8
-0x004b6e2c	3	"case 2 luke atmeys office (bag on table complete).png"	6	8	1337	8
-0x004b7720	3	"case 3 vitamin square (magazine on table).png"	6	3	1337	8
-0x004b7af8	3	"case 3 tender lender (badge on suit).png"	1	1	1337	8
-0x004b7b38	3	"case 3 tres bien (magazine stuck behind stand).png"	3	4	1337	8
-0x004b7d68	3	"case 3 tender lender (matchbook).png"	2	2	1337	8
-0x004b7e7c	3	"case 5 hazakura temple main hall (larrys letter in left corner).png"	2	2	1337	8
-0x004b7f90	3	"case 4 map of bridge french (with attacker-victim icons).png"	5	3	1337	4
-0x004b80c0	3	"case 4 map of bridge (blank out car).png"	3	2	1337	4
-0x004b80e0	3	"case 3 vitamin square (magazine on table).png"	6	3	1337	8
-0x004b84b8	3	"case 4 map of bridge german (with attacker-victim icons).png"	5	3	1337	4
+0x004a9280	3	"case 2 lordly tailor basement (statue 1-3)"	6	4	1337	8
+0x004a97f0	3	"case 2 lordly tailor basement (statue 2-3)"	6	4	1337	8
+0x004a9cf8	3	"case 2 lordly tailor basement (statue 3-3)"	6	3	1337	8
+0x004aa0a4	3	"case 2 lordly tailor basement (moved statue 1-2)"	5	5	1337	8
+0x004aa634	3	"case 2 lordly tailor basement (moved statue 2-2)"	5	5	1337	8
+0x004aab88	3	"case 2 lordly tailor basement (bent shichishito)"	6	2	1337	8
+0a004aae04	3	"case 2 lordly tailor basement (dropped box)"	5	4	1337	8
+0x004ab108	3	"case 2 luke atmeys office (bag on table 1-2)"	6	4	1337	8
+0x004ab628	3	"case 2 luke atmeys office (bag on table 2-2)"	6	4	1337	8
+0x004aba20	3	"case 2 kb security presidents office (floor in front of safe)"	8	3	1337	8
+0x004abe6c	3	"case 2 kb security presidents office (floor above carpet)"	3	1	1337	8
+0x004abf14	3	"case 3 vitamin square (tigres scooter 1-3)"	6	2	1337	8
+0x004ac13c	3	"case 3 vitamin square (tigres scooter 2-3)"	9	3	1337	8
+0x004ac6e4	3	"case 3 vitamin square (tigres scooter 3-3)"	9	3	1337	8
+0x004acc58	3	"case 3 tres bien kitchen (magatama on table)"	3	1	1337	8
+0x004acd08	3	"case 3 tender lender (piece of paper below shogi piece)"	1	2	1337	8
+0x004acd84	3	"case 4 intro bridge (person on bridge)"	2	4	1337	4
+0x004ace50	3	"case 5 map of hazakura temple (location of heavenly hall)"	6	5	1337	4
+0x004acfc0	3	"case 5 dusky bridge burnt down (safety planks top-left)"	5	3	1337	8
+0x004ad398	3	"case 5 dusky bridge burnt down (safety planks top-mid)"	7	2	1337	8
+0x004ad708	3	"case 5 dusky bridge burnt down (safety planks top-right)"	5	2	1337	8
+0x004ad9a8	3	"case 5 dusky bridge burnt down (safety planks center)"	8	3	1337	8
+0x004adf28	3	"case 5 dusky bridge burnt down (safety planks bottom-left)"	3	4	1337	8
+0x004ae25c	3	"case 5 dusky bridge burnt down (safety planks bottom-left 2)"	2	1	1337	8
+0x004ae2e8	3	"case 5 dusky bridge burnt down (safety planks bottom-right)"	2	3	1337	8
+0x004ae470	3	"case 5 dusky bridge burnt down (gumshoes fix near)"	4	3	1337	8
+0x004ae790	3	"case 5 dusky bridge burnt down (gumshoes fix mid)"	3	4	1337	8
+0x004aeadc	3	"case 5 dusky bridge burnt down (gumshoes fix far)"	2	3	1337	8
+0x004aec90	3	"case 5 hazakura temple main hall (larrys letter in left corner)"	2	2	1337	8
+0x004aed98	3	"case 5 hazakura temple entrance (snow mobile with snow 1)"	4	3	1337	8
+0x004af0b8	3	"case 5 hazakura temple entrance (snow mobile with snow 2)"	5	2	1337	8
+0x004af318	3	"case 5 hazakura temple entrance (snow mobile with snow 3)"	4	3	1337	8
+0x004af5a8	3	"case 5 hazakura temple entrance (snow mobile with snow 4)"	6	3	1337	8
+0x004af9d4	3	"case 5 hazakura temple entrance (snow mobile with snow 5)"	6	3	1337	8
+0x004afe20	3	"case 5 hazakura temple entrance (snow mobile with snow 6)"	8	1	1337	8
+0x004aff14	3	"case 5 inside inner temple (scroll on the right top)"	3	6	1337	8
+0x004b031c	3	"case 5 inside inner temple (scroll on the right bottom)"	3	6	1337	8
+0x004b0754	3	"case 5 inside inner temple (trick lock chains 1)"	2	2	1337	8
+0x004b0868	3	"case 5 inside inner temple (trick lock chains 1)"	2	2	1337	8
+0x004b097c	3	"case 5 inside inner temple (trick lock chains 1)"	5	2	1337	8
+0x004b0c4c	3	"case 5 inside inner temple (trick lock chains 1)"	2	2	1337	8
+0x004b0d60	3	"case 5 inside inner temple (trick lock chains 1)"	2	2	1337	8
+0x004b0e78	3	"case 5 inside inner temple (trick lock chains 1)"	3	2	1337	8
+0x004b1008	3	"case 5 inside inner temple (trick lock chains 1)"	5	2	1337	8
+0x004b12c4	3	"case 5 inside inner temple (trick lock chains 1)"	5	2	1337	8
+0x004b1580	3	"case 5 inside inner temple (trick lock chains 2)"	2	2	1337	8
+0x004b1688	3	"case 5 inside inner temple (trick lock chains 2)"	2	2	1337	8
+0x004b1790	3	"case 5 inside inner temple (trick lock chains 2)"	5	2	1337	8
+0x004b1a2c	3	"case 5 inside inner temple (trick lock chains 2)"	2	2	1337	8
+0x004b1b38	3	"case 5 inside inner temple (trick lock chains 2)"	6	3	1337	8
+0x004b2018	3	"case 5 inside inner temple (trick lock chains 2)"	2	2	1337	8
+0x004b213c	3	"case 5 inside inner temple (trick lock chains 2)"	4	2	1337	8
+0x004b2374	3	"case 5 inside inner temple (trick lock chains 2)"	9	1	1337	8
+0x004b25f4	3	"case 5 inside inner temple (trick lock chains 2)"	6	2	1337	8
+0x004b2938	3	"case 5 inside inner temple (trick lock chains 2)"	5	2	1337	8
+0x004b2bf4	3	"case 5 inside inner temple (trick lock chains 2)"	1	4	1337	8
+0x004b2cfc	3	"case 5 inside inner temple (trick lock chains 2)"	4	3	1337	8
+0x004b3018	3	"case 5 inside inner temple (trick lock chains 2)"	6	2	1337	8
+0x004b336c	3	"case 5 inside inner temple (trick lock chains 2)"	4	3	1337	8
+0x004b3664	3	"case 5 outside of inner temple (rope on pole)"	6	2	1337	8
+0x004b3988	3	"case 5 outside of inner temple (snow on oven 1)"	2	3	1337	8
+0x004b3b30	3	"case 5 outside of inner temple (snow on oven 2)"	5	3	1337	8
+0x004b3e5c	3	"case 5 outside of inner temple (snow on oven 3)"	6	1	1337	8
+0x004b3fd4	3	"case 5 outside of inner temple (snow on oven 4)"	7	2	1337	8
+0x004b4284	3	"case 5 map of hazakura temple (spot before heavenly hall)"	3	2	1337	4
+0x004b42c0	3	"case 5 map of hazakura temple (bridge with all ropes)"	7	2	1337	4
+0x004b43d0	3	"case 5 map of hazakura temple (rest of bottom right rope)"	2	1	1337	4
+0x004b4400	3	"case 5 map of hazakura temple (bottom right rope with bridge)"	2	2	1337	4
+0x004b445c	3	"case 4 map of bridge (blank out car)"	3	2	1337	4
+0x004b447c	3	"case 4 map of bridge (bridge without planks left)"	7	2	1337	4
+0x004b4508	3	"case 4 map of bridge (bridge without planks right)"	7	2	1337	4
+0x004b45dc	3	"case 4 map of bridge (without bottom right rope 1)"	2	2	1337	4
+0x004b4618	3	"case 4 map of bridge (without bottom right rope 2)"	2	2	1337	4
+0x004b4650	3	"case 4 map of bridge (without bottom right rope 3)"	2	2	1337	4
+0x004b46b4	3	"case 5 inner temple garden (snow around lantern 1)"	3	4	1337	8
+0x004b4898	3	"case 5 inner temple garden (snow around lantern 2)"	4	2	1337	8
+0x004b49f4	3	"case 5 inner temple garden (snow around lantern 3)"	5	1	1337	8
+0x004b4ac4	3	"case 5 inner temple garden (snow around lantern 4)"	7	2	1337	8
+0x004b4bd8	3	"case 5 inner temple garden (snow around lantern 5)"	6	2	1337	8
+0x004b4d34	3	"case 5 inner temple garden (snow around lantern 6)"	6	2	1337	8
+0x004b4ea0	3	"case 4 map of bridge (red dot on bottom right pole)"	1	1	1337	4
+0x004b4ec8	3	"case 4 map of bridge (red dot on rocks 1)"	2	1	1337	4
+0x004b4f08	3	"case 4 map of bridge (pole without dot)"	1	1	1337	4
+0x004b4f30	3	"case 4 map of bridge (red dot on rocks 2)"	2	1	1337	4
+0x004b4f6c	3	"case 4 map of bridge (rocks without dot 1)"	1	1	1337	4
+0x004b4f8c	3	"case 4 map of bridge (red dot at water)"	2	1	1337	4
+0x004b4fd0	3	"case 4 map of bridge (rocks without dot 2)"	1	1	1337	4
+0x004b4ff0	3	"case 4 map of bridge (red dot below bridge)"	2	1	1337	4
+0x004b501c	3	"case 4 map of bridge (little corner of coast)"	1	1	1337	4
+0x004b503c	3	"case 4 map of bridge (red dot along rope)"	2	1	1337	4
+0x004b506c	3	"case 4 map of bridge (part of rope)"	1	1	1337	4
+0x004b508c	3	"case 4 map of bridge (red dot along rope)"	2	1	1337	4
+0x004b50b4	3	"case 4 map of bridge (part of rope)"	1	1	1337	4
+0x004b50d4	3	"case 4 map of bridge (red dot along rope)"	2	1	1337	4
+0x004b50fc	3	"case 4 map of bridge (part of rope)"	1	1	1337	4
+0x004b5110	3	"case 4 map of bridge (red dot along rope)"	2	1	1337	4
+0x004b5150	3	"case 4 map of bridge (part of rope)"	1	1	1337	4
+0x004b5164	3	"case 5 map of hazakura temple (complete bridge)"	7	2	1337	4
+0x004b5270	3	"case 5 inner temple garden (talisman under tree)"	2	2	1337	8
+0x004b532c	3	"case 5 inner temple garden (unknown)"	2	2	1337	8
+0x004b53c8	3	"case 5 inner temple garden (part of blank lantern)"	2	2	1337	8
+0x004b5428	3	"case 5 inner temple garden (middle blank lantern)"	2	4	1337	8
+0x004b555c	3	"case 5 inner temple garden (unknown)"	3	2	1337	8
+0x004b5630	3	"case 5 inner temple garden (snow around lantern 7)"	8	2	1337	8
+0x004b5828	3	"case 5 inner temple garden (snow around lantern 8)"	4	3	1337	8
+0x004b59fc	3	"case 5 inner temple garden (snow around lantern 9)"	3	2	1337	8
+0x004b5af0	3	"case 5 map of hazakura temple (location of crystal)"	2	1	1337	4
+0x004b5b2c	3	"case 2 lordly tailor basement (statue 1-3)"	6	4	1337	8
+0x004b609c	3	"case 2 lordly tailor basement (moved statue 1-2)"	5	5	1337	8
+0x004b6628	3	"case 2 lordly tailor basement (dropped box)"	5	4	1337	8
+0x004b692c	3	"case 5 dusky bridge burnt down (gumshoes fix mid)"	3	4	1337	8
+0x004b6c78	3	"case 5 dusky bridge burnt down (gumshoes fix far)"	2	3	1337	8
+0x004b6e2c	3	"case 2 luke atmeys office (bag on table complete)"	6	8	1337	8
+0x004b7720	3	"case 3 vitamin square (magazine on table)"	6	3	1337	8
+0x004b7af8	3	"case 3 tender lender (badge on suit)"	1	1	1337	8
+0x004b7b38	3	"case 3 tres bien (magazine stuck behind stand)"	3	4	1337	8
+0x004b7d68	3	"case 3 tender lender (matchbook)"	2	2	1337	8
+0x004b7e7c	3	"case 5 hazakura temple main hall (larrys letter in left corner)"	2	2	1337	8
+0x004b7f90	3	"case 4 map of bridge french (with attacker-victim icons)"	5	3	1337	4
+0x004b80c0	3	"case 4 map of bridge (blank out car)"	3	2	1337	4
+0x004b80e0	3	"case 3 vitamin square (magazine on table)"	6	3	1337	8
+0x004b84b8	3	"case 4 map of bridge german (with attacker-victim icons)"	5	3	1337	4
 
 // 0x004b85e4	1	""	0x00010cc0	uncompressed	bustups and effects with tilemaps	yes
 // 0x004c92a4	1	""	0x0000f320	uncompressed	courtroom defense side with blur	yes
 
-0x004d85c4	3	"psychelock chains (unknown reference).png"	16	16	1337	8
+0x004d85c4	3	"psychelock chains (unknown reference)"	16	16	1337	8
 
 0x004d9818	0	"characters.bin"	0x002ca2dc
 
