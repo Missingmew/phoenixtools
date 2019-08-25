@@ -9,23 +9,34 @@ typedef struct {
 	uint32_t size;
 }arcEntry;
 
+typedef enum {
+	LINEUSE,
+	LINEEMPTY
+} linetype;
+
 int main( int argc, char** argv ) {
 	
-	if ( argc < 2 )
+	if ( argc < 3 )
 	{
-		printf( "Not enough arguments given!\nUsage: %s [file]\nFiles will be extracted in current working directory.\n", argv[0] );
+		printf( "Not enough arguments given!\nUsage: %s [file] [list]\nFiles will be extracted in current working directory.\n", argv[0] );
 		return 1;
 	}
 	
 	uint32_t listsize;
 	unsigned int i, numFiles, resultsize, compressedsize;
-	char outputname[32] = { 0 };
+	char outputname[256] = { 0 }, mapline[256] = {0};
 	unsigned char *workbuf = NULL, *resultbuf = NULL;
+	linetype curline;
 	arcEntry *filelist = NULL;
-	FILE *f, *o;
+	FILE *f, *t, *o;
 	
 	if( !(f = fopen( argv[1], "rb" ))) {
 		printf("Couldnt open file %s\n", argv[1]);
+		return 1;
+	}
+	
+	if( !(t = fopen( argv[2], "r" ))) {
+		printf("Couldnt open file %s\n", argv[2]);
 		return 1;
 	}
 	
@@ -46,6 +57,16 @@ int main( int argc, char** argv ) {
 	
 	for( i = 0; i < numFiles; i++ ) {
 		printf("Current file %u offset: %08x - Current file size %08x\n", i, filelist[i].offset, filelist[i].size);
+		fgets(mapline, 256, t);
+		while(!(strncmp(mapline, "//", 2)) && !feof(t)) fgets(mapline, 256, t);
+		if(feof(t)) curline = LINEEMPTY;
+		else if(strlen(mapline) < 3) curline = LINEEMPTY;
+		else curline = LINEUSE;
+		
+		
+		while(strcspn(mapline, "\r\n") < strlen(mapline)) mapline[strcspn(mapline,"\r\n")] = 0;
+		
+		
 		fflush(stdout);
 		
 		if(filelist[i].size) {
@@ -69,51 +90,34 @@ int main( int argc, char** argv ) {
 		else {
 			resultsize = 0;
 		}
-		if(resultsize) {
-			/* NITRO common filetypes */
-			if( !strncmp( (char *)resultbuf, "BCA0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbca", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "BMD0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbmd", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "BTX0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbtx", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "BTA0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbta", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "RNAN", 4 )) snprintf( outputname, 32, "%08d-%08x.nanr", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "RECN", 4 )) snprintf( outputname, 32, "%08d-%08x.ncer", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "RGCN", 4 )) snprintf( outputname, 32, "%08d-%08x.ncgr", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "RLCN", 4 )) snprintf( outputname, 32, "%08d-%08x.nclr", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "RCMN", 4 )) snprintf( outputname, 32, "%08d-%08x.nmcr", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "RCSN", 4 )) snprintf( outputname, 32, "%08d-%08x.nscr", i, filelist[i].offset );
-			else if( !strncmp( (char *)resultbuf, "NARC", 4 )) snprintf( outputname, 32, "%08d-%08x.narc", i, filelist[i].offset );
-			// else if( resultbuf[0] == 0x42 && resultbuf[1] == 0x4D && resultbuf[2] == 0x44 && resultbuf[3] == 0x30 ) snprintf( outputname, 32, "%08d-%08x.nsbmd", i, filelist[i].offset );
-			// else if( resultbuf[0] == 0x42 && resultbuf[1] == 0x43 && resultbuf[2] == 0x41 && resultbuf[3] == 0x30 ) snprintf( outputname, 32, "%08d-%08x.nsbca", i, filelist[i].offset );
-			else if( resultsize == 32 ) snprintf( outputname, 32, "%08d-%08x.pal4", i, filelist[i].offset );
-			else if( resultsize == 512 ) snprintf( outputname, 32, "%08d-%08x.pal8", i, filelist[i].offset );
-			else if( resultsize % 0x20 == 0 ) snprintf( outputname, 32, "%08d-%08x-img.bin", i, filelist[i].offset );
-			else snprintf( outputname, 32, "%08d-%08x-unk.bin", i, filelist[i].offset );
+		
+		/* NITRO common filetypes */
+		if(curline == LINEUSE) {
+			snprintf(outputname, 256, "%04d-%s", i, mapline);
 		}
 		else {
-			/* NITRO common filetypes */
-			if( filelist[i].size == 0 ) snprintf( outputname, 32, "%08d-%08x.null", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "BCA0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbca", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "BMD0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbmd", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "BTX0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbtx", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "BTA0", 4 )) snprintf( outputname, 32, "%08d-%08x.nsbta", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "RNAN", 4 )) snprintf( outputname, 32, "%08d-%08x.nanr", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "RECN", 4 )) snprintf( outputname, 32, "%08d-%08x.ncer", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "RGCN", 4 )) snprintf( outputname, 32, "%08d-%08x.ncgr", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "RLCN", 4 )) snprintf( outputname, 32, "%08d-%08x.nclr", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "RCMN", 4 )) snprintf( outputname, 32, "%08d-%08x.nmcr", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "RCSN", 4 )) snprintf( outputname, 32, "%08d-%08x.nscr", i, filelist[i].offset );
-			else if( !strncmp( (char *)workbuf, "NARC", 4 )) snprintf( outputname, 32, "%08d-%08x.narc", i, filelist[i].offset );
-			// else if( workbuf[0] == 0x42 && workbuf[1] == 0x4D && workbuf[2] == 0x44 && workbuf[3] == 0x30 ) snprintf( outputname, 32, "%08d-%08x.nsbmd", i, filelist[i].offset );
-			// else if( workbuf[0] == 0x42 && workbuf[1] == 0x43 && workbuf[2] == 0x41 && workbuf[3] == 0x30 ) snprintf( outputname, 32, "%08d-%08x.nsbca", i, filelist[i].offset );
-			else if( filelist[i].size == 32 ) snprintf( outputname, 32, "%08d-%08x.pal4", i, filelist[i].offset );
-			else if( filelist[i].size == 512 ) snprintf( outputname, 32, "%08d-%08x.pal8", i, filelist[i].offset );
-			else if( filelist[i].size % 0x20 == 0 ) snprintf( outputname, 32, "%08d-%08x-img.bin", i, filelist[i].offset );
-			else snprintf( outputname, 32, "%08d-%08x-unk.bin", i, filelist[i].offset );
+			if( filelist[i].size == 0 ) snprintf( outputname, 256, "%04d-%08x.null", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BCA0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbca", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BMD0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbmd", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BTX0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbtx", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BTA0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbta", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RNAN", 4 )) snprintf( outputname, 256, "%04d-%08x.nanr", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RECN", 4 )) snprintf( outputname, 256, "%04d-%08x.ncer", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RGCN", 4 )) snprintf( outputname, 256, "%04d-%08x.ncgr", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RLCN", 4 )) snprintf( outputname, 256, "%04d-%08x.nclr", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RCMN", 4 )) snprintf( outputname, 256, "%04d-%08x.nmcr", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RCSN", 4 )) snprintf( outputname, 256, "%04d-%08x.nscr", i, filelist[i].offset );
+			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "NARC", 4 )) snprintf( outputname, 256, "%04d-%08x.narc", i, filelist[i].offset );
+			else if( (resultsize ? resultsize : filelist[i].size) == 32 ) snprintf( outputname, 32, "%04d-%08x.pal4", i, filelist[i].offset );
+			else if( (resultsize ? resultsize : filelist[i].size) == 512 ) snprintf( outputname, 32, "%04d-%08x.pal8", i, filelist[i].offset );
+			else if( (resultsize ? resultsize : filelist[i].size) % 0x20 == 0 ) snprintf( outputname, 32, "%04d-%08x-img.bin", i, filelist[i].offset );
+			else snprintf( outputname, 32, "%04d-%08x-unk.bin", i, filelist[i].offset );
 		}
 		
 		if( !(o = fopen( outputname, "wb" ))) {
 				printf("Couldnt open file %s\n", outputname);
-				return 1;
+				//~ return 1;
+			continue;
 		}
 		
 		if(!resultsize) fwrite( workbuf, filelist[i].size, 1, o );
@@ -126,6 +130,7 @@ int main( int argc, char** argv ) {
 	}
 	free(filelist);
 	printf("Done.\n");
+	fclose(t);
 	fclose(f);
 	return 0;
 	

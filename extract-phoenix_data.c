@@ -37,6 +37,7 @@ typedef struct {
 	unsigned int filesize;
 	char *palpath;
 	char *gfxpath;
+	char *extraargs;
 	unsigned int width;
 	unsigned int height;
 	unsigned int bpp;
@@ -93,6 +94,8 @@ void dumpRaw(FILE *f, FILE *batch, outputinfo *info) {
 	fwrite(tempbuf, info->filesize, 1, o);
 	free(tempbuf);
 	fclose(o);
+	
+	if(strlen(info->extraargs)) fprintf(batch, "gbagfx %s %s.png %s\n", info->gfxpath, info->gfxpath, info->extraargs);
 }
 
 void dumpCompressed(FILE *f, FILE *batch, outputinfo *info) {
@@ -257,7 +260,8 @@ void dumpPatch(FILE *f, FILE *batch, outputinfo *info) {
 	fwrite(resultbuf, ressize, 1, o);
 	fclose(o);
 	
-	fprintf(batch, "gbagfx %s %s.png -width %d # palette from 0x%08x\n", info->gfxpath, info->gfxpath, info->width, info->sourceoffset);
+	if(strlen(info->extraargs)) fprintf(batch, "gbagfx %s %s.png -width %d %s\n", info->gfxpath, info->gfxpath, info->width, info->extraargs);
+	else fprintf(batch, "gbagfx %s %s.png -width %d # palette from 0x%08x\n", info->gfxpath, info->gfxpath, info->width, info->sourceoffset);
 	
 	free(workbuf);
 	free(resultbuf);
@@ -346,7 +350,8 @@ void dumpUncompressed(FILE *f, FILE *batch, outputinfo *info) {
 	workbuf = malloc(header.imageSize);
 	fread(workbuf, header.imageSize, 1, f);
 	
-	rgbapixeldata = linearImageWithPaletteToRGBA(workbuf, palettedata, pixelsX, pixelsY, bpp, 1);
+	if(strlen(info->extraargs)) rgbapixeldata = linearImageWithPaletteToRGBA(workbuf, palettedata, pixelsX, pixelsY, bpp, 1);
+	else rgbapixeldata = linearImageWithPaletteToRGBA(workbuf, palettedata, pixelsX, pixelsY, bpp, 0);
 	lodepng_encode32_file(info->gfxpath, rgbapixeldata, pixelsX, pixelsY);
 	free(workbuf);
 	free(rgbapixeldata);
@@ -366,7 +371,7 @@ int main(int argc, char** argv) {
 	FILE *data = NULL, *map = NULL, *batch = NULL;
 	char mapline[2048] = {0};
 	/* arguments used by all types */
-	char outputpath[2048] = {0}, palettepath[2048] = {0}, graphicspath[2048] = {0};
+	char outputpath[2048] = {0}, palettepath[2048] = {0}, graphicspath[2048] = {0}, extraargs[2048] = {0};
 	unsigned int i = 0, params = 0, datasize = 0, fileoffset = 0, filetype = 0;
 	
 	/* arguments used by specific types */
@@ -419,7 +424,7 @@ int main(int argc, char** argv) {
 		printf("line %03d - Offset %08x - Type %s(%d) - %s\n", i, fileoffset, typestring[filetype], filetype, outputpath);
 		switch(filetype) {
 			case 0: { /* rawdump */
-				params = sscanf(mapline, "%x %d \"%[^\"]\" %x", &fileoffset, &filetype, graphicspath, &filesize);
+				params = sscanf(mapline, "%x %d \"%[^\"]\" %x \"%[^\"]\"", &fileoffset, &filetype, graphicspath, &filesize, extraargs);
 				if(params < 4) {
 					printf("Not enough params for rawdump at line %d, wanted 4, got %d\n", i, params);
 					continue;
@@ -428,6 +433,7 @@ int main(int argc, char** argv) {
 					printf("invalid output path at line %d (%u)\n", i, (unsigned int)strlen(graphicspath));
 					continue;
 				}
+				//~ printf("extraargs are \"%s\"\n", extraargs);
 				break;
 			}
 			case 1: { /* compressed graphics */
@@ -464,7 +470,7 @@ int main(int argc, char** argv) {
 				break;
 			}
 			case 3: { /* patch graphics */
-				params = sscanf(mapline, "%x %d \"%[^\"]\" %d %d %x %d", &fileoffset, &filetype, graphicspath, &tilesx, &tilesy, &sourceoffset, &sourcetype);
+				params = sscanf(mapline, "%x %d \"%[^\"]\" %d %d %x %d \"%[^\"]\"", &fileoffset, &filetype, graphicspath, &tilesx, &tilesy, &sourceoffset, &sourcetype, extraargs);
 				if(params < 7) {
 					printf("Not enough params for pgfx at line %d, wanted 7, got %d\n", i, params);
 					continue;
@@ -476,7 +482,8 @@ int main(int argc, char** argv) {
 				break;
 			}
 			case 4: { /*uncompressed header graphics */
-				/* dont need to sscanf again, since we dont need additional data if everything is okay */
+				params = sscanf(mapline, "%x %d \"%[^\"]\" \"%[^\"]\"", &fileoffset, &filetype, graphicspath, extraargs);
+				// no need to check for anything as that has been done previously, and extraargs are entirely optional
 				break;
 			}
 			default: {
@@ -489,6 +496,7 @@ int main(int argc, char** argv) {
 		outinfo.filesize = filesize;
 		outinfo.palpath = palettepath;
 		outinfo.gfxpath = graphicspath;
+		outinfo.extraargs = extraargs;
 		outinfo.width = tilesx;
 		outinfo.height = tilesy;
 		outinfo.bpp = bpp;
@@ -496,6 +504,8 @@ int main(int argc, char** argv) {
 		outinfo.sourceoffset = sourceoffset;
 		
 		dumpfuncs[filetype](data, batch, &outinfo);
+		
+		extraargs[0] = 0;
 	}
 	fclose(data);
 	fclose(map);
