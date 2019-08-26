@@ -106,17 +106,18 @@
 0x01ad93f4	0	"common/graphics/not-guilty2.4bpp"			0x00004000	"-width 4 -palette common/graphics/not-guilty.gbapal"
 0x01add3f4	0	"common/graphics/not-guilty3.4bpp"			0x00001000	"-width 8 -palette common/graphics/not-guilty.gbapal"
 0x01ade3f4	0	"common/graphics/unknown-palettes2.bin"			0x00000040
-0x01ade434	0	"common/graphics/killer-victim-icons-m3.4bpp"		0x00000320	"-width 2"
+0x01ade434	0	"common/graphics/killer-victim-icons-m3.gbapal"		0x00000020
+0x01ade454	0	"common/graphics/killer-victim-icons-m3.4bpp"		0x00000300	"-palette common/graphics/killer-victim-icons-m3.gbapal -width 2"
 0x01ade754	0	"common/graphics/unknown-thing1.4bpp"			0x00000400	"-width 4"
 0x01adeb54	0	"common/graphics/unknown-thing2.4bpp"			0x00000040	"-width 1"
 0x01adeb94	0	"common/graphics/global-studios-map-objects1-m3.4bpp"	0x00004800	"-width 8"
 0x01ae3394	0	"common/graphics/global-studios-map-objects2.4bpp"	0x00000080	"-width 1"
 0x01ae3414	0	"common/graphics/global-studios-map-objects3.4bpp"	0x00000300	"-width 4"
-0x01ae3714	0	"common/graphics/generic-green-circle.4bpp"		0x00000080	"-width 2"
+0x01ae3714	0	"common/graphics/generic-green-circle.4bpp"		0x00000080	"-palette common/graphics/killer-victim-icons-m3.gbapal -width 2"
 0x01ae3794	0	"common/graphics/tiny-arrow-right.4bpp"			0x00000040	"-width 2"
 0x01ae37d4	0	"common/graphics/house-van-icons.4bpp"			0x00000300	"-width 4"
 0x01ae3ad4	0	"common/graphics/tiny-arrow-up.4bpp"			0x00000040	"-width 1"
-0x01ae3b14	0	"common/graphics/witness-icons-m3.4bpp"			0x00000180	"-width 2"
+0x01ae3b14	0	"common/graphics/witness-icons-m3.4bpp"			0x00000180	"-palette common/graphics/killer-victim-icons-m3.gbapal -width 2"
 0x01ae3c94	0	"common/graphics/case-5-map-icons.4bpp"			0x00002480	"-width 4"
 0x01ae6114	0	"common/graphics/selection-cursor.4bpp"			0x00000200	"-width 4"
 0x01ae6314	1	"common/graphics/interface/touchscreen/vase-puzzle-circle.gbapal"	"common/graphics/interface/touchscreen/vase-puzzle-circle.4bpp"	 		32	24	4
@@ -178,8 +179,8 @@
 0x01c0cbcc	2	"es/graphics/evidence-details/case2/maya-phone-log-2.gbapal"	"es/graphics/evidence-details/case2/maya-phone-log-2"	 32	4
 0x01c0db60	2	"common/graphics/capcom-logo.gbapal"	"common/graphics/capcom-logo"	 32	4
 0x01c0fba0	2	"de/graphics/evidence-details/case2/maya-phone-log-3.gbapal"	"de/graphics/evidence-details/case2/maya-phone-log-3"	 32	4
-0x01c10c0c	2	"de/graphics/evidence-details/case2/maya-phone-log-3.gbapal"	"de/graphics/evidence-details/case2/maya-phone-log-3"	 32	4
-0x01c11c74	2	"de/graphics/evidence-details/case2/maya-phone-log-3.gbapal"	"de/graphics/evidence-details/case2/maya-phone-log-3"	 32	4
+0x01c10c0c	2	"it/graphics/evidence-details/case2/maya-phone-log-3.gbapal"	"de/graphics/evidence-details/case2/maya-phone-log-3"	 32	4
+0x01c11c74	2	"es/graphics/evidence-details/case2/maya-phone-log-3.gbapal"	"de/graphics/evidence-details/case2/maya-phone-log-3"	 32	4
 
 0x01c12c44	2	"common/graphics/backgrounds/bg049-steel-samurai-broken-leg.gbapal"	"common/graphics/backgrounds/bg049-steel-samurai-broken-leg"	 32	4
 0x01c16190	2	"common/graphics/backgrounds/bg050-finding-dead-hammer.gbapal"	"common/graphics/backgrounds/bg050-finding-dead-hammer"	 32	4

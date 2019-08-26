@@ -5,7 +5,7 @@
 
 int main( int argc, char** argv ) {
 	
-	unsigned int size, extract, offset, start = 0, end = 0, resultsize, compressedsize;
+	unsigned int size, extract, offset, start = 0, end = 0, resultsize = 0, compressedsize = 0;
 	
 	if ( argc < 3 )
 	{
@@ -44,9 +44,9 @@ int main( int argc, char** argv ) {
 		//~ fprintf(stderr, "offset %x\n", offset);
 		//~ fflush(stderr);
 		if((data[offset] >> 4) == 1) {
-			compressedsize = (data[offset+3] << 16) | (data[offset+2] << 8) | data[offset+1];
-			if(compressedsize < 0x10000) {
-				compressedsize *= 2;
+			resultsize = (data[offset+3] << 16) | (data[offset+2] << 8) | data[offset+1];
+			if(resultsize < 0x10000) {
+				compressedsize = resultsize * 2;
 				resultbuffer = unpackBuffer(data+offset, &compressedsize, &resultsize);
 				if(resultbuffer) {
 					//~ printf("0x%08X hit compressed 0x%04X uncompressed 0x%04X\n", offset, compressedsize, resultsize);
