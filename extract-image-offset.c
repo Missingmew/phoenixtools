@@ -22,7 +22,7 @@ int main( int argc, char** argv ) {
 	}
 	
 	uint32_t i, numFiles, listOffset, givenOffset, patchOffset, evidenceSize = 2080;
-	unsigned int bpp, resultsize, compressedsize, type, tilesx, tilesy, sourcetype, tempsize = 0, transparency, totalsize;
+	unsigned int bpp, resultsize = 0, compressedsize = 0, type, tilesx, tilesy, sourcetype, tempsize = 0, transparency, totalsize;
 	givenOffset = strtoul(argv[2], NULL, 16);
 	type = strtoul(argv[3], NULL, 10);
 	tilesx = strtoul(argv[4], NULL, 10);

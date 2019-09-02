@@ -41,32 +41,21 @@ int main( int argc, char** argv ) {
 	
 	
 	while(offset < end) {
-		//~ fprintf(stderr, "offset %x\n", offset);
-		//~ fflush(stderr);
 		if((data[offset] >> 4) == 1) {
 			resultsize = (data[offset+3] << 16) | (data[offset+2] << 8) | data[offset+1];
 			if(resultsize < 0x10000) {
 				compressedsize = resultsize * 2;
-				resultbuffer = unpackBuffer(data+offset, &compressedsize, &resultsize);
+				resultbuffer = unpackBuffer(data+offset, &resultsize, &compressedsize);
 				if(resultbuffer) {
-					//~ printf("0x%08X hit compressed 0x%04X uncompressed 0x%04X\n", offset, compressedsize, resultsize);
 					printf("%08X: 0x%08X hit compressed 0x%04X uncompressed 0x%04X\n", start, offset, compressedsize, resultsize);
 					if(extract) {
-						snprintf(outputname, 512, "%08X-compressed.bin", offset);
+						snprintf(outputname, 512, "%08X-compressed.bin.lz", offset);
 						if( !(o = fopen( outputname, "wb" ))) {
 							printf("Couldnt open file %s\n", outputname);
 							return 1;
 						}
 						fwrite(data+offset, compressedsize, 1, o);
 						fclose(o);
-						
-						//~ snprintf(outputname, 512, "%08X-decompressed.bin", offset);
-						//~ if( !(o = fopen( outputname, "wb" ))) {
-							//~ printf("Couldnt open file %s\n", outputname);
-							//~ return 1;
-						//~ }
-						//~ fwrite(resultbuffer, resultsize, 1, o);
-						//~ fclose(o);
 					}
 					offset += compressedsize;
 					free(resultbuffer);

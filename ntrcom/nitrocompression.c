@@ -102,8 +102,6 @@ unsigned char *unpackBuffer(unsigned char *source, unsigned int *resultsize, uns
 	unsigned int type, mode, destinationsize;
 	type = source[0] >> 4;
 	mode = source[0] & 0xF;
-	destinationsize = source[1] | source[2] << 8 | source[3] << 16;
-	*resultsize = destinationsize;
 	switch(type) {
 		case 1: {
 			return LZDecompress(comsource, (int *)compressedsize, (int *)resultsize);
