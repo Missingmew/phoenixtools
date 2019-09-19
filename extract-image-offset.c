@@ -17,12 +17,13 @@ int main( int argc, char** argv ) {
 	
 	if ( argc < 7 )
 	{
-		printf( "Not enough arguments given!\nUsage: %s [file] [offset in hex] [type] [tilesx] [tilesy]\n[patch/palette offset/evidence end in hex/bpp for single image/transparency for striped images]\n[source type/transparency]\nFiles will be extracted in current working directory.\nTypes are:\n0 - plain image\n1 - stripped image\n2 - patch\n3 - evidence\n4 - compressed evidence\nSource types are:\n0 - stripped image\n4/8 - simple image/palette with source type bpp\npatch offset and source type are only needed when extracting a patch/raw image\nbpp and transparency required for single image\nadd 10 to source type for raw images to enable transparency\n", argv[0] );
+		printf( "Not enough arguments given!\nUsage: %s [file] [offset in hex] [type] [tilesx] [tilesy]\n[patch/palette offset/evidence end in hex/bpp for single image/transparency for striped images]\n[source type/transparency]\nFiles will be extracted in current working directory.\nTypes are:\n0 - plain image\n1 - stripped image\n2 - patch\n3 - evidence\n4 - compressed evidence\n5 - Raw image with palette\n6 - AGB striped\nSource types are:\n0 - stripped image\n4/8 - simple image/palette with source type bpp\npatch offset and source type are only needed when extracting a patch/raw image\nbpp and transparency required for single image\nadd 10 to source type for raw images to enable transparency\n", argv[0] );
 		return 1;
 	}
 	
-	uint32_t i, numFiles, listOffset, givenOffset, patchOffset, evidenceSize = 2080;
-	unsigned int bpp, resultsize = 0, compressedsize = 0, type, tilesx, tilesy, sourcetype, tempsize = 0, transparency, totalsize;
+	uint32_t i, numFiles, listOffset, givenOffset, patchOffset, evidenceSize = 2080, agbpaloffset;
+	uint32_t *agboffsets;
+	unsigned int bpp, resultsize = 0, compressedsize = 0, type, tilesx, tilesy, sourcetype, tempsize = 0, transparency = 0, totalsize;
 	givenOffset = strtoul(argv[2], NULL, 16);
 	type = strtoul(argv[3], NULL, 10);
 	tilesx = strtoul(argv[4], NULL, 10);
@@ -74,7 +75,7 @@ int main( int argc, char** argv ) {
 		}
 	}
 	char outputname[32] = { 0 };
-	unsigned char *workbuffer = NULL, *resultbuffer = NULL, *fullbuffer = NULL, *fulltarget = NULL, *rgbaPixelData = NULL, *paletteData = NULL;
+	unsigned char *workbuffer = NULL, *resultbuffer = NULL, *fullbuffer = NULL, *fulltarget = NULL, *rgbaPixelData = NULL, *paletteData = NULL, minibuf[4];
 	pacEntry workentry;
 	FILE *f;
 	
@@ -82,7 +83,7 @@ int main( int argc, char** argv ) {
 		printf("Couldnt open file %s\n", argv[1]);
 		return 1;
 	}
-	
+	printf("givenOffset %08x\n", givenOffset);
 	fseek( f, givenOffset, SEEK_SET );
 	
 	switch( type ) {
@@ -275,6 +276,75 @@ int main( int argc, char** argv ) {
 			free(rgbaPixelData);
 			free(workbuffer);
 			free(paletteData);
+			break;
+		}
+		case 6: { /* AGB style striped image */
+			fseek(f, givenOffset, SEEK_SET);
+			fread(&agbpaloffset, 4, 1, f);
+			numFiles = agbpaloffset/4;
+			agboffsets = malloc(agbpaloffset-4);
+			fread(agboffsets, agbpaloffset-4, 1, f);
+			fseek(f, givenOffset+agbpaloffset+0x200, SEEK_SET); // seek to first data after possible 8bpp palette
+			fread(minibuf, 4, 1, f);
+			fseek(f, givenOffset+agbpaloffset, SEEK_SET);
+			if(minibuf[0] == 0x10 && minibuf[1] == 0) { // bad assumptions about compressed files, but none appear to exceed 65k decompressed so yay?
+				// image is 8bpp
+				tempsize = 0x200;
+				bpp = image8bpp;
+				printf("detected 8bpp\n");
+			}
+			else {
+				// image is 4bpp
+				tempsize = 0x20;
+				bpp = image4bpp;
+				printf("detected 4bpp\n");
+			}
+			paletteData = malloc(tempsize);
+			fread(paletteData, tempsize, 1, f);
+			// now at first stripe
+			compressedsize = tempsize = agboffsets[0]-agbpaloffset-tempsize;
+			workbuffer = malloc(tempsize);
+			fread(workbuffer, tempsize, 1, f);
+			resultbuffer = unpackBuffer(workbuffer, &resultsize, &compressedsize);
+			if( !resultbuffer ) BREAK("error occured first stripe\n");
+			if(bpp == image8bpp) {
+				if((tilesx*8*tilesy*8) != resultsize) BREAK("size/bpp dont match with uncompressed size\n");
+			}
+			else if(bpp == image4bpp) {
+				if(((tilesx*8*tilesy*8)/2) != resultsize) BREAK("size/bpp dont match with uncompressed size\n");
+			}
+			fullbuffer = malloc(tilesx*8*(numFiles*tilesy)*8); // since list excludes stripe and includes palette, but number of entries matches up
+			fulltarget = fullbuffer;
+			memcpy(fulltarget, resultbuffer, resultsize);
+			fulltarget += resultsize;
+			free(workbuffer);
+			free(resultbuffer);
+			for(i = 0; i < numFiles-1; i++) {
+				if(i == (numFiles-2)) tempsize = 0xFFFF; // just grab 64k of data for last stripe
+				else tempsize = agboffsets[i+1] - agboffsets[i];
+				
+				compressedsize = tempsize;
+				workbuffer = malloc(tempsize);
+				fread(workbuffer, tempsize, 1, f);
+				resultbuffer = unpackBuffer(workbuffer, &resultsize, &compressedsize);
+				if( !resultbuffer ) BREAK("error occured\n");
+				memcpy(fulltarget, resultbuffer, resultsize);
+				fulltarget += resultsize;
+				if(i == (numFiles-2)) tempsize = compressedsize; // remember compressed size of last stripe seperately
+				free(workbuffer);
+				free(resultbuffer);
+			}
+			rgbaPixelData = tiledImageWithPaletteToRGBA(fullbuffer, paletteData, tilesx, numFiles*tilesy, bpp, transparency);
+			snprintf( outputname, 32, "%08d-striped-%08x.png", givenOffset, givenOffset );
+			lodepng_encode32_file( outputname, rgbaPixelData, tilesx*8, numFiles*tilesy*8 );
+			free( fullbuffer );
+			free( rgbaPixelData );
+			free( paletteData );
+			printf("total size of striped image %08x\n", agboffsets[numFiles-2]+tempsize);
+			
+			free(agboffsets);
+			
+			break;
 		}
 		default: {
 			BREAK("unknown type\n");
