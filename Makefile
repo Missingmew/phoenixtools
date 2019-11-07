@@ -45,7 +45,7 @@ extract-%.elf: $(NITROCOMPRESSION) extract-%.c
 	$(CC) -Wall -g -o $@ $^
 	
 convert-%.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) convert-%.c
-	$(CC) -Wall -ggdb -o $@ $^
+	$(CC) -Wall -g -o $@ $^
 	
 extract-pc-file.elf: extract-pc-file.c
 	$(CC) -Wall -g -o $@ $^ -lz

@@ -4,7 +4,7 @@
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int filesize, resultsize, compressedsize;
+	unsigned int filesize, resultsize = 0, compressedsize = 0;
 	char fileName[512];
 	unsigned char *workbuffer, *resultbuffer;
 	if( argc < 2 ) {
@@ -24,6 +24,7 @@ int main( int argc, char **argv ) {
 	sprintf( fileName, "%s.unpak", argv[1] );
 	workbuffer = malloc( filesize );
 	fread( workbuffer, filesize, 1, f );
+	compressedsize = filesize;
 	resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 	if( !resultbuffer ) {
 		printf("couldnt unpak file\n");

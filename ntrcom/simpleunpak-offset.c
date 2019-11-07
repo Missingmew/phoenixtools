@@ -5,7 +5,7 @@
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int offset, filesize, resultsize, compressedsize;
+	unsigned int offset, filesize, resultsize = 0, compressedsize = 0;
 	uint32_t tempsize = 0;
 	char fileName[512];
 	unsigned char *workbuffer, *resultbuffer;
@@ -26,10 +26,11 @@ int main( int argc, char **argv ) {
 	fread( &tempsize, 3, 1, f );
 	if((offset + tempsize) > filesize) tempsize = filesize - offset;
 	fseek( f, offset, SEEK_SET );
-				
+	
 	sprintf( fileName, "%s-%08d-%08x.unpak", argv[1], offset, offset );
 	workbuffer = malloc( tempsize );
 	fread( workbuffer, tempsize, 1, f );
+	compressedsize = tempsize;
 	resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 	if( !resultbuffer ) {
 		printf("couldnt unpak file\n");
