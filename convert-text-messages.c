@@ -165,23 +165,101 @@ operator opcodeList[144] = {
 
 // charlist assumes that token is not an opcode and was reduced by 128
 
-char *charset[256] = {
-	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F",
-	"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-	"W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
-	"m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "?",
-	"É", "À", "È", "Ù", "Â", "Ê", "Î", "Ô", "Û", "Ë", "Ï", "Ü", "Ç", "Œ", "é", "à",
-	"è", "ù", "â", "ê", "î", "ô", "û", "ë", "ï", "ü", "ç", "œ", "°", "€", ";", "á",
-	"ä", "å", "æ", "﹚", "ö", "ø", "ß", "ÿ", "Ä", "Å", "Æ", "﹙", "Ö", "Ø", "ì", "ò",
-	"Ì", "Ò", "í", "ñ", "ó", "ú", "Á", "Í", "Ñ", "Ó", "Ú", "¿", "¡",  0 ,  0 ,  0 ,
-	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
-	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
-	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
-	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
-	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,
-	"-", "\"", "[", "]", "$", "#", ">", "<", "=", "˽", " ",  0 ,  0 ,  0 ,  0 ,  0 , // space here because the scripts contain enough refs to it, char before space is [box]
-	 0 , ".", "☞", "｢", "｣", "(", ")", "『", "』", "‟", "”", "▼", "▲", ":", "`", ",",
-	"+", "/", "*", "'", "-", "･", "｡", "%%", "¨", "~", "«", "»", "&", "☆", "♪", " "
+/* shared charset across all localizations */
+char *charset_shared[256] = {
+	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", // 080
+	"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", // 090
+	"W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", // 0A0
+	"m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", "?", // 0B0
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0C0
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0D0
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0E0
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0F0
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 100
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 110
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 120
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 130
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 140
+	 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 150
+	 0 , ".", "☞", "｢", "｣", "(", ")", "『", "』", "‟", "”", "▼", "▲", ":", "`", ",", // 160
+	"+", "/", "*", "'", "-", "･", "｡", "%%", "‥", "~", "«", "»", "&", "☆", "♪", " ", // 170
+};
+
+/* characters specific to localization, but still within the limits of the basic charset
+   for the japanese releases these characters are shared across all games
+   this uses the isjp flag to select the correct charset */
+char *charset_default[2][256] = {
+	{ /* for US/EU releases */
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 080
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 090
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0A0
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0B0
+		"É", "À", "È", "Ù", "Â", "Ê", "Î", "Ô", "Û", "Ë", "Ï", "Ü", "Ç", "Œ", "é", "à", // 0C0
+		"è", "ù", "â", "ê", "î", "ô", "û", "ë", "ï", "ü", "ç", "œ", "°", "€", ";", "á", // 0D0
+		"ä", "å", "æ", "﹚", "ö", "ø", "ß", "ÿ", "Ä", "Å", "Æ", "﹙", "Ö", "Ø", "ì", "ò", // 0E0
+		"Ì", "Ò", "í", "ñ", "ó", "ú", "Á", "Í", "Ñ", "Ó", "Ú", "¿", "¡",  0 ,  0 ,  0 , // 0F0
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 100
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 110
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 120
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 130
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 140
+		"-", "\"", "[", "]", "$", "#", ">", "<", "=", "˽", " ",  0 ,  0 ,  0 ,  0 ,  0 , // 150 space here because the scripts contain enough refs to it, char before space is [box]
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 160
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 170
+	},
+	{ /* for JP releases, shared chars only */
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 080
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 090
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0A0
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 0B0
+		"あ", "い", "う", "え", "お", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た",  // 0C0
+		"ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", // 0D0
+		"む", "め", "も", "や", "ゆ", "よ", "ら", "り", "る", "れ", "ろ", "わ", "を", "ん", "が", "ぎ", // 0E0
+		"ぐ", "げ", "ご", "ざ", "じ", "ず", "ぜ", "ぞ", "だ", "ぢ", "づ", "で", "ど", "ば", "び", "ぶ", // 0F0
+		"べ", "ぼ", "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", "ぁ", "ぃ", "ぅ", "ぇ", "ぉ", "ゃ", "ゅ", "ょ", "っ", // 100
+		"ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ", "サ", "シ", "ス", "セ", "ソ", "タ", // 110
+		"チ", "ツ", "テ", "ト", "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ", "マ", "ミ", // 120
+		"ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ", "ル", "レ", "ロ", "ワ", "ヲ", "ン", "ガ", "ギ", // 130
+		"グ", "ゲ", "ゴ", "ザ", "ジ", "ズ", "ゼ", "ゾ", "ダ", "ヂ", "ヅ", "デ", "ド", "バ", "ビ", "ブ", // 140
+		"ベ", "ボ", "パ", "ピ", "プ", "ペ", "ポ", "ァ", "ィ", "ゥ", "ェ", "ォ", "ャ", "ュ", "ョ", "ッ", // 150
+		"ヴ",  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 160
+		 0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 ,  0 , // 170
+	}
+};
+
+char *charset_japanese_extended[4][512] = { /* for JP releases, version specific characters only */
+	// not sure about 0x180 aka 'ー'
+	/* GS1 mapped out by phoenixbound */
+	{ /* GS1 */
+		"ー", "記", "録", "中", "断", "選", "消", "去", "初", "期", "状", "態", "戻", "追", "加", "逆", // 180
+		"転", "日", "目", "法", "廷", "姉", "妹", "探", "偵", "最", "終", "手", "今", "血", "気", "千", // 190
+		"尋", "所", "長", "無", "事", "発", "言", "証", "拠", "品", "特", "異", "議", "認", "弁", "護", // 1A0
+		"人", "慎", "重", "失", "敗", "残", "念", "私", "見", "得", "与", "違", "示", "関", "係", "全", // 1B0
+		"然", "考", "裁", "判", "心", "悪", "思", "明", "顔", "説", "力", "欠", "感", "却", "下", "誰", // 1C0
+		"月", "午", "前", "時", "分", "地", "方", "被", "告", "第", "控", "室", "間", "小", "学", "校", // 1D0
+		"級", "以", "来", "部", "舞", "台", "殺", "件", "度", "胸", "依", "頼", "借", "実", "士", "意", // 1E0
+		"味", "耳", "助", "何", "叫", "死", "成", "歩", "堂", "矢", "張", "有", "罪", "刑", "女", "生", // 1F0
+		"教", "害", "犯", "新", "聞", "書", "名", "龍", "一", "ヶ", "回", "若", "性", "逮", "捕", "不", // 200
+		"運", "彼", "男", "政", "志", "大", "親", "友", "年", "巻", "込", "知", "開", "検", "察", "側", // 210
+		"準", "備", "完", "了", "困", "進", "本", "当", "質", "問", "答", "綾", "里", "帰", "宅", "急", // 220
+		"便", "届", "常", "識", "落", "着", "次", "者", "調", "読", "忘", "好", "高", "美", "佳", "通", // 230
+		"用", "自", "信", "命", "困", "毒", "飲", "鈍", "器", "殴", "首", "絞", "冷", "独", "審", "理", // 240
+		"始", "亜", "内", "具", "体", "的", "凶", "置", "物", "受", "提", "出", "武", "呼", "話", "情",  // 250
+		"報", "逃", "反", "撃", "祈", "配", "近", "世", "紀", "向", "電", "会", "況", "際", "遊", "海", // 260
+		"外", "旅", "行", "亡", "国", "付", "収", "入", "金", "援", "口", "走", "他", "天", "動", "機", // 270
+		"移", "屋", "正", "直", "合", "図", "送", "静", "粛", "留", "守", "結", "局", "我", "々", "立", // 280
+		"覚", "予", "決", "定", "早", "現", "場", "勧", "誘", "山", "野", "星", "雄", "員", "半", "腰", // 290
+		"抜", "怖", "警", "公", "衆", "昼", "停", "使", "種", "子", "番", "暴", "食", "含", "妙", "怒", // 2A0
+	},
+	{ /* GS2 */
+		
+	},
+	{ /* GS3 */
+		
+	},
+	{ /* GS4? */
+		
+	}
 };
 
 /*	names for the "person" command
@@ -1434,28 +1512,58 @@ int getMemidxIndex( unsigned int memidx, uint32_t *list, unsigned int count ) {
 	return -1;
 }
 
+char *supportedgames[] = {
+	"PWAA", "JFA", "TT", "AJAA"
+};
+
+unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int isjp, unsigned int isunity) {
+	if(*token < 128 || (gamenum == 3 && *token < 128+16)) return 0; // opcode for script
+	printf("original token is %08x ", *token);
+	*token -= 128;
+	if(gamenum == 3) *token -= 16; // apollo has 16 extra opcodes
+	if(isunity) *token -= 32; // unity uses ASCII with offset?
+	printf("modified token is %08x\n", *token);
+	return 1;
+}
+
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int fileSize, i, j, gamenum, memidx, textidx, scriptsize, missingargs, isunity = 0;
+	unsigned int fileSize, i, j, gamenum, memidx, textidx, scriptsize, missingargs, isunity = 0, isjp = 0;
 	uint32_t numScripts, *scriptOffsets = NULL;
 	//~ uint16_t token, *arguments = NULL, *scriptfile = NULL;
 	uint16_t token, arguments[10] = {0}, *scriptfile = NULL;
 	operator curop;
 	char textfile[0x100000] = {0}; /* 1M should be enough */
 	if( argc < 3 ) {
-	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\nadd 10 to enable unity mode\n", argv[0]);
+	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n\nadd 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\n", argv[0]);
 		return 1;
 	}
 	
 	gamenum = strtoul(argv[2], NULL, 10) - 1;
-	if(gamenum > 9) {
+	if(gamenum > 19) {
 		isunity = 1;
+		gamenum -= 20;
+	}
+	else if(gamenum > 9) {
+		isjp = 1;
 		gamenum -= 10;
 	}
 	if( gamenum > 3 ) {
 		printf("unsupported gamenum %d\n", gamenum+1);
 		return 1;
 	}
+	
+	/* ensure sane combo of gamenum, isunity and isjp */
+	if(gamenum == 3 && isunity) {
+		printf("apollo does not have a unity version\n");
+		return 1;
+	}
+	if(isjp && isunity) {
+		printf("there is no explicit japanese support for unity right now\n");
+		return 1;
+	}
+	
+	printf("selected config: %s %s %s\n", supportedgames[gamenum], isjp ? "jp" : "", isunity ? "unity" : "");
 	
 	if( !(f = fopen( argv[1], "rb" ))) {
 		printf("Couldnt open file %s\n", argv[1]);
@@ -1482,6 +1590,9 @@ int main( int argc, char **argv ) {
 	fread(scriptfile, scriptsize, 1, f);
 	memidx = 0;
 	
+	//~ textfile[0] = 0xEF;
+	//~ textfile[1] = 0xBB;
+	//~ textfile[2] = 0xBF;
 	strcpy(textfile, "<section 0>\n\t");
 	textidx = 13;
 	while( memidx < scriptsize/2 - 2 ) {
@@ -1494,46 +1605,44 @@ int main( int argc, char **argv ) {
 			sprintf( textfile+textidx, "\n</section>\n<section %03u>\n\t", getMemidxIndex( memidx, scriptOffsets, numScripts));
 			textidx += 27;
 		}
+		// printf("memidx %08x (off %08x)\n", memidx, memidx*2+numScripts*4);
 		token = scriptfile[memidx];
 		memidx++;
-		if( gamenum < 3 && token > 127 ) {
+		if(prepareToken(&token, gamenum, isjp, isunity)) {
 			if(isunity) {
-				token -= (128-32);
 				sprintf( textfile+textidx, "%c", (char)token);
 				textidx += 1;
 			}
 			else {
-				token -= 128;
-				if( (token < sizeofarr(charset)) && (charset[token] != 0) ) {
-					sprintf( textfile+textidx, "%s", charset[token]);
-					textidx += strlen(charset[token]);
+				if(token < sizeofarr(charset_shared)) { /* token is within default charsets */
+					//~ printf("getting character %s from %d %04x to textidx %d\n", charset_shared[token]?charset_shared[token]:charset_default[isjp][token], gamenum, token, textidx);
+					if(charset_shared[token] != 0) { /* char is in shared charset */
+						sprintf( textfile+textidx, "%s", charset_shared[token]);
+						textidx += strlen(charset_shared[token]);
+					}
+					else if(charset_default[isjp][token] != 0) { /* char is in default charset for selected localization */
+						sprintf( textfile+textidx, "%s", charset_default[isjp][token]);
+						textidx += strlen(charset_default[isjp][token]);
+					}
 				}
-				else {
+				else if(isjp && (token-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
+					token -= 256;
+					//~ printf("getting character %s from %d %04x to textidx %d\n", charset_japanese_extended[gamenum][token], gamenum, token, textidx);
+					if(charset_japanese_extended[gamenum][token] != 0) {
+						sprintf( textfile+textidx, "%s", charset_japanese_extended[gamenum][token]);
+						textidx += strlen(charset_japanese_extended[gamenum][token]);
+					}
+					else { /* char is not in any charset */
+						sprintf( textfile+textidx, "{%05u}", token+128+256 );
+						textidx += 7;
+					}
+				}
+				else { /* char is not in any charset */
 					sprintf( textfile+textidx, "{%05u}", token+128 );
 					textidx += 7;
 				}
 			}
-			//~ if( token > 1 && token < 256 && !(charset[token] == 0) ) {
-				//~ sprintf( textfile+textidx, "{%05u}", token+128 );
-				//~ textidx += 7;
-			//~ }
 		}
-		else if( gamenum == 3 && token > (127+16) ) {
-			token -= (128+16);
-			//~ if( token > 1 && token < 256 && !(strcmp(charset[token], "0")) ) {
-				//~ sprintf( textfile+textidx, "{%05u}", token+128+16 );
-				//~ textidx += 7;
-			//~ }
-			if( (token < sizeofarr(charset)) && (charset[token] != 0)) {
-				sprintf( textfile+textidx, "%s", charset[token]);
-				textidx += strlen(charset[token]);
-			}
-			else {
-				sprintf( textfile+textidx, "{%05u}", token+128+16 );
-				textidx += 7;
-			}
-		}
-		//~ else if( gamenum == 3 && token > 127 ) {}
 		else {
 			curop = opcodeList[token];
 			if(token > 0x7F) printf("apollo - curtoken %08x\n", token);
@@ -1581,6 +1690,7 @@ int main( int argc, char **argv ) {
 					textidx += strlen(shiftdirection[arguments[0]/256]) + 12;
 				}
 				else {
+					//~ printf("command is %s\n", curop.name);
 					sprintf( textfile+textidx, "<%s:%05u>\n\t", curop.name, arguments[0] );
 					textidx += strlen(curop.name) + 10;
 				}
