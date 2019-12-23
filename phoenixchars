@@ -2,6 +2,7 @@ even:
 	begins with 0x80000001
 	followed by palette 0x20 bytes (4bpp)
 	followed by table
+	each entry is offset relative to table start
 	followed by tile data
 
 odd:

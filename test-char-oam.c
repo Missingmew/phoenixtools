@@ -6,12 +6,6 @@
 #define BREAK(x) { printf(x); return 1; }
 
 typedef struct {
-	uint16_t offset;
-	uint16_t size;
-	uint32_t unknown;
-}__attribute__((packed)) headerentry;
-
-typedef struct {
 	unsigned int y:8;
 	unsigned int rotscale:1;
 	unsigned int doubledis:1;
@@ -37,6 +31,11 @@ typedef struct {
 	unsigned int size:2;
 }__attribute__((packed)) oam1nrs;
 
+typedef union {
+	oam1wrs o1w;
+	oam1nrs o1n;
+} oam1;
+
 typedef struct {
 	unsigned int tilenum:10;
 	unsigned int priority:2;
@@ -47,45 +46,40 @@ typedef struct {
 
 int main( int argc, char** argv ) {
 	
-	if ( argc < 2 )
+	if ( argc < 3 )
 	{
-		printf( "Not enough arguments given!\nUsage: %s [infile]\n", argv[0] );
+		printf( "Not enough arguments given!\nUsage: %s [infile] [offset]\n", argv[0] );
 		return 1;
 	}
 	
 	FILE *f;
-	headerentry head;
-	headerentry *headlist = NULL;
 	
-	uint32_t head;
-	int pixelsx, pixelsy, tilesx, tilesy, palettesize, imagesize, bpp, alpha;
-	unsigned char *workbuf, *rgbaPixelData;
+	unsigned int off = strtoul(argv[2], NULL, 16);
+	oam0 o0;
+	oam1 o1;
+	oam2 o2;
 	
 	if( !(f = fopen( argv[1], "rb" ))) {
 		printf("Couldnt open file %s\n", argv[1]);
 		return 1;
 	}
 	
-	fread( &head, 4, 1, f );
+	fseek(f, off, SEEK_SET);
 	
-	bpp = (head & (1<<31))?image4bpp:image8bpp;
-	pixelsx = head & 0xffff;
-	pixelsy = (head & 0x7fff0000) >> 16;
-	printf("bpp is %d, width is %04d, height is %04d\n", bpp, pixelsx, pixelsy);
-	tilesx = pixelsx / 8;
-	tilesy = pixelsy / 8;
-	imagesize = pixelsx*pixelsy;
-	palettesize = 512;
-	if(bpp == image4bpp) {
-		imagesize /= 2;
-		palettesize = 32;
+	fread(&o0, sizeof(oam0), 1, f);
+	fread(&o1, sizeof(oam1), 1, f);
+	fread(&o2, sizeof(oam2), 1, f);
+	
+	printf("OAM0: y %d, rot %d, doubledis %d, mode %d, mosaic %d, color %d, shape %d\n", o0.y, o0.rotscale, o0.doubledis, o0.mode, o0.mosaic, o0.colors, o0.shape);
+	printf("OAM1 ");
+	if(o0.rotscale) {
+		printf("with rotscale: x %d, rotscaleparam %d, size %d\n", o1.o1w.x, o1.o1w.rotscaleparam, o1.o1w.size);
 	}
-	workbuf = malloc(palettesize+imagesize);
-	fread(workbuf, palettesize+imagesize, 1, f);
-	rgbaPixelData = tiledImageToRGBA(workbuf, tilesx, tilesy, bpp, alpha);
-	lodepng_encode32_file( argv[2], rgbaPixelData, pixelsx, pixelsy );
-	free(workbuf);
-	free(rgbaPixelData);
+	else {
+		printf("no rotscale: x %d, nouse %d, hflip %d, vflip %d, size %d\n", o1.o1n.x, o1.o1n.unused, o1.o1n.hflip, o1.o1n.vflip, o1.o1n.size);
+	}
+	printf("OAM2: tilenum %d(%02x), prio %d, palnum %d\n", o2.tilenum, o2.tilenum, o2.priority, o2.palnum);
+	
 	fclose(f);
 	printf("Done.\n");
 	return 0;
