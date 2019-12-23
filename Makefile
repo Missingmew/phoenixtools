@@ -2,7 +2,8 @@
 #~ NITROCOMPRESSION = ntrcom/huffman.o ntrcom/lzss.o ntrcom/lzx.o ntrcom/rle.o ntrcom/nitrocompression.o
 NITROCOMPRESSION = ntrcom/nitrocompression.o
 LODEPNG = lodepng/lodepng.o
-PHOENIXLIB = phoenixgfx.o
+PHOENIXGFX = phoenixgfx.o
+PHOENIXSCRIPT = phoenixscript_charsets.o phoenixscript_commands.o phoenixscript_data.o
 
 .PHONY: tools
 
@@ -43,6 +44,9 @@ extract-phoenix_data.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) extract-p
 	$(CC) -Wall -g -o $@ $^
 	
 extract-%.elf: $(NITROCOMPRESSION) extract-%.c
+	$(CC) -Wall -g -o $@ $^
+	
+convert-text-messages.elf: $(PHOENIXSCRIPT) convert-text-messages.c
 	$(CC) -Wall -g -o $@ $^
 	
 convert-%.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) convert-%.c
