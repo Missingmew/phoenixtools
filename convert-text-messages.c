@@ -1516,24 +1516,25 @@ char *supportedgames[] = {
 	"PWAA", "JFA", "TT", "AJAA"
 };
 
+/* returns non-zero if token is text, zero if command */
 unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int isjp, unsigned int isunity) {
 	if(*token < 128 || (gamenum == 3 && *token < 128+16)) return 0; // opcode for script
-	printf("original token is %08x ", *token);
+	//~ printf("original token is %08x ", *token);
 	*token -= 128;
 	if(gamenum == 3) *token -= 16; // apollo has 16 extra opcodes
 	if(isunity) *token -= 32; // unity uses ASCII with offset?
-	printf("modified token is %08x\n", *token);
+	//~ printf("modified token is %08x\n", *token);
 	return 1;
 }
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int fileSize, i, j, gamenum, memidx, textidx, scriptsize, missingargs, isunity = 0, isjp = 0;
+	unsigned int fileSize, i, j, gamenum, memidx, textidx = 0, tbufidx = 0, scriptsize, missingargs, isunity = 0, isjp = 0;
 	uint32_t numScripts, *scriptOffsets = NULL;
-	//~ uint16_t token, *arguments = NULL, *scriptfile = NULL;
 	uint16_t token, arguments[10] = {0}, *scriptfile = NULL;
 	operator curop;
 	char textfile[0x100000] = {0}; /* 1M should be enough */
+	char textbuf[256] = {0};
 	if( argc < 3 ) {
 	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n\nadd 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\n", argv[0]);
 		return 1;
@@ -1583,18 +1584,13 @@ int main( int argc, char **argv ) {
 	fseek( f, 0, SEEK_SET );
 	fread( &numScripts, sizeof(uint32_t), 1, f );
 	scriptOffsets = malloc( numScripts * sizeof(uint32_t));
-	//~ for( i = 0; i < numScripts; i++ ) fread( &scriptOffsets[i], sizeof(uint32_t), 1, f );
 	fread(scriptOffsets, sizeof(uint32_t)*numScripts, 1, f);
 	scriptsize = fileSize - ((numScripts*4)+4);
 	scriptfile = malloc(scriptsize);
 	fread(scriptfile, scriptsize, 1, f);
 	memidx = 0;
 	
-	//~ textfile[0] = 0xEF;
-	//~ textfile[1] = 0xBB;
-	//~ textfile[2] = 0xBF;
-	strcpy(textfile, "<section 0>\n\t");
-	textidx = 13;
+	textidx += sprintf(textfile, "section 0\n\t" );
 	while( memidx < scriptsize/2 - 2 ) {
 		missingargs = 1;
 		if(textidx > (0x100000-100)) {
@@ -1602,151 +1598,119 @@ int main( int argc, char **argv ) {
 			return 1;
 		}
 		if( getMemidxIndex( memidx, scriptOffsets, numScripts ) > 0 ) {
-			sprintf( textfile+textidx, "\n</section>\n<section %03u>\n\t", getMemidxIndex( memidx, scriptOffsets, numScripts));
-			textidx += 27;
+			textidx += sprintf( textfile+textidx, "\nendsection\nsection %03u\n\t", getMemidxIndex( memidx, scriptOffsets, numScripts));
 		}
 		// printf("memidx %08x (off %08x)\n", memidx, memidx*2+numScripts*4);
 		token = scriptfile[memidx];
 		memidx++;
 		if(prepareToken(&token, gamenum, isjp, isunity)) {
+			// TODO collect text in buffer
 			if(isunity) {
-				sprintf( textfile+textidx, "%c", (char)token);
-				textidx += 1;
+				textidx += sprintf( textfile+textidx, "%c", (char)token);
 			}
 			else {
 				if(token < sizeofarr(charset_shared)) { /* token is within default charsets */
-					//~ printf("getting character %s from %d %04x to textidx %d\n", charset_shared[token]?charset_shared[token]:charset_default[isjp][token], gamenum, token, textidx);
 					if(charset_shared[token] != 0) { /* char is in shared charset */
-						sprintf( textfile+textidx, "%s", charset_shared[token]);
-						textidx += strlen(charset_shared[token]);
+						textidx += sprintf( textfile+textidx, "%s", charset_shared[token]);
 					}
 					else if(charset_default[isjp][token] != 0) { /* char is in default charset for selected localization */
-						sprintf( textfile+textidx, "%s", charset_default[isjp][token]);
-						textidx += strlen(charset_default[isjp][token]);
+						textidx += sprintf( textfile+textidx, "%s", charset_default[isjp][token]);
 					}
 				}
 				else if(isjp && (token-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
 					token -= 256;
-					//~ printf("getting character %s from %d %04x to textidx %d\n", charset_japanese_extended[gamenum][token], gamenum, token, textidx);
 					if(charset_japanese_extended[gamenum][token] != 0) {
-						sprintf( textfile+textidx, "%s", charset_japanese_extended[gamenum][token]);
-						textidx += strlen(charset_japanese_extended[gamenum][token]);
+						textidx += sprintf( textfile+textidx, "%s", charset_japanese_extended[gamenum][token]);
 					}
 					else { /* char is not in any charset */
-						sprintf( textfile+textidx, "{%05u}", token+128+256 );
-						textidx += 7;
+						textidx += sprintf( textfile+textidx, "{%05u}", token+128+256 );
 					}
 				}
 				else { /* char is not in any charset */
-					sprintf( textfile+textidx, "{%05u}", token+128 );
-					textidx += 7;
+					textidx += sprintf( textfile+textidx, "{%05u}", token+128 );
 				}
 			}
 		}
 		else {
+			// emit "text [string]" if there was text in buffer
+			// switch to using per opcode functions
 			curop = opcodeList[token];
 			if(token > 0x7F) printf("apollo - curtoken %08x\n", token);
 			if( curop.args > 0 ) {
-				//~ arguments = malloc( curop.args * sizeof(uint16_t));
 				for( j = 0; j < curop.args; j++ ) {
 					arguments[j] = scriptfile[memidx];
 					memidx++;
 				}
 			}
-			//~ if(textfile[textidx-1] != '\t') {
-				//~ sprintf(textfile+textidx, "\n\t");
-				//~ textidx+=2;
-			//~ }
 			if( curop.args == 0 ) {
-				sprintf( textfile+textidx, "<%s>", curop.name );
-				textidx += strlen(curop.name) + 2;
+				textidx += sprintf( textfile+textidx, "<%s>", curop.name );
 				if(token == 0) {
-					sprintf(textfile+textidx, "\n\t");
-					textidx+=2;
+					textidx += sprintf(textfile+textidx, "\n\t");
 				}
 			}
 			else if( curop.args == 1 ) {
 				/* color opcode */		if((token == 3) && (arguments[0] < 4)) {
-					sprintf( textfile+textidx, "<%s:%s>\n\t", curop.name, colors[arguments[0]] );
-					textidx += strlen(curop.name) + strlen(colors[arguments[0]]) + 5;
+					textidx += sprintf( textfile+textidx, "<%s:%s>\n\t", curop.name, colors[arguments[0]] );
 				}
 				/* the bitshift is needed cause capcom seems to store the person in the upper 8 bits of the 16bit argument...
 				   removed check if argument 1 is less then 55 because it seems to be ok and apollo exceeds this by 5 :/ */
 				/* name opcode */		else if((token == 14) && ((arguments[0] >> 8) < sizeofarr(speakers[gamenum])) && (speakers[gamenum][(arguments[0] >> 8)] != 0)) {
-					sprintf( textfile+textidx, "<%s:\"%s\">\n\t", curop.name, speakers[gamenum][(arguments[0] >> 8)] );
-					textidx += strlen(curop.name) + strlen(speakers[gamenum][(arguments[0] >> 8)]) + 7;
+					textidx += sprintf( textfile+textidx, "<%s:\"%s\">\n\t", curop.name, speakers[gamenum][(arguments[0] >> 8)] );
 				}
 				/* background opcode */		else if((token == 27) && (arguments[0] < sizeofarr(backgrounds[gamenum])) && (backgrounds[gamenum][arguments[0]] != 0)) {
-					sprintf( textfile+textidx, "<%s:\"%s\">\n\t", curop.name, backgrounds[gamenum][arguments[0]] );
-					textidx += strlen(curop.name) + strlen(backgrounds[gamenum][arguments[0]]) + 7;
+					textidx += sprintf( textfile+textidx, "<%s:\"%s\">\n\t", curop.name, backgrounds[gamenum][arguments[0]] );
 				}
 				/* rejmp and jmp opcode */	else if((token == 10) || (token == 44)) {
-					sprintf( textfile+textidx, "<%s:%05u>\n\t", curop.name, arguments[0]-128 );
-					textidx += strlen(curop.name) + 10;
+					textidx += sprintf( textfile+textidx, "<%s:%05u>\n\t", curop.name, arguments[0]-128 );
 				}
 				/* shift_background opcode */	else if(token == 29) {
-					sprintf( textfile+textidx, "<%s:%s - %04u>\n\t", curop.name, shiftdirection[arguments[0]/256], arguments[0] % 256 );
-					textidx += strlen(curop.name) ;
-					textidx += strlen(shiftdirection[arguments[0]/256]) + 12;
+					textidx += sprintf( textfile+textidx, "<%s:%s - %04u>\n\t", curop.name, shiftdirection[arguments[0]/256], arguments[0] % 256 );
 				}
 				else {
 					//~ printf("command is %s\n", curop.name);
-					sprintf( textfile+textidx, "<%s:%05u>\n\t", curop.name, arguments[0] );
-					textidx += strlen(curop.name) + 10;
+					textidx += sprintf( textfile+textidx, "<%s:%05u>\n\t", curop.name, arguments[0] );
 				}
 			}
 			else {
 				/* removed check if argument 1 is less then 55 because it seems to be ok and apollo exceeds this by 5 :/ */
 				/* readded check because it broke things for phoenix 1 */
 				/* person opcode */		if((token == 30) && (arguments[0] < sizeofarr(speakers[gamenum])) && (speakers[gamenum][arguments[0]] != 0)) {
-					sprintf( textfile+textidx, "<%s:\"%s\"", curop.name, speakers[gamenum][arguments[0]] );
-					textidx += strlen(curop.name) + strlen(speakers[gamenum][arguments[0]]) + 4;
+					textidx += sprintf( textfile+textidx, "<%s:\"%s\"", curop.name, speakers[gamenum][arguments[0]] );
 				}
 				/* fademusic opcode */		else if((token == 34) && (arguments[0] < sizeofarr(musicfading))) {
-					sprintf( textfile+textidx, "<%s:\"%s\"", curop.name, musicfading[arguments[0]] );
-					textidx += strlen(curop.name) + strlen(musicfading[arguments[0]]) + 4;
+					textidx += sprintf( textfile+textidx, "<%s:\"%s\"", curop.name, musicfading[arguments[0]] );
 				}
 				/* 2 choice jmp opcode */	else if(token == 8) {
 					arguments[0] -= 128;
 					arguments[1] -= 128;
-					sprintf( textfile+textidx, "<%s:%05u", curop.name, arguments[0] );
-					textidx += strlen(curop.name) + 7;
+					textidx += sprintf( textfile+textidx, "<%s:%05u", curop.name, arguments[0] );
 				}
 				/* 3 choice jmp opcode */	else if(token == 9) {
 					arguments[0] -= 128;
 					arguments[1] -= 128;
 					arguments[2] -= 128;
-					sprintf( textfile+textidx, "<%s:%05u", curop.name, arguments[0] );
-					textidx += strlen(curop.name) + 7;
+					textidx += sprintf( textfile+textidx, "<%s:%05u", curop.name, arguments[0] );
 				}
 				/* music and sound opcode */	else if(((token == 5) || (token == 6)) && (arguments[0] < sizeofarr(sound_data[gamenum])) && (sound_data[gamenum][arguments[0]] != 0)) {
-					sprintf( textfile+textidx, "<%s:\"%s\"", curop.name, sound_data[gamenum][arguments[0]] );
-					textidx += strlen(curop.name) + strlen(sound_data[gamenum][arguments[0]]) + 4;
+					textidx += sprintf( textfile+textidx, "<%s:\"%s\"", curop.name, sound_data[gamenum][arguments[0]] );
 				}
 				/* animation opcode */		else if((token == 47) && (arguments[1] < sizeofarr(animationstate))) {
-					sprintf( textfile+textidx, "<%s:%05u:\"%s\"", curop.name, arguments[0], animationstate[arguments[1]] );
-					textidx += strlen(curop.name) + 10 + strlen(animationstate[arguments[1]]);
+					textidx += sprintf( textfile+textidx, "<%s:%05u:\"%s\"", curop.name, arguments[0], animationstate[arguments[1]] );
 					missingargs = 0;
 				}
 				else {
-					sprintf( textfile+textidx, "<%s:%05u", curop.name, arguments[0] );
-					textidx += strlen(curop.name) + 7;
+					textidx += sprintf( textfile+textidx, "<%s:%05u", curop.name, arguments[0] );
 				}
 				if(missingargs) {
 					for( j = 1; j < curop.args; j++ ) {
-						sprintf( textfile+textidx, ",%05u", arguments[j] );
-						textidx += 6;
+						textidx += sprintf( textfile+textidx, ",%05u", arguments[j] );
 					}
 				}
-				sprintf( textfile+textidx, ">\n\t" );
-				textidx += 3;
+				textidx += sprintf( textfile+textidx, ">\n\t" );
 			}
-			//~ if( arguments ) {
-				//~ free(arguments);
-				//~ arguments = 0;
-			//~ }
 		}
 	}
+	textidx += sprintf( textfile+textidx, "\nendsection\n" );
 	fwrite(textfile, textidx, 1, o);
 	fclose(f);
 	fclose(o);
