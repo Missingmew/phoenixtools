@@ -101,7 +101,7 @@ int main( int argc, char **argv ) {
 	fread(scriptfile, scriptsize, 1, f);
 	memidx = 0;
 	
-	textidx += sprintf(textfile, "section 0" );
+	textidx += sprintf(textfile, "section 0\n" );
 	while( memidx < scriptsize/2 - 2 ) {
 		if(textidx > (0x100000-100)) {
 			printf("converted textfile is approaching the 1M limit, now at 100 or less chars remaining, aborting\n");
