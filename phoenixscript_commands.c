@@ -16,7 +16,7 @@
 command opcodeList[144] = {
 	{ "noop", 0, printCmdGeneric },						/* does nothing */
 	{ "linebreak", 0, printCmdGeneric },						/* linebreak */
-	{ "pagepreag", 0, printCmdGeneric },						/* paragraph, ends current textbox, waits for player interaction */
+	{ "pagebreak", 0, printCmdGeneric },						/* paragraph, ends current textbox, waits for player interaction */
 	{ "textcolor", 1, printCmdColor },					/* text color, args: 0 white, 1 red, 2 blue, 3 green */
 	{ "pause", 0, printCmdGeneric },	/* 1 */					/* pause the game, waits for player interaction */
 	{ "music", 2, printCmdAudio },						/* change the music, args sequence(SDAT index) - fadein time frames (on resume only?) */
