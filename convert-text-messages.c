@@ -44,6 +44,7 @@ int main( int argc, char **argv ) {
 	uint32_t numScripts, *scriptOffsets = NULL;
 	//~ command *curop;
 	char textbuf[256] = {0};
+	char escapebuf[512];
 	struct scriptstate state;
 	if( argc < 3 ) {
 	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n\nadd 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\n", argv[0]);
@@ -152,25 +153,44 @@ int main( int argc, char **argv ) {
 			// do indentation
 			state.textidx += sprintf(state.textfile+state.textidx, "\t");
 			if(tbufidx) {
+				// escape collected text
+				for(unsigned i = 0, j = 0; textbuf[i]; i++) {
+					switch(textbuf[i]) {
+						case '\'': {
+							escapebuf[j] = '\\';
+							escapebuf[j+1] = '\'';
+							j+=2;
+							escapebuf[j] = 0;
+							break;
+						}
+						case '\"': {
+							escapebuf[j] = '\\';
+							escapebuf[j+1] = '\"';
+							j+=2;
+							escapebuf[j] = 0;
+							break;
+						}
+						//~ case '%': {
+							//~ escapebuf[j] = '%';
+							//~ escapebuf[j+1] = '%';
+							//~ j+=2;
+							//~ escapebuf[j] = 0;
+							//~ break;
+						//~ }
+						default: {
+							escapebuf[j] = textbuf[i];
+							j++;
+							escapebuf[j] = 0;
+							break;
+						}
+					}
+				}
 				// print collected text and do indentation for command
-				state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n\t", textbuf);
+				state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n\t", escapebuf);
 				tbufidx = 0;
 				textbuf[0] = 0;
 			}
-			//~ printf("current command token is %02x\n", state.script[state.memidx]);
-			//~ fflush(stdout);
 			commands[state.script[state.memidx]].print(&state);
-			// switch to using per opcode functions
-			//~ curop = &opcodeList[token];
-			//~ if(token > 0x7F) printf("apollo - curtoken %08x\n", token);
-			//~ if( curop->args > 0 ) {
-				//~ for( i = 0; i < curop->args; i++ ) {
-					//~ arguments[i] = scriptfile[memidx];
-					//~ memidx++;
-				//~ }
-			//~ }
-			
-			//~ textidx += curop->print(textfile+textidx, arguments, curop);
 		}
 	}
 	// get leftover text printed

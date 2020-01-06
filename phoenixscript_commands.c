@@ -276,8 +276,8 @@ void printCmd35(struct scriptstate *state) {
 	printCmdGeneric(state, 2);
 }
 
-void printCmd36(struct scriptstate *state) { /* 1 */
-	printCmdGeneric(state, 0);
+void printCmd36(struct scriptstate *state) {
+	printCmdGeneric(state, 1);
 }
 
 void printCmd37(struct scriptstate *state) {
