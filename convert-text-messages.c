@@ -40,12 +40,11 @@ unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int is
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int fileSize, i, memidx, textidx = 0, tbufidx = 0, scriptsize, isunity = 0, isjp = 0;
+	unsigned int fileSize, tbufidx = 0, isunity = 0, isjp = 0;
 	uint32_t numScripts, *scriptOffsets = NULL;
-	uint16_t token, arguments[10] = {0}, *scriptfile = NULL;
-	command *curop;
-	char textfile[0x100000] = {0}; /* 1M should be enough */
+	//~ command *curop;
 	char textbuf[256] = {0};
+	struct scriptstate state;
 	if( argc < 3 ) {
 	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n\nadd 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\n", argv[0]);
 		return 1;
@@ -96,83 +95,95 @@ int main( int argc, char **argv ) {
 	fread( &numScripts, sizeof(uint32_t), 1, f );
 	scriptOffsets = malloc( numScripts * sizeof(uint32_t));
 	fread(scriptOffsets, sizeof(uint32_t)*numScripts, 1, f);
-	scriptsize = fileSize - ((numScripts*4)+4);
-	scriptfile = malloc(scriptsize);
-	fread(scriptfile, scriptsize, 1, f);
-	memidx = 0;
 	
-	textidx += sprintf(textfile, "section 0\n" );
-	while( memidx < scriptsize/2 - 2 ) {
-		if(textidx > (0x100000-100)) {
-			printf("converted textfile is approaching the 1M limit, now at 100 or less chars remaining, aborting\n");
-			return 1;
+	state.scriptsize = fileSize - ((numScripts*4)+4);
+	state.textidx = 0;
+	state.memidx = 0;
+	state.textfile = malloc(0x800); // 2k
+	state.maxtext = 0x800; // 2k
+	state.script = malloc(state.scriptsize);
+	
+	fread(state.script, state.scriptsize, 1, f);
+	
+	state.textidx += sprintf(state.textfile, "section 0\n" );
+	while( state.memidx < state.scriptsize/2 - 2 ) {
+		if(state.maxtext - 100 < state.textidx) {
+			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
+			if(!(state.textfile = realloc(state.textfile, state.maxtext*2))) {
+				printf("couldnt realloc\n");
+				return 1;
+			}
+			state.maxtext *= 2;
 		}
-		if( getMemidxIndex( memidx, scriptOffsets, numScripts ) > 0 ) {
-			textidx += sprintf( textfile+textidx, "endsection\nsection %03u\n", getMemidxIndex( memidx, scriptOffsets, numScripts));
+		if( getMemidxIndex( state.memidx, scriptOffsets, numScripts ) > 0 ) {
+			state.textidx += sprintf( state.textfile+state.textidx, "endsection\nsection %03u\n", getMemidxIndex( state.memidx, scriptOffsets, numScripts ));
 		}
-		// printf("memidx %08x (off %08x)\n", memidx, memidx*2+numScripts*4);
-		token = scriptfile[memidx];
-		memidx++;
-		if(prepareToken(&token, gamenum, isjp, isunity)) {
+		//~ printf("memidx %08x (off %08x)\n", state.memidx, state.memidx*2+numScripts*4);
+		if(prepareToken(&state.script[state.memidx], gamenum, isjp, isunity)) {
 			if(isunity) {
-				tbufidx += sprintf( textbuf+tbufidx, "%c", (char)token);
+				// this is incredibly evil on a second thought... should probably find a better solution
+				tbufidx += sprintf( textbuf+tbufidx, "%c", (char)state.script[state.memidx]);
 			}
 			else {
-				if(token < sizeofarr(charset_shared)) { /* token is within default charsets */
-					if(charset_shared[token] != 0) { /* char is in shared charset */
-						tbufidx += sprintf( textbuf+tbufidx, "%s", charset_shared[token]);
+				if(state.script[state.memidx] < sizeofarr(charset_shared)) { /* token is within default charsets */
+					if(charset_shared[state.script[state.memidx]] != 0) { /* char is in shared charset */
+						tbufidx += sprintf( textbuf+tbufidx, "%s", charset_shared[state.script[state.memidx]]);
 					}
-					else if(charset_default[isjp][token] != 0) { /* char is in default charset for selected localization */
-						tbufidx += sprintf( textbuf+tbufidx, "%s", charset_default[isjp][token]);
+					else if(charset_default[isjp][state.script[state.memidx]] != 0) { /* char is in default charset for selected localization */
+						tbufidx += sprintf( textbuf+tbufidx, "%s", charset_default[isjp][state.script[state.memidx]]);
 					}
 				}
-				else if(isjp && (token-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
-					token -= 256;
-					if(charset_japanese_extended[gamenum][token] != 0) {
-						tbufidx += sprintf( textbuf+tbufidx, "%s", charset_japanese_extended[gamenum][token]);
+				else if(isjp && (state.script[state.memidx]-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
+					state.script[state.memidx] -= 256;
+					if(charset_japanese_extended[gamenum][state.script[state.memidx]] != 0) {
+						tbufidx += sprintf( textbuf+tbufidx, "%s", charset_japanese_extended[gamenum][state.script[state.memidx]]);
 					}
 					else { /* char is not in any charset */
-						tbufidx += sprintf( textbuf+tbufidx, "{%05u}", token+128+256 );
+						tbufidx += sprintf( textbuf+tbufidx, "{%05u}", state.script[state.memidx]+128+256 );
 					}
 				}
 				else { /* char is not in any charset */
-					tbufidx += sprintf( textbuf+tbufidx, "{%05u}", token+128 );
+					tbufidx += sprintf( textbuf+tbufidx, "{%05u}", state.script[state.memidx]+128 );
 				}
 			}
+			state.memidx++;
 		}
 		else {
 			// do indentation
-			textidx += sprintf(textfile+textidx, "\t");
+			state.textidx += sprintf(state.textfile+state.textidx, "\t");
 			if(tbufidx) {
-				textidx += sprintf(textfile+textidx, "text \"%s\"\n", textbuf);
+				// print collected text and do indentation for command
+				state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n\t", textbuf);
 				tbufidx = 0;
 				textbuf[0] = 0;
-				// do indentation for command if we had text
-				textidx += sprintf(textfile+textidx, "\t");
 			}
+			//~ printf("current command token is %02x\n", state.script[state.memidx]);
+			//~ fflush(stdout);
+			commands[state.script[state.memidx]].print(&state);
 			// switch to using per opcode functions
-			curop = &opcodeList[token];
-			if(token > 0x7F) printf("apollo - curtoken %08x\n", token);
-			if( curop->args > 0 ) {
-				for( i = 0; i < curop->args; i++ ) {
-					arguments[i] = scriptfile[memidx];
-					memidx++;
-				}
-			}
+			//~ curop = &opcodeList[token];
+			//~ if(token > 0x7F) printf("apollo - curtoken %08x\n", token);
+			//~ if( curop->args > 0 ) {
+				//~ for( i = 0; i < curop->args; i++ ) {
+					//~ arguments[i] = scriptfile[memidx];
+					//~ memidx++;
+				//~ }
+			//~ }
 			
-			textidx += curop->print(textfile+textidx, arguments, curop);
+			//~ textidx += curop->print(textfile+textidx, arguments, curop);
 		}
 	}
 	// get leftover text printed
 	if(tbufidx) {
-		textidx += sprintf(textfile+textidx, "text \"%s\"\n", textbuf);
+		state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n", textbuf);
 	}
-	textidx += sprintf( textfile+textidx, "endsection\n" );
-	fwrite(textfile, textidx, 1, o);
+	state.textidx += sprintf( state.textfile+state.textidx, "endsection\n" );
+	fwrite(state.textfile, state.textidx, 1, o);
 	fclose(f);
 	fclose(o);
 	free(outfilename);
 	free(scriptOffsets);
-	free(scriptfile);
+	free(state.script);
+	free(state.textfile);
 	return 0;
 }

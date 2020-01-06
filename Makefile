@@ -22,11 +22,11 @@ test: test-char-oam.elf
 tools:
 	$(MAKE) -C tools/gbagfx
 
-extract-video-offset.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) extract-video-offset.c
-	$(CC) -Wall -g -o extract-video-offset.elf extract-video-offset.c $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION)
+extract-video-offset.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) extract-video-offset.c
+	$(CC) -Wall -g -o $@ $^
 	
-extract-image-offset.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) extract-image-offset.c
-	$(CC) -Wall -g -o extract-image-offset.elf extract-image-offset.c $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION)
+extract-image-offset.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) extract-image-offset.c
+	$(CC) -Wall -g -o $@ $^
 	
 3dsetc/etc1util.elf: 3dsetc/main.c
 	$(CXX) -Wall -g -o 3dsetc/etc1util.elf 3dsetc/main.c 3dsetc/rg_etc1.cpp
@@ -40,7 +40,7 @@ extract-raw-file.elf: $(NITROCOMPRESSION) extract-raw-file.c
 find-compressed-files.elf: $(NITROCOMPRESSION) find-compressed-files.c
 	$(CC) -Wall -g -o $@ $^
 	
-extract-phoenix_data.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) extract-phoenix_data.c
+extract-phoenix_data.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) extract-phoenix_data.c
 	$(CC) -Wall -g -o $@ $^
 	
 extract-%.elf: $(NITROCOMPRESSION) extract-%.c
@@ -49,7 +49,7 @@ extract-%.elf: $(NITROCOMPRESSION) extract-%.c
 convert-text-messages.elf: $(PHOENIXSCRIPT) convert-text-messages.c
 	$(CC) -Wall -g -o $@ $^
 	
-convert-%.elf: $(PHOENIXLIB) $(LODEPNG) $(NITROCOMPRESSION) convert-%.c
+convert-%.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) convert-%.c
 	$(CC) -Wall -g -o $@ $^
 	
 extract-pc-file.elf: extract-pc-file.c
