@@ -8,11 +8,13 @@ extern unsigned int gamenum;
 
 struct scriptstate {
 	unsigned textidx;
-	unsigned memidx;
 	char *textfile;
 	unsigned maxtext;
+	unsigned scriptidx;
 	uint16_t *script;
 	unsigned scriptsize;
+	unsigned outidx;
+	char *outbuf;
 };
 
 typedef struct cmd {
