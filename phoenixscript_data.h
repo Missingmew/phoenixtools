@@ -8,5 +8,6 @@ extern char *backgrounds[4][4096];
 extern char *musicfading[2];
 extern char *animationstate[2];
 extern char *sound_data[4][1024];
+extern char *locations[4][256];
 
 #endif

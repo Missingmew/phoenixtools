@@ -3,10 +3,8 @@
 
 #include <stdint.h>
 
-/* this has to be provided and set by main */
-extern unsigned int gamenum;
-
 struct scriptstate {
+	unsigned gamenum;
 	unsigned textidx;
 	char *textfile;
 	unsigned maxtext;

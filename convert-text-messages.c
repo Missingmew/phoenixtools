@@ -8,9 +8,6 @@
 
 #define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
-/* need to provide this for commands*/
-unsigned int gamenum;
-
 char *supportedgames[] = {
 	"PWAA", "JFA", "TT", "AJAA"
 };
@@ -40,7 +37,7 @@ unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int is
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int fileSize, isunity = 0, isjp = 0;
+	unsigned int fileSize, isunity = 0, isjp = 0, gamenum;
 	uint32_t numScripts, *scriptOffsets = NULL;
 	//~ command *curop;
 	char escapebuf[512];
@@ -99,12 +96,13 @@ int main( int argc, char **argv ) {
 	state.scriptsize = fileSize - ((numScripts*4)+4);
 	state.textidx = 0;
 	state.scriptidx = 0;
-	state.textfile = malloc(0x20000); // 128k
-	state.maxtext = 0x20000; // 128k
+	state.textfile = malloc(0x40000); // 256k
+	state.maxtext = 0x40000; // 256k
 	state.script = malloc(state.scriptsize);
 	state.outidx = 0;
 	state.outbuf = malloc(256);
 	state.outbuf[0] = 0;
+	state.gamenum = gamenum;
 	
 	fread(state.script, state.scriptsize, 1, f);
 	

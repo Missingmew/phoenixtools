@@ -15,7 +15,7 @@
 /* numbers in comments are arguments as stated in MessageSystem from unity */
 
 void printCmdGeneric(struct scriptstate *state, unsigned args) {
-	int i;
+	unsigned i;
 	state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
 	state->scriptidx++;
 	if(args) {
@@ -57,8 +57,8 @@ void printCmd04(struct scriptstate *state) { /* 1 */
 }
 
 void printCmd05(struct scriptstate *state) {
-	if(state->script[state->scriptidx+1] < sizeofarr(sound_data[gamenum]) && sound_data[gamenum][state->script[state->scriptidx+1]]) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[gamenum][state->script[state->scriptidx+1]], state->script[state->scriptidx+2]);
+	if(state->script[state->scriptidx+1] < sizeofarr(sound_data[state->gamenum]) && sound_data[state->gamenum][state->script[state->scriptidx+1]]) {
+		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[state->gamenum][state->script[state->scriptidx+1]], state->script[state->scriptidx+2]);
 		state->scriptidx += 1+2;
 	}
 	else printCmdGeneric(state, 2);
@@ -102,8 +102,8 @@ void printCmd0D(struct scriptstate *state) {
 void printCmd0E(struct scriptstate *state) {
 	/* the bitshift is needed cause capcom seems to store the person in the upper 8 bits of the 16bit argument...
 	   removed check if argument 1 is less then 55 because it seems to be ok and apollo exceeds this by 5 :/ */
-	if((state->script[state->scriptidx+1] >> 8) < sizeofarr(speakers[gamenum]) && speakers[gamenum][(state->script[state->scriptidx+1] >> 8)]) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, speakers[gamenum][(state->script[state->scriptidx+1] >> 8)] );
+	if((state->script[state->scriptidx+1] >> 8) < sizeofarr(speakers[state->gamenum]) && speakers[state->gamenum][(state->script[state->scriptidx+1] >> 8)]) {
+		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, speakers[state->gamenum][(state->script[state->scriptidx+1] >> 8)] );
 		state->scriptidx += 1+1;
 	}
 	else printCmdGeneric(state, 1);
@@ -113,13 +113,12 @@ void printCmd0F(struct scriptstate *state) {
 	printCmdGeneric(state, 2);
 }
 
-void printCmd10(struct scriptstate *state) { // flagctl todo
+void printCmd10(struct scriptstate *state) {
 	unsigned num = state->script[state->scriptidx+1] & 0xFF;
 	unsigned num2 = (state->script[state->scriptidx+1] & 0x7F00) >> 8;
 	unsigned set = state->script[state->scriptidx+1] >> 15;
 	state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, num2, num, set);
 	state->scriptidx += 1+1;
-	//~ printCmdGeneric(state, 1);
 }
 
 void printCmd11(struct scriptstate *state) {
@@ -163,8 +162,8 @@ void printCmd1A(struct scriptstate *state) {
 }
 
 void printCmd1B(struct scriptstate *state) {
-	if(state->script[state->scriptidx+1] < sizeofarr(backgrounds[gamenum]) && backgrounds[gamenum][state->script[state->scriptidx+1]]) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[gamenum][state->script[state->scriptidx+1]] );
+	if(state->script[state->scriptidx+1] < sizeofarr(backgrounds[state->gamenum]) && backgrounds[state->gamenum][state->script[state->scriptidx+1]]) {
+		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[state->gamenum][state->script[state->scriptidx+1]] );
 		state->scriptidx += 1+1;
 	}
 	else printCmdGeneric(state, 1);
@@ -180,8 +179,8 @@ void printCmd1D(struct scriptstate *state) {
 }
 
 void printCmd1E(struct scriptstate *state) {
-	if(state->script[state->scriptidx+1] < sizeofarr(speakers[gamenum]) && speakers[gamenum][state->script[state->scriptidx+1]]) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[gamenum][state->script[state->scriptidx+1]], state->script[state->scriptidx+2], state->script[state->scriptidx+3]);
+	if(state->script[state->scriptidx+1] < sizeofarr(speakers[state->gamenum]) && speakers[state->gamenum][state->script[state->scriptidx+1]]) {
+		state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[state->gamenum][state->script[state->scriptidx+1]], state->script[state->scriptidx+2], state->script[state->scriptidx+3]);
 		state->scriptidx += 1+3;
 	}
 	else printCmdGeneric(state, 3);
@@ -276,7 +275,22 @@ void printCmd32(struct scriptstate *state) {
 }
 
 void printCmd33(struct scriptstate *state) {
-	printCmdGeneric(state, 5);
+	unsigned i;
+	state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
+	
+	if(state->script[state->scriptidx+1] < sizeofarr(locations[state->gamenum]) && locations[state->gamenum][state->script[state->scriptidx+1]]) {
+		state->textidx += sprintf(state->textfile+state->textidx, " %s", locations[state->gamenum][state->script[state->scriptidx+1]]);
+	}
+	else state->textidx += sprintf(state->textfile+state->textidx, " %u", state->script[state->scriptidx+1]);
+	
+	for(i = 2; i < 6; i++) {
+		if(state->script[state->scriptidx+i] < sizeofarr(locations[state->gamenum]) && locations[state->gamenum][state->script[state->scriptidx+i]]) {
+			state->textidx += sprintf(state->textfile+state->textidx, ", %s", locations[state->gamenum][state->script[state->scriptidx+i]]);
+		}
+		else state->textidx += sprintf(state->textfile+state->textidx, ", %u", state->script[state->scriptidx+i]);
+	}
+	state->textidx += sprintf(state->textfile+state->textidx, "\n");
+	state->scriptidx += 1+5;
 }
 
 void printCmd34(struct scriptstate *state) {
@@ -698,7 +712,7 @@ command commands[144] = {
 	{ "cmd30", printCmd30 },  			/* ? */
 	{ "personvanish", printCmd31 }, 		/* makes characer vanish, args: ? */
 	{ "cmd32", printCmd32 },  			/* ? */
-	{ "cmd33", printCmd33 },			/* unknown jump, args: ? */
+	{ "setmovelocations", printCmd33 },		/* sets locations available to move to */
 	{ "fadetoblack", printCmd34 }, 			/* fades to black, args: ? */
 	{ "cmd35", printCmd35 },  			/* ? */
 	{ "cmd36", printCmd36 },			/* ?, unclear description in python */
