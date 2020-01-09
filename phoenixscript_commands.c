@@ -114,7 +114,12 @@ void printCmd0F(struct scriptstate *state) {
 }
 
 void printCmd10(struct scriptstate *state) { // flagctl todo
-	printCmdGeneric(state, 1);
+	unsigned num = state->script[state->scriptidx+1] & 0xFF;
+	unsigned num2 = (state->script[state->scriptidx+1] & 0x7F00) >> 8;
+	unsigned set = state->script[state->scriptidx+1] >> 15;
+	state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, num2, num, set);
+	state->scriptidx += 1+1;
+	//~ printCmdGeneric(state, 1);
 }
 
 void printCmd11(struct scriptstate *state) {
@@ -270,8 +275,8 @@ void printCmd32(struct scriptstate *state) {
 	printCmdGeneric(state, 2);
 }
 
-void printCmd33(struct scriptstate *state) { /* 5 */
-	printCmdGeneric(state, 2);
+void printCmd33(struct scriptstate *state) {
+	printCmdGeneric(state, 5);
 }
 
 void printCmd34(struct scriptstate *state) {
