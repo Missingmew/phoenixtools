@@ -1,3 +1,26 @@
+#include "phoenixscript_charsets.h"
+
+#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
+
+enum tokenset charset_isTokenValid(uint16_t token, unsigned isjp, unsigned gamenum) {
+	if(token < sizeofarr(charset_shared)) { /* token is within default charsets */
+		if(charset_shared[token] != 0) { /* char is in shared charset */
+			return SET_SHARED;
+		}
+		else if(charset_default[isjp][token] != 0) { /* char is in default charset for selected localization */
+			return SET_DEFAULT;
+		}
+	}
+	else if(isjp && (token-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
+		token -= 256;
+		if(charset_japanese_extended[gamenum][token] != 0) {
+			return SET_EXTENDED;
+		}
+	}
+	/* char is not in any charset */
+	return SET_NONE;
+}
+
 /* charsets as presented/used in the GBA/NDS games */
 
 // charlist assumes that token is not an opcode and was reduced by 128

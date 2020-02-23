@@ -8,6 +8,8 @@
 
 #define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
+#define OUTBUFSIZE 256
+
 char *supportedgames[] = {
 	"PWAA", "JFA", "TT", "AJAA"
 };
@@ -35,12 +37,54 @@ unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int is
 	return 1;
 }
 
+void escapeText(char *dst, char* src) {
+	// escape collected text
+	for(unsigned i = 0, j = 0; src[i]; i++) {
+		switch(src[i]) {
+			case '\n': {
+				dst[j] = '\\';
+				dst[j+1] = 'n';
+				j+=2;
+				dst[j] = 0;
+				break;
+			}
+			case '\'': {
+				dst[j] = '\\';
+				dst[j+1] = '\'';
+				j+=2;
+				dst[j] = 0;
+				break;
+			}
+			case '\"': {
+				dst[j] = '\\';
+				dst[j+1] = '\"';
+				j+=2;
+				dst[j] = 0;
+				break;
+			}
+			//~ case '%': {
+				//~ dst[j] = '%';
+				//~ dst[j+1] = '%';
+				//~ j+=2;
+				//~ dst[j] = 0;
+				//~ break;
+			//~ }
+			default: {
+				dst[j] = src[i];
+				j++;
+				dst[j] = 0;
+				break;
+			}
+		}
+	}
+}
+
 int main( int argc, char **argv ) {
 	FILE *f, *o;
 	unsigned int fileSize, isunity = 0, isjp = 0, gamenum;
 	uint32_t numScripts, *scriptOffsets = NULL;
 	//~ command *curop;
-	char escapebuf[512];
+	char escapebuf[OUTBUFSIZE*2];
 	struct scriptstate state;
 	if( argc < 3 ) {
 	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n\nadd 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\n", argv[0]);
@@ -100,13 +144,19 @@ int main( int argc, char **argv ) {
 	state.maxtext = 0x40000; // 256k
 	state.script = malloc(state.scriptsize);
 	state.outidx = 0;
-	state.outbuf = malloc(256);
+	state.outbuf = malloc(OUTBUFSIZE);
 	state.outbuf[0] = 0;
 	state.gamenum = gamenum;
 	
 	fread(state.script, state.scriptsize, 1, f);
 	
-	state.textidx += sprintf(state.textfile, "section 0\n" );
+	// the "last" entry in the script offset table is actually not an offset but some magic data...
+	// the data appears to be two uint16_t which is how i dump them here
+	numScripts--;
+	state.textidx += sprintf(state.textfile, "special data %04x, %04x\n", scriptOffsets[numScripts] & 0xFFFF, (scriptOffsets[numScripts] >> 16) & 0xFFFF);
+	//~ printf("special data %04x, %04x\n", scriptOffsets[numScripts] & 0xFFFF, scriptOffsets[numScripts] >> 16);
+	
+	state.textidx += sprintf(state.textfile+state.textidx, "section 0\n" );
 	while( state.scriptidx < state.scriptsize/2 - 2 ) {
 		if(state.maxtext - 100 < state.textidx) {
 			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
@@ -126,25 +176,23 @@ int main( int argc, char **argv ) {
 				state.outidx += sprintf( state.outbuf+state.outidx, "%c", (char)state.script[state.scriptidx]);
 			}
 			else {
-				if(state.script[state.scriptidx] < sizeofarr(charset_shared)) { /* token is within default charsets */
-					if(charset_shared[state.script[state.scriptidx]] != 0) { /* char is in shared charset */
-						state.outidx += sprintf( state.outbuf+state.outidx, "%s", charset_shared[state.script[state.scriptidx]]);
+				switch(charset_isTokenValid(state.script[state.scriptidx], isjp, gamenum)) {
+					case SET_SHARED: {
+						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_shared[state.script[state.scriptidx]]);
+						break;
 					}
-					else if(charset_default[isjp][state.script[state.scriptidx]] != 0) { /* char is in default charset for selected localization */
-						state.outidx += sprintf( state.outbuf+state.outidx, "%s", charset_default[isjp][state.script[state.scriptidx]]);
+					case SET_DEFAULT: {
+						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[isjp][state.script[state.scriptidx]]);
+						break;
 					}
-				}
-				else if(isjp && (state.script[state.scriptidx]-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
-					state.script[state.scriptidx] -= 256;
-					if(charset_japanese_extended[gamenum][state.script[state.scriptidx]] != 0) {
-						state.outidx += sprintf( state.outbuf+state.outidx, "%s", charset_japanese_extended[gamenum][state.script[state.scriptidx]]);
+					case SET_EXTENDED: {
+						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_japanese_extended[gamenum][state.script[state.scriptidx]-256]);
+						break;
 					}
-					else { /* char is not in any charset */
-						state.outidx += sprintf( state.outbuf+state.outidx, "{%05u}", state.script[state.scriptidx]+128+256 );
+					default: {
+						state.outidx += sprintf(state.outbuf+state.outidx, "{%05u}", state.script[state.scriptidx]+128);
+						break;
 					}
-				}
-				else { /* char is not in any charset */
-					state.outidx += sprintf( state.outbuf+state.outidx, "{%05u}", state.script[state.scriptidx]+128 );
 				}
 			}
 			state.scriptidx++;
@@ -154,44 +202,7 @@ int main( int argc, char **argv ) {
 			state.textidx += sprintf(state.textfile+state.textidx, "\t");
 			if(state.outidx && state.script[state.scriptidx] != 0x01) {
 				// escape collected text
-				for(unsigned i = 0, j = 0; state.outbuf[i]; i++) {
-					switch(state.outbuf[i]) {
-						case '\n': {
-							escapebuf[j] = '\\';
-							escapebuf[j+1] = 'n';
-							j+=2;
-							escapebuf[j] = 0;
-							break;
-						}
-						case '\'': {
-							escapebuf[j] = '\\';
-							escapebuf[j+1] = '\'';
-							j+=2;
-							escapebuf[j] = 0;
-							break;
-						}
-						case '\"': {
-							escapebuf[j] = '\\';
-							escapebuf[j+1] = '\"';
-							j+=2;
-							escapebuf[j] = 0;
-							break;
-						}
-						//~ case '%': {
-							//~ escapebuf[j] = '%';
-							//~ escapebuf[j+1] = '%';
-							//~ j+=2;
-							//~ escapebuf[j] = 0;
-							//~ break;
-						//~ }
-						default: {
-							escapebuf[j] = state.outbuf[i];
-							j++;
-							escapebuf[j] = 0;
-							break;
-						}
-					}
-				}
+				escapeText(escapebuf, state.outbuf);
 				// print collected text and do indentation for command
 				state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n\t", escapebuf);
 				state.outidx = 0;

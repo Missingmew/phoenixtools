@@ -5,6 +5,8 @@
 
 #define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
+#define genericScanf(s, f, a) sscanf(s, f, ##a)
+
 /* structure and prettyprinting functions for commands as presented in the GBA/NDS games */
 
 /* all jump commands have the target encoded as _section numbers_ with 128 added on top */
@@ -13,6 +15,12 @@
 	04 - hide
 */
 /* numbers in comments are arguments as stated in MessageSystem from unity */
+
+int command_tokenFromString(char *s) {
+	int i;
+	for(i = 0; i < sizeofarr(commands); i++) if(!strncmp(s, commands[i].name, strlen(commands[i].name))) return i;
+	return -1;
+}
 
 void printCmdGeneric(struct scriptstate *state, unsigned args) {
 	unsigned i;
@@ -24,6 +32,10 @@ void printCmdGeneric(struct scriptstate *state, unsigned args) {
 		state->scriptidx += args;
 	}
 	state->textidx += sprintf(state->textfile+state->textidx, "\n");
+}
+
+unsigned parseCmdGeneric(struct scriptstate *state, unsigned args) {
+	
 }
 
 void printCmd00(struct scriptstate *state) {
