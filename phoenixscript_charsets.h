@@ -12,7 +12,7 @@ enum tokenset {
 
 extern char *charset_shared[256];
 extern char *charset_default[2][256];
-extern char *charset_japanese_extended[4][976];
+extern char *charset_japanese_extended[4][1096];
 
 enum tokenset charset_isTokenValid(uint16_t token, unsigned isjp, unsigned gamenum);
 
