@@ -92,7 +92,7 @@ char *charset_default[2][256] = {
 /* size currently calculated as 0x5C8 (num of chars in gs1) - 0x180 (num of shared chars) = 0x448 (1096), adjust if required */
 char *charset_japanese_extended[4][1096] = { /* for JP releases, version specific characters only */
 	// not sure about 0x180 aka 'ー'
-	/* GS1 mapped out by phoenixbound */
+	/* GS1 mapped out by phoenixbound and h3rmit */
 	{ /* GS1 */
 		"ー", "記", "録", "中", "断", "選", "消", "去", "初", "期", "状", "態", "戻", "追", "加", "逆", // 180
 		"転", "日", "目", "法", "廷", "姉", "妹", "探", "偵", "最", "終", "手", "今", "血", "気", "千", // 190
