@@ -6,6 +6,7 @@
 
 struct scriptstate {
 	unsigned gamenum;
+	unsigned isjp;
 	unsigned textidx;
 	char *textfile;
 	unsigned maxtext;
