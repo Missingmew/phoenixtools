@@ -5,8 +5,6 @@
 
 #define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
-#define genericScanf(s, f, a) sscanf(s, f, ##a)
-
 /* structure and prettyprinting functions for commands as presented in the GBA/NDS games */
 
 /* all jump commands have the target encoded as _section numbers_ with 128 added on top */
@@ -15,12 +13,6 @@
 	04 - hide
 */
 /* numbers in comments are arguments as stated in MessageSystem from unity */
-
-int command_tokenFromString(char *s) {
-	int i;
-	for(i = 0; i < sizeofarr(commands); i++) if(!strncmp(s, commands[i].name, strlen(commands[i].name))) return i;
-	return -1;
-}
 
 void printCmdGeneric(struct scriptstate *state, unsigned args) {
 	unsigned i;
@@ -34,18 +26,12 @@ void printCmdGeneric(struct scriptstate *state, unsigned args) {
 	state->textidx += sprintf(state->textfile+state->textidx, "\n");
 }
 
-unsigned parseCmdGeneric(struct scriptstate *state, unsigned args) {
-	
-}
-
 void printCmd00(struct scriptstate *state) {
 	printCmdGeneric(state, 0);
 }
 
 void printCmd01(struct scriptstate *state) {
 	if(state->outidx) { // append linebreak to text if available
-		state->textidx--;
-		state->textfile[state->textidx] = 0;
 		state->outidx += sprintf(state->outbuf+state->outidx, "\n");
 		state->scriptidx++;
 	}
@@ -310,7 +296,20 @@ void printCmd34(struct scriptstate *state) {
 }
 
 void printCmd35(struct scriptstate *state) {
-	printCmdGeneric(state, 2);
+	/* this needs more looking into. it involves special data to allow jumping at arbitrary offsets in other sections */
+	unsigned targetsection, offset;
+	state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
+	state->textidx += sprintf(state->textfile+state->textidx, " %s, %u, %s, ", cmd35hints[0][state->script[state->scriptidx+1] & 1], state->script[state->scriptidx+1] >> 8, cmd35hints[1][(state->script[state->scriptidx+1] & 0x80) ? 1 : 0]);
+	if(state->script[state->scriptidx+1] & 0x80) {
+		targetsection = state->specialdata[(state->script[state->scriptidx+2] - state->numsections)];
+		offset = state->specialdata[(state->script[state->scriptidx+2] - state->numsections) + 1];
+		state->textidx += sprintf(state->textfile+state->textidx, "%u + %u\n", targetsection, offset/2);
+	}
+	else {
+		state->textidx += sprintf(state->textfile+state->textidx, "%u\n", state->script[state->scriptidx+2]/2);
+	}
+	state->scriptidx += 1+2;
+	//~ printCmdGeneric(state, 2);
 }
 
 void printCmd36(struct scriptstate *state) {
@@ -673,7 +672,7 @@ void printCmd8F(struct scriptstate *state) {
 	printCmdGeneric(state, 0);
 }
 command commands[144] = {
-	{ "cmd00", printCmd00 }, 			/* does something? */
+	{ "setup_section", printCmd00 }, 			/* does something? */
 	{ "linebreak", printCmd01 }, 			/* linebreak */
 	{ "pagebreak", printCmd02 }, 			/* paragraph, ends current textbox, waits for player interaction */
 	{ "textcolor", printCmd03 }, 			/* text color, args: 0 white, 1 red, 2 blue, 3 green */

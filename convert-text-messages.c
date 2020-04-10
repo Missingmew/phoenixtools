@@ -21,7 +21,7 @@ int getOffsetIndex( unsigned int offset, uint32_t *list, unsigned int count ) {
 }
 
 int getMemidxIndex( unsigned int memidx, uint32_t *list, unsigned int count ) {
-	int i, sub = (count*4)+4;
+	int i, sub = list[0];
 	for( i = 0; i < count; i++ ) if( memidx == (list[i]-sub)/2 ) return i;
 	return -1;
 }
@@ -81,7 +81,7 @@ void escapeText(char *dst, char* src) {
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
-	unsigned int fileSize, isunity = 0, isjp = 0, gamenum;
+	unsigned int fileSize, isunity = 0, isjp = 0, gamenum, intext;
 	uint32_t numScripts, *scriptOffsets = NULL;
 	//~ command *curop;
 	char escapebuf[OUTBUFSIZE*2];
@@ -137,7 +137,7 @@ int main( int argc, char **argv ) {
 	scriptOffsets = malloc( numScripts * sizeof(uint32_t));
 	fread(scriptOffsets, sizeof(uint32_t)*numScripts, 1, f);
 	
-	state.scriptsize = fileSize - ((numScripts*4)+4);
+	state.scriptsize = fileSize - scriptOffsets[0];
 	state.textidx = 0;
 	state.scriptidx = 0;
 	state.textfile = malloc(0x40000); // 256k
@@ -146,17 +146,40 @@ int main( int argc, char **argv ) {
 	state.outidx = 0;
 	state.outbuf = malloc(OUTBUFSIZE);
 	state.outbuf[0] = 0;
+	state.section = 0;
+	state.sectionoff = 0;
+	state.sectionlist = scriptOffsets;
 	state.gamenum = gamenum;
+	state.specialdata = NULL;
+	state.numspecialdata = 0;
+	state.numsections = 0;
+	
+	/* find the beginning and amount of "special" data */
+	for(unsigned i = 2, first = scriptOffsets[1]; i < numScripts; i++) {
+		//~ printf("findspecialdata %u of %u - %08x %08x\n", i, numScripts, scriptOffsets[i], first);
+		// if either uneven offset, beyond file or breaking ascending order we should be good
+		if((scriptOffsets[i] % 2) || (scriptOffsets[i] > fileSize) || (scriptOffsets[i] < first)) {
+			state.specialdata = (uint16_t *)&scriptOffsets[i];
+			state.numspecialdata = (numScripts-i) * 2 - 1;
+			state.numsections = i;
+			break;
+		}
+		first = scriptOffsets[i];
+	}
+	
+	printf("have %u specialdata and %u sections\n", state.numspecialdata, state.numsections);
+	//~ for(unsigned i = 0; i < state.numsections; i++) printf("section %03u @ %08x\n", i, state.sectionlist[i]);
 	
 	fread(state.script, state.scriptsize, 1, f);
 	
-	// the "last" entry in the script offset table is actually not an offset but some magic data...
-	// the data appears to be two uint16_t which is how i dump them here
-	numScripts--;
-	state.textidx += sprintf(state.textfile, "special data %04x, %04x\n", scriptOffsets[numScripts] & 0xFFFF, (scriptOffsets[numScripts] >> 16) & 0xFFFF);
+	//~ numScripts--;
+	state.textidx += sprintf( state.textfile+state.textidx, "begin special data\n");
+	for(unsigned i = 0; i < state.numspecialdata; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i], state.specialdata[i+1]);
+	state.textidx += sprintf( state.textfile+state.textidx, "end special data\n");
 	//~ printf("special data %04x, %04x\n", scriptOffsets[numScripts] & 0xFFFF, scriptOffsets[numScripts] >> 16);
 	
 	state.textidx += sprintf(state.textfile+state.textidx, "section 0\n" );
+	intext = 0;
 	while( state.scriptidx < state.scriptsize/2 - 2 ) {
 		if(state.maxtext - 100 < state.textidx) {
 			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
@@ -166,11 +189,17 @@ int main( int argc, char **argv ) {
 			}
 			state.maxtext *= 2;
 		}
-		if( getMemidxIndex( state.scriptidx, scriptOffsets, numScripts ) > 0 ) {
-			state.textidx += sprintf( state.textfile+state.textidx, "endsection\nsection %03u\n", getMemidxIndex( state.scriptidx, scriptOffsets, numScripts ));
+		if( getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections ) > 0 ) {
+			state.section = getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections );
+			state.sectionoff = state.scriptidx;
+			state.textidx += sprintf( state.textfile+state.textidx, "endsection\nsection %03u\n", state.section);
 		}
 		//~ printf("memidx %08x (off %08x)\n", state.scriptidx, state.scriptidx*2+numScripts*4);
 		if(prepareToken(&state.script[state.scriptidx], gamenum, isjp, isunity)) {
+			if(!intext) {
+				state.textstart = state.scriptidx;
+				intext = 1;
+			}
 			if(isunity) {
 				// this is incredibly evil on a second thought... should probably find a better solution
 				state.outidx += sprintf( state.outbuf+state.outidx, "%c", (char)state.script[state.scriptidx]);
@@ -199,14 +228,15 @@ int main( int argc, char **argv ) {
 		}
 		else {
 			// do indentation
-			state.textidx += sprintf(state.textfile+state.textidx, "\t");
+			if(!intext) state.textidx += sprintf(state.textfile+state.textidx, " %04u\t", state.scriptidx - state.sectionoff);
 			if(state.outidx && state.script[state.scriptidx] != 0x01) {
 				// escape collected text
 				escapeText(escapebuf, state.outbuf);
 				// print collected text and do indentation for command
-				state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n\t", escapebuf);
+				state.textidx += sprintf(state.textfile+state.textidx, " %04u\ttext \"%s\"\n %04u\t", state.textstart-state.sectionoff, escapebuf, state.scriptidx - state.sectionoff);
 				state.outidx = 0;
 				state.outbuf[0] = 0;
+				intext = 0;
 			}
 			commands[state.script[state.scriptidx]].print(&state);
 		}

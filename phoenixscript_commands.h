@@ -14,23 +14,20 @@ struct scriptstate {
 	unsigned scriptsize;
 	unsigned outidx;
 	char *outbuf;
-};
-
-struct parsestate {
-	unsigned gamenum;
-	char *line;
-	unsigned scriptidx;
-	uint16_t *script;
-	unsigned maxscript;
-	unsigned sectionidx;
-	uint32_t *section;
-	unsigned maxsection;
+	
+	unsigned section;
+	unsigned sectionoff;
+	uint32_t *sectionlist;
+	unsigned numsections;
+	uint16_t *specialdata;
+	unsigned numspecialdata;
+	
+	unsigned textstart;
 };
 
 typedef struct cmd {
 	char name[32];
 	void (*print)(struct scriptstate *);
-	unsigned (*parse)(struct parsestate *);
 } command;
 
 extern command commands[144];

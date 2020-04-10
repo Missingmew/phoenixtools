@@ -73,6 +73,15 @@ char *shiftdirection[4] = {
 	"SHIFT_LEFT", "SHIFT_RIGHT", "SHIFT_UP", "SHIFT_DOWN"
 };
 
+char *cmd35hints[2][2] = {
+	{
+		"SKIP_IF_FLAG_SET", "SKIP_IF_FLAG_UNSET"
+	},
+	{
+		"JUMP_THIS_SECTION", "JUMP_OTHER_SECTION"
+	}
+};
+
 /* multilang backgrounds share their number! */
 /* TODO: add support for multiple games */
 /* 4096 is the size per game due to BGSPC, this may change due to various weird leftover commands though */
