@@ -150,6 +150,7 @@ int main( int argc, char **argv ) {
 	state.sectionoff = 0;
 	state.sectionlist = scriptOffsets;
 	state.gamenum = gamenum;
+	state.isjp = isjp;
 	state.specialdata = NULL;
 	state.numspecialdata = 0;
 	state.numsections = 0;
@@ -180,7 +181,7 @@ int main( int argc, char **argv ) {
 	
 	state.textidx += sprintf(state.textfile+state.textidx, "section 0\n" );
 	intext = 0;
-	while( state.scriptidx < state.scriptsize/2 - 2 ) {
+	while( state.scriptidx < state.scriptsize/2) {
 		if(state.maxtext - 100 < state.textidx) {
 			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
 			if(!(state.textfile = realloc(state.textfile, state.maxtext*2))) {

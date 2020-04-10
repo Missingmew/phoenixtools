@@ -63,7 +63,15 @@ void printCmd05(struct scriptstate *state) {
 }
 
 void printCmd06(struct scriptstate *state) {
-	printCmd05(state);
+	if(state->isjp && state->gamenum == 0) { // technically only for GBA version of pwaa1
+		unsigned int seNum = state->script[state->scriptidx+1] >> 8;
+		if(seNum < sizeofarr(sound_data[state->gamenum]) && sound_data[state->gamenum][seNum]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[state->gamenum][seNum], state->script[state->scriptidx+1] & 1);
+			state->scriptidx += 1+1;
+		}
+		else printCmdGeneric(state, 1);
+	}
+	else printCmd05(state);
 }
 
 void printCmd07(struct scriptstate *state) {
