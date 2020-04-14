@@ -24,15 +24,17 @@ struct scriptstate {
 	unsigned numspecialdata;
 	
 	unsigned textstart;
+	
+	/* this will disable output related functionality in print functions
+	   use to just get argument count */
+	unsigned outputenabled;
 };
 
 typedef struct cmd {
+	unsigned (*print)(struct scriptstate *);
 	char name[32];
-	void (*print)(struct scriptstate *);
 } command;
 
-extern command commands[144];
-
-int command_tokenFromString(char *);
+extern command commands[0x90]; // 144
 
 #endif

@@ -14,6 +14,14 @@ char *supportedgames[] = {
 	"PWAA", "JFA", "TT", "AJAA"
 };
 
+int compare_uint32(const void *a, const void *b) {
+	uint32_t arg1 = *((uint32_t *)a);
+	uint32_t arg2 = *((uint32_t *)b);
+	if(arg1 < arg2) return -1;
+	if(arg1 > arg2) return 1;
+	return 0;
+}
+
 int getOffsetIndex( unsigned int offset, uint32_t *list, unsigned int count ) {
 	int i;
 	for( i = 0; i < count; i++ ) if( offset == list[i] ) return i;
@@ -81,8 +89,9 @@ void escapeText(char *dst, char* src) {
 
 int main( int argc, char **argv ) {
 	FILE *f, *o;
+	unsigned i, j;
 	unsigned int fileSize, isunity = 0, isjp = 0, gamenum, intext;
-	uint32_t numScripts, *scriptOffsets = NULL;
+	uint32_t numScripts, *scriptOffsets = NULL, *specialaddrs = NULL;
 	//~ command *curop;
 	char escapebuf[OUTBUFSIZE*2];
 	struct scriptstate state;
@@ -135,6 +144,9 @@ int main( int argc, char **argv ) {
 	fseek( f, 0, SEEK_SET );
 	fread( &numScripts, sizeof(uint32_t), 1, f );
 	scriptOffsets = malloc( numScripts * sizeof(uint32_t));
+	/* need this to find number of sections and specialdata */
+	specialaddrs = malloc( numScripts * sizeof(uint32_t));
+	
 	fread(scriptOffsets, sizeof(uint32_t)*numScripts, 1, f);
 	
 	state.scriptsize = fileSize - scriptOffsets[0];
@@ -155,27 +167,68 @@ int main( int argc, char **argv ) {
 	state.numspecialdata = 0;
 	state.numsections = 0;
 	
-	/* find the beginning and amount of "special" data */
-	for(unsigned i = 2, first = scriptOffsets[1]; i < numScripts; i++) {
-		//~ printf("findspecialdata %u of %u - %08x %08x\n", i, numScripts, scriptOffsets[i], first);
-		// if either uneven offset, beyond file or breaking ascending order we should be good
-		if((scriptOffsets[i] % 2) || (scriptOffsets[i] > fileSize) || (scriptOffsets[i] < first)) {
-			state.specialdata = (uint16_t *)&scriptOffsets[i];
-			state.numspecialdata = (numScripts-i) * 2 - 1;
-			state.numsections = i;
-			break;
-		}
-		first = scriptOffsets[i];
-	}
-	
-	printf("have %u specialdata and %u sections\n", state.numspecialdata, state.numsections);
-	//~ for(unsigned i = 0; i < state.numsections; i++) printf("section %03u @ %08x\n", i, state.sectionlist[i]);
+	/* disable text output to scan for commands that use special data */
+	state.outputenabled = 0;
 	
 	fread(state.script, state.scriptsize, 1, f);
 	
+	/* find the beginning and amount of "special" data */
+	/* parse the script, catching all cmd35 and cmd36 (which are known to use special data)
+	   and saving the indices of the "scriptOffsets" they access */
+	for(i = 0, j = 0; i < state.scriptsize/2; i++) {
+		if(state.script[i] > 0x7F || (gamenum == 3 && state.script[i] > 0x8F)) continue;
+		switch(state.script[i]) {
+			case 0x35: {
+				if(state.script[i+1] & 0x80 && state.script[i+2] && numScripts > state.script[i+2]) {
+					specialaddrs[j++] = state.script[i+2];
+				}
+				i += 2;
+				break;
+			}
+			case 0x36: {
+				if(state.script[i+1] && numScripts > state.script[i+1]) {
+					specialaddrs[j++] = state.script[i+1];
+				}
+				i += 2;
+				break;
+			}
+			default: {
+				i += commands[state.script[i]].print(&state);
+				break;
+			}
+		}
+	}
+	if(j) {
+		/* if we found any uses of specialdata, find the first used index and use that
+		   to mark the end of actual section offsets and the beginning of specialdata
+		   as well as calculate the number of each */
+		
+		/* specialaddrs now holds all known indices for j uses of special data
+		   qsort the array and use the first index from the result as begin of specialdata */
+		qsort(specialaddrs, j, sizeof(uint32_t), compare_uint32);
+		
+		//~ printf("found the following specialaddr indices:\n");
+		//~ for(unsigned i = 0; i < j; i++) printf("%08x\n", specialaddrs[i]);
+		
+		//~ printf("first specialdata index is %08x\n", specialaddrs[0]);
+		//~ printf("have %08x special uint32\n", (numScripts-specialaddrs[0]));
+		
+		state.specialdata = (uint16_t *)&scriptOffsets[specialaddrs[0]];
+		state.numspecialdata = (numScripts-specialaddrs[0]) * 2;
+		state.numsections = specialaddrs[0];
+	}
+	else {
+		state.numsections = numScripts;
+	}
+	
+	printf("have %u specialdata and %u sections\n", state.numspecialdata, state.numsections);
+	
+	/* enable text output for actual dumping */
+	state.outputenabled = 1;
+	
 	//~ numScripts--;
 	state.textidx += sprintf( state.textfile+state.textidx, "begin special data\n");
-	for(unsigned i = 0; i < state.numspecialdata; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i], state.specialdata[i+1]);
+	for(unsigned i = 0; i < state.numspecialdata; i+=2) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i], state.specialdata[i+1]);
 	state.textidx += sprintf( state.textfile+state.textidx, "end special data\n");
 	//~ printf("special data %04x, %04x\n", scriptOffsets[numScripts] & 0xFFFF, scriptOffsets[numScripts] >> 16);
 	
@@ -252,6 +305,7 @@ int main( int argc, char **argv ) {
 	fclose(o);
 	free(outfilename);
 	free(scriptOffsets);
+	free(specialaddrs);
 	free(state.script);
 	free(state.textfile);
 	free(state.outbuf);
