@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <string.h>
 
+/* this is incredibly dirty but the alternatives would be either a giant waste of space or spaghetti */
+#define ARRGAMENUM(x) (x % 4)
+
 typedef struct special {
 	uint16_t val0;
 	uint16_t val1;
@@ -12,6 +15,7 @@ typedef struct special {
 struct scriptstate {
 	unsigned gamenum;
 	unsigned isjp;
+	unsigned isunity;
 	unsigned textidx;
 	char *textfile;
 	unsigned maxtext;

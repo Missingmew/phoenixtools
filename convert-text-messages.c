@@ -90,11 +90,12 @@ void escapeText(char *dst, char* src) {
 int main( int argc, char **argv ) {
 	FILE *f, *o;
 	unsigned i, j;
-	unsigned int fileSize, isunity = 0, isjp = 0, gamenum, intext;
+	unsigned int fileSize, gamenum, intext;
 	uint32_t numScripts, *scriptOffsets = NULL, *specialaddrs = NULL;
 	//~ command *curop;
 	char escapebuf[OUTBUFSIZE*2];
 	struct scriptstate state;
+	memset(&state, 0, sizeof(state));
 	if( argc < 3 ) {
 		printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n", argv[0]);
 		printf("1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n5 - Gyakuten Saiban 1 (GBA)\n\n");
@@ -103,16 +104,18 @@ int main( int argc, char **argv ) {
 	}
 	
 	gamenum = strtoul(argv[2], NULL, 10) - 1;
+	
+	printf("gamenum is %u %u\n", gamenum, gamenum == GAME_GS1GBA);
 	if(gamenum == GAME_GS1GBA) {
-		isjp = 1;
+		state.isjp = 1;
 	}
 	else {
 		if(gamenum > 19) {
-			isunity = 1;
+			state.isunity = 1;
 			gamenum -= 20;
 		}
 		else if(gamenum > 9) {
-			isjp = 1;
+			state.isjp = 1;
 			gamenum -= 10;
 		}
 	}
@@ -121,17 +124,19 @@ int main( int argc, char **argv ) {
 		return 1;
 	}
 	
+	state.gamenum = gamenum;
+	
 	/* ensure sane combo of gamenum, isunity and isjp */
-	if(gamenum == GAME_APOLLO && isunity) {
+	if(state.gamenum == GAME_APOLLO && state.isunity) {
 		printf("apollo does not have a unity version\n");
 		return 1;
 	}
-	if(isjp && isunity) {
+	if(state.isjp && state.isunity) {
 		printf("there is no explicit japanese support for unity right now\n");
 		return 1;
 	}
 	
-	printf("selected config: %s %s %s\n", supportedgamenames[gamenum], isjp ? "jp" : "", isunity ? "unity" : "");
+	printf("selected config: %s %s %s\n", supportedgamenames[state.gamenum], state.isjp ? "jp" : "", state.isunity ? "unity" : "");
 	
 	if( !(f = fopen( argv[1], "rb" ))) {
 		printf("Couldnt open file %s\n", argv[1]);
@@ -168,8 +173,6 @@ int main( int argc, char **argv ) {
 	state.section = 0;
 	state.sectionoff = 0;
 	state.sectionlist = scriptOffsets;
-	state.gamenum = gamenum;
-	state.isjp = isjp;
 	state.specialdata = NULL;
 	state.numspecialdata = 0;
 	state.numsections = 0;
@@ -183,7 +186,7 @@ int main( int argc, char **argv ) {
 	/* parse the script, catching all cmd35 and cmd36/78 (which are known to use special data)
 	   and saving the indices of the "scriptOffsets" they access */
 	for(i = 0, j = 0; i < state.scriptsize/2; i++) {
-		if(state.script[i] > 0x7F || (gamenum == GAME_APOLLO && state.script[i] > 0x8F)) continue;
+		if(state.script[i] > 0x7F || (state.gamenum == GAME_APOLLO && state.script[i] > 0x8F)) continue;
 		switch(state.script[i]) {
 			case 0x35: {
 				if(state.script[i+1] & 0x80 && state.script[i+2] && numScripts > state.script[i+2]) {
@@ -257,27 +260,27 @@ int main( int argc, char **argv ) {
 			state.textidx += sprintf( state.textfile+state.textidx, "endsection\nsection %03u\n", state.section);
 		}
 		//~ printf("memidx %08x (off %08x)\n", state.scriptidx, state.scriptidx*2+numScripts*4);
-		if(prepareToken(&state.script[state.scriptidx], gamenum, isjp, isunity)) {
+		if(prepareToken(&state.script[state.scriptidx], state.gamenum, state.isjp, state.isunity)) {
 			if(!intext) {
 				state.textstart = state.scriptidx;
 				intext = 1;
 			}
-			if(isunity) {
+			if(state.isunity) {
 				// this is incredibly evil on a second thought... should probably find a better solution
 				state.outidx += sprintf( state.outbuf+state.outidx, "%c", (char)state.script[state.scriptidx]);
 			}
 			else {
-				switch(charset_isTokenValid(state.script[state.scriptidx], isjp, gamenum)) {
+				switch(charset_isTokenValid(state.script[state.scriptidx], state.isjp, state.gamenum)) {
 					case SET_SHARED: {
 						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_shared[state.script[state.scriptidx]]);
 						break;
 					}
 					case SET_DEFAULT: {
-						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[isjp][state.script[state.scriptidx]]);
+						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[state.isjp][state.script[state.scriptidx]]);
 						break;
 					}
 					case SET_EXTENDED: {
-						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_japanese_extended[gamenum][state.script[state.scriptidx]-256]);
+						state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_japanese_extended[ARRGAMENUM(state.gamenum)][state.script[state.scriptidx]-256]);
 						break;
 					}
 					default: {

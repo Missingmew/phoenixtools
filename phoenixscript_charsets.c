@@ -11,9 +11,9 @@ enum tokenset charset_isTokenValid(uint16_t token, unsigned isjp, unsigned gamen
 			return SET_DEFAULT;
 		}
 	}
-	else if(isjp && (token-256 < sizeofarr(charset_japanese_extended[gamenum]))) { /* token is within extended charset of game */
+	else if(isjp && (token-256 < sizeofarr(charset_japanese_extended[ARRGAMENUM(gamenum)]))) { /* token is within extended charset of game */
 		token -= 256;
-		if(charset_japanese_extended[gamenum][token] != 0) {
+		if(charset_japanese_extended[ARRGAMENUM(gamenum)][token] != 0) {
 			return SET_EXTENDED;
 		}
 	}

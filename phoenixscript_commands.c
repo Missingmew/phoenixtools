@@ -68,8 +68,8 @@ unsigned printCmd04(struct scriptstate *state) { /* 1 */
 
 unsigned printCmd05(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(sound_data[state->gamenum]) && sound_data[state->gamenum][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[state->gamenum][state->script[state->scriptidx+1]], state->script[state->scriptidx+2]);
+		if(state->script[state->scriptidx+1] < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]], state->script[state->scriptidx+2]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -82,8 +82,8 @@ unsigned printCmd06(struct scriptstate *state) {
 	if(state->gamenum == GAME_GS1GBA) {
 		if(state->outputenabled) {
 			unsigned int seNum = state->script[state->scriptidx+1] >> 8;
-			if(seNum < sizeofarr(sound_data[state->gamenum]) && sound_data[state->gamenum][seNum]) {
-				state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[state->gamenum][seNum], state->script[state->scriptidx+1] & 1);
+			if(seNum < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][seNum]) {
+				state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][seNum], state->script[state->scriptidx+1] & 1);
 				state->scriptidx += 1+1;
 			}
 			else return printCmdGeneric(state, 1);
@@ -137,8 +137,8 @@ unsigned printCmd0E(struct scriptstate *state) {
 	/* the bitshift is needed cause capcom seems to store the person in the upper 8 bits of the 16bit argument...
 	   removed check if argument 1 is less then 55 because it seems to be ok and apollo exceeds this by 5 :/ */
 	if(state->outputenabled) {
-		if((state->script[state->scriptidx+1] >> 8) < sizeofarr(speakers[state->gamenum]) && speakers[state->gamenum][(state->script[state->scriptidx+1] >> 8)]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, speakers[state->gamenum][(state->script[state->scriptidx+1] >> 8)] );
+		if((state->script[state->scriptidx+1] >> 8) < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][(state->script[state->scriptidx+1] >> 8)]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][(state->script[state->scriptidx+1] >> 8)] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -203,8 +203,8 @@ unsigned printCmd1A(struct scriptstate *state) {
 
 unsigned printCmd1B(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(backgrounds[state->gamenum]) && backgrounds[state->gamenum][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[state->gamenum][state->script[state->scriptidx+1]] );
+		if(state->script[state->scriptidx+1] < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -226,8 +226,8 @@ unsigned printCmd1D(struct scriptstate *state) {
 
 unsigned printCmd1E(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(speakers[state->gamenum]) && speakers[state->gamenum][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[state->gamenum][state->script[state->scriptidx+1]], state->script[state->scriptidx+2], state->script[state->scriptidx+3]);
+		if(state->script[state->scriptidx+1] < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]], state->script[state->scriptidx+2], state->script[state->scriptidx+3]);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -334,14 +334,14 @@ unsigned printCmd33(struct scriptstate *state) {
 	if(state->outputenabled) {
 		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
 		
-		if(state->script[state->scriptidx+1] < sizeofarr(locations[state->gamenum]) && locations[state->gamenum][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, " %s", locations[state->gamenum][state->script[state->scriptidx+1]]);
+		if(state->script[state->scriptidx+1] < sizeofarr(locations[ARRGAMENUM(state->gamenum)]) && locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
+			state->textidx += sprintf(state->textfile+state->textidx, " %s", locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]);
 		}
 		else state->textidx += sprintf(state->textfile+state->textidx, " %u", state->script[state->scriptidx+1]);
 		
 		for(i = 2; i < 6; i++) {
-			if(state->script[state->scriptidx+i] < sizeofarr(locations[state->gamenum]) && locations[state->gamenum][state->script[state->scriptidx+i]]) {
-				state->textidx += sprintf(state->textfile+state->textidx, ", %s", locations[state->gamenum][state->script[state->scriptidx+i]]);
+			if(state->script[state->scriptidx+i] < sizeofarr(locations[ARRGAMENUM(state->gamenum)]) && locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+i]]) {
+				state->textidx += sprintf(state->textfile+state->textidx, ", %s", locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+i]]);
 			}
 			else state->textidx += sprintf(state->textfile+state->textidx, ", %u", state->script[state->scriptidx+i]);
 		}
