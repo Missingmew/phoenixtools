@@ -42,4 +42,13 @@ typedef struct cmd {
 
 extern command commands[0x90]; // 144
 
+enum supportedgames {
+	GAME_PHOENIX1,
+	GAME_PHOENIX2,
+	GAME_PHOENIX3,
+	GAME_APOLLO,
+	GAME_GS1GBA,
+	GAME_NUMGAMES
+};
+
 #endif

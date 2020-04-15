@@ -78,7 +78,8 @@ unsigned printCmd05(struct scriptstate *state) {
 }
 
 unsigned printCmd06(struct scriptstate *state) {
-	if(state->isjp && state->gamenum == 0) { // technically only for GBA version of pwaa1
+	/* GS1GBA only takes one argument for the sound command */
+	if(state->gamenum == GAME_GS1GBA) {
 		if(state->outputenabled) {
 			unsigned int seNum = state->script[state->scriptidx+1] >> 8;
 			if(seNum < sizeofarr(sound_data[state->gamenum]) && sound_data[state->gamenum][seNum]) {

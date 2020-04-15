@@ -10,8 +10,8 @@
 
 #define OUTBUFSIZE 256
 
-char *supportedgames[] = {
-	"PWAA", "JFA", "TT", "AJAA"
+char *supportedgamenames[] = {
+	"PWAA", "JFA", "TT", "AJAA", "GS1GBA"
 };
 
 int compare_uint32(const void *a, const void *b) {
@@ -36,10 +36,10 @@ int getMemidxIndex( unsigned int memidx, uint32_t *list, unsigned int count ) {
 
 /* returns non-zero if token is text, zero if command */
 unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int isjp, unsigned int isunity) {
-	if(*token < 128 || (gamenum == 3 && *token < 128+16)) return 0; // opcode for script
+	if(*token < 128 || (gamenum == GAME_APOLLO && *token < 128+16)) return 0; // opcode for script
 	//~ printf("original token is %08x ", *token);
 	*token -= 128;
-	if(gamenum == 3) *token -= 16; // apollo has 16 extra opcodes
+	if(gamenum == GAME_APOLLO) *token -= 16; // apollo has 16 extra opcodes
 	if(isunity) *token -= 32; // unity uses ASCII with offset?
 	//~ printf("modified token is %08x\n", *token);
 	return 1;
@@ -96,26 +96,33 @@ int main( int argc, char **argv ) {
 	char escapebuf[OUTBUFSIZE*2];
 	struct scriptstate state;
 	if( argc < 3 ) {
-	printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n\nadd 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\n", argv[0]);
+		printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n", argv[0]);
+		printf("1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n5 - Gyakuten Saiban 1 (GBA)\n\n");
+		printf("add 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\nGBA versions imply japanese mode, do not explicitly enable it\n");
 		return 1;
 	}
 	
 	gamenum = strtoul(argv[2], NULL, 10) - 1;
-	if(gamenum > 19) {
-		isunity = 1;
-		gamenum -= 20;
-	}
-	else if(gamenum > 9) {
+	if(gamenum == GAME_GS1GBA) {
 		isjp = 1;
-		gamenum -= 10;
 	}
-	if( gamenum > 3 ) {
+	else {
+		if(gamenum > 19) {
+			isunity = 1;
+			gamenum -= 20;
+		}
+		else if(gamenum > 9) {
+			isjp = 1;
+			gamenum -= 10;
+		}
+	}
+	if( gamenum >= GAME_NUMGAMES ) {
 		printf("unsupported gamenum %d\n", gamenum+1);
 		return 1;
 	}
 	
 	/* ensure sane combo of gamenum, isunity and isjp */
-	if(gamenum == 3 && isunity) {
+	if(gamenum == GAME_APOLLO && isunity) {
 		printf("apollo does not have a unity version\n");
 		return 1;
 	}
@@ -124,7 +131,7 @@ int main( int argc, char **argv ) {
 		return 1;
 	}
 	
-	printf("selected config: %s %s %s\n", supportedgames[gamenum], isjp ? "jp" : "", isunity ? "unity" : "");
+	printf("selected config: %s %s %s\n", supportedgamenames[gamenum], isjp ? "jp" : "", isunity ? "unity" : "");
 	
 	if( !(f = fopen( argv[1], "rb" ))) {
 		printf("Couldnt open file %s\n", argv[1]);
@@ -176,7 +183,7 @@ int main( int argc, char **argv ) {
 	/* parse the script, catching all cmd35 and cmd36/78 (which are known to use special data)
 	   and saving the indices of the "scriptOffsets" they access */
 	for(i = 0, j = 0; i < state.scriptsize/2; i++) {
-		if(state.script[i] > 0x7F || (gamenum == 3 && state.script[i] > 0x8F)) continue;
+		if(state.script[i] > 0x7F || (gamenum == GAME_APOLLO && state.script[i] > 0x8F)) continue;
 		switch(state.script[i]) {
 			case 0x35: {
 				if(state.script[i+1] & 0x80 && state.script[i+2] && numScripts > state.script[i+2]) {
