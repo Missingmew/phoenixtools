@@ -45,6 +45,8 @@ unsigned printCmd01(struct scriptstate *state) {
 }
 
 unsigned printCmd02(struct scriptstate *state) {
+	/* the function in GS1 gba for this is a mess.
+	   this appears to work however with no arguments so ill keep rolling with this for now. */
 	return printCmdGeneric(state, 0);
 }
 
@@ -60,6 +62,7 @@ unsigned printCmd03(struct scriptstate *state) {
 }
 
 unsigned printCmd04(struct scriptstate *state) { /* 1 */
+	/* unity says 1 arg, GS1 gba is either one or two args. zero works though so... */
 	return printCmdGeneric(state, 0);
 }
 
@@ -395,6 +398,7 @@ unsigned printCmd39(struct scriptstate *state) {
 }
 
 unsigned printCmd3A(struct scriptstate *state) { /* 3 */
+	/* has 2 args in GS1 gba */
 	return printCmdGeneric(state, 2);
 }
 
