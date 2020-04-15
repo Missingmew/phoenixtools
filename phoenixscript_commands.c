@@ -376,11 +376,18 @@ unsigned printCmd35(struct scriptstate *state) {
 unsigned printCmd36(struct scriptstate *state) {
 	unsigned targetsection, offset;
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
-		offset = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val0;
-		targetsection = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val1;
-		state->textidx += sprintf(state->textfile+state->textidx, " %u + %u\n", targetsection, offset/2);
-		state->scriptidx += 1+1;
+		if((state->script[state->scriptidx+1] - state->numsections) < state->numspecialdata) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
+			//~ printf("cmd36 using index %08x(%08x)\n", (state->script[state->scriptidx+1] - state->numsections), state->script[state->scriptidx+1]);
+			offset = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val0;
+			targetsection = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val1;
+			state->textidx += sprintf(state->textfile+state->textidx, " %u + %u\n", targetsection, offset/2);
+			state->scriptidx += 1+1;
+		}
+		else {
+			//~ printf("cmd36 invalid index! %08x(%08x)\n", (state->script[state->scriptidx+1] - state->numsections), state->script[state->scriptidx+1]);
+			return printCmdGeneric(state, 1);
+		}
 	}
 	return 1;
 }
@@ -632,8 +639,11 @@ unsigned printCmd73(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
 
-unsigned printCmd74(struct scriptstate *state) { /* 2 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd74(struct scriptstate *state) {
+	/* this appears to be, among other things, related to minigames (vase and luminol) as well as the staff roll/credits
+           it appears a lot more often though (switching touchsceen display modes?) */
+	
+	return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd75(struct scriptstate *state) {
