@@ -105,7 +105,7 @@ int main( int argc, char **argv ) {
 	
 	gamenum = strtoul(argv[2], NULL, 10) - 1;
 	
-	printf("gamenum is %u %u\n", gamenum, gamenum == GAME_GS1GBA);
+	//~ printf("gamenum is %u %u\n", gamenum, gamenum == GAME_GS1GBA);
 	if(gamenum == GAME_GS1GBA) {
 		state.isjp = 1;
 	}
