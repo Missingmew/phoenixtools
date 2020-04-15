@@ -173,7 +173,7 @@ int main( int argc, char **argv ) {
 	fread(state.script, state.scriptsize, 1, f);
 	
 	/* find the beginning and amount of "special" data */
-	/* parse the script, catching all cmd35 and cmd36 (which are known to use special data)
+	/* parse the script, catching all cmd35 and cmd36/78 (which are known to use special data)
 	   and saving the indices of the "scriptOffsets" they access */
 	for(i = 0, j = 0; i < state.scriptsize/2; i++) {
 		if(state.script[i] > 0x7F || (gamenum == 3 && state.script[i] > 0x8F)) continue;
@@ -185,11 +185,13 @@ int main( int argc, char **argv ) {
 				i += 2;
 				break;
 			}
-			case 0x36: {
+			/* 78 is mapped to 36 in unity... */
+			case 0x36:
+			case 0x78: {
 				if(state.script[i+1] && numScripts > state.script[i+1]) {
 					specialaddrs[j++] = state.script[i+1];
 				}
-				i += 2;
+				i += 1;
 				break;
 			}
 			default: {
@@ -210,27 +212,26 @@ int main( int argc, char **argv ) {
 		//~ printf("found the following specialaddr indices:\n");
 		//~ for(unsigned i = 0; i < j; i++) printf("%08x\n", specialaddrs[i]);
 		
-		//~ printf("first specialdata index is %08x\n", specialaddrs[0]);
+		//~ printf("first specialdata index is %08x(%08x)\n", specialaddrs[0], specialaddrs[0]*4+4);
 		//~ printf("have %08x special uint32\n", (numScripts-specialaddrs[0]));
 		
-		state.specialdata = (uint16_t *)&scriptOffsets[specialaddrs[0]];
-		state.numspecialdata = (numScripts-specialaddrs[0]) * 2;
+		state.specialdata = (specialdatapack *)&scriptOffsets[specialaddrs[0]];
+		state.numspecialdata = (numScripts-specialaddrs[0]);
 		state.numsections = specialaddrs[0];
 	}
 	else {
 		state.numsections = numScripts;
 	}
 	
-	printf("have %u specialdata and %u sections\n", state.numspecialdata, state.numsections);
+	//~ printf("have %u specialdata and %u(%08x) sections\n", state.numspecialdata, state.numsections, state.numsections);
 	
 	/* enable text output for actual dumping */
 	state.outputenabled = 1;
 	
 	//~ numScripts--;
 	state.textidx += sprintf( state.textfile+state.textidx, "begin special data\n");
-	for(unsigned i = 0; i < state.numspecialdata; i+=2) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i], state.specialdata[i+1]);
+	for(unsigned i = 0; i < state.numspecialdata; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i].val0, state.specialdata[i].val1);
 	state.textidx += sprintf( state.textfile+state.textidx, "end special data\n");
-	//~ printf("special data %04x, %04x\n", scriptOffsets[numScripts] & 0xFFFF, scriptOffsets[numScripts] >> 16);
 	
 	state.textidx += sprintf(state.textfile+state.textidx, "section 0\n" );
 	intext = 0;

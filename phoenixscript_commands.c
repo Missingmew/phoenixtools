@@ -358,8 +358,8 @@ unsigned printCmd35(struct scriptstate *state) {
 		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
 		state->textidx += sprintf(state->textfile+state->textidx, " %s, %u, %s, ", cmd35hints[0][state->script[state->scriptidx+1] & 1], state->script[state->scriptidx+1] >> 8, cmd35hints[1][(state->script[state->scriptidx+1] & 0x80) ? 1 : 0]);
 		if(state->script[state->scriptidx+1] & 0x80) {
-			targetsection = state->specialdata[(state->script[state->scriptidx+2] - state->numsections)];
-			offset = state->specialdata[(state->script[state->scriptidx+2] - state->numsections) + 1];
+			offset = state->specialdata[(state->script[state->scriptidx+2] - state->numsections)].val0;
+			targetsection = state->specialdata[(state->script[state->scriptidx+2] - state->numsections)].val1;
 			state->textidx += sprintf(state->textfile+state->textidx, "%u + %u\n", targetsection, offset/2);
 		}
 		else {
@@ -368,11 +368,18 @@ unsigned printCmd35(struct scriptstate *state) {
 		state->scriptidx += 1+2;
 	}
 	return 2;
-	//~ return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd36(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	unsigned targetsection, offset;
+	if(state->outputenabled) {
+		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
+		offset = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val0;
+		targetsection = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val1;
+		state->textidx += sprintf(state->textfile+state->textidx, " %u + %u\n", targetsection, offset/2);
+		state->scriptidx += 1+1;
+	}
+	return 1;
 }
 
 unsigned printCmd37(struct scriptstate *state) {
@@ -539,6 +546,8 @@ unsigned printCmd5F(struct scriptstate *state) {
 	return printCmdGeneric(state, 3);
 }
 
+/* commands introduced after GS1 gba */
+
 unsigned printCmd60(struct scriptstate *state) { /* 4 */
 	return printCmdGeneric(state, 0);
 }
@@ -635,8 +644,8 @@ unsigned printCmd77(struct scriptstate *state) { /* 2 */
 	return printCmdGeneric(state, 0);
 }
 
-unsigned printCmd78(struct scriptstate *state) { /* 1 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd78(struct scriptstate *state) {
+	return printCmd36(state);
 }
 
 unsigned printCmd79(struct scriptstate *state) {
@@ -731,7 +740,7 @@ unsigned printCmd8F(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
 command commands[144] = {
-	{ printCmd00, "setup_section" }, 			/* does something? */
+	{ printCmd00, "setup_section" }, 		/* does something? */
 	{ printCmd01, "linebreak" }, 			/* linebreak */
 	{ printCmd02, "pagebreak" }, 			/* paragraph, ends current textbox, waits for player interaction */
 	{ printCmd03, "textcolor" }, 			/* text color, args: 0 white, 1 red, 2 blue, 3 green */
@@ -827,6 +836,7 @@ command commands[144] = {
 	{ printCmd5D, "toggle_center_text" },		/* toggles text centering, args: 0 normal alignment - 1 centered */
 	{ printCmd5E, "cmd5E" },			/* ? */
 	{ printCmd5F, "cmd5F" },  			/* ? */
+	/* commands introduced after GS1 gba */
 	{ printCmd60, "cmd60" },			/* ?, crash? */
 	{ printCmd61, "cmd61" },  			/* ? */
 	{ printCmd62, "cmd62" },  			/* ? */
@@ -851,6 +861,7 @@ command commands[144] = {
 	{ printCmd75, "cmd75" },  			/* ?, crash? */
 	{ printCmd76, "cmd76" },			/* ?, crash? */
 	{ printCmd77, "cmd77" },			/* ?, crash? */
+	/* unity maps cmd78 to cmd36. possibly something to do with localization? */
 	{ printCmd78, "cmd78" },			/* ?, crash? */
 	{ printCmd79, "cmd79" },  			/* ?, crash? */
 	{ printCmd7A, "cmd7A" },			/* reset to capcom animation? */

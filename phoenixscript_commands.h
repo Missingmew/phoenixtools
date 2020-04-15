@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <string.h>
 
+typedef struct special {
+	uint16_t val0;
+	uint16_t val1;
+}__attribute__((packed)) specialdatapack;
+
 struct scriptstate {
 	unsigned gamenum;
 	unsigned isjp;
@@ -20,7 +25,7 @@ struct scriptstate {
 	unsigned sectionoff;
 	uint32_t *sectionlist;
 	unsigned numsections;
-	uint16_t *specialdata;
+	specialdatapack *specialdata;
 	unsigned numspecialdata;
 	
 	unsigned textstart;
