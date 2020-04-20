@@ -470,8 +470,8 @@ unsigned printCmd49(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
 
-unsigned printCmd4A(struct scriptstate *state) { /* 1 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd4A(struct scriptstate *state) {
+	return printCmdGeneric(state, 1);
 }
 
 unsigned printCmd4B(struct scriptstate *state) {
@@ -481,6 +481,8 @@ unsigned printCmd4B(struct scriptstate *state) {
 unsigned printCmd4C(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
+
+/* all commands below are nullsubs in GS1 gba */
 
 unsigned printCmd4D(struct scriptstate *state) {
 	return printCmdGeneric(state, 2);
@@ -832,6 +834,7 @@ command commands[144] = {
 	{ printCmd4A, "cmd4A" },			/* ?, crash? */
 	{ printCmd4B, "cmd4B" },  			/* ? */
 	{ printCmd4C, "cmd4C" },  			/* ? */
+	/* commands following are nullsubs in GS1 gba */
 	{ printCmd4D, "cmd4D" },  			/* ?, not tested? */
 	{ printCmd4E, "wait_noanim" }, 			/* wait for specified time, no character animation, args: time to wait */
 	{ printCmd4F, "cmd4F" },  			/* ? */
