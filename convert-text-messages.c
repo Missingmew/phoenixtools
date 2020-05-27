@@ -284,6 +284,33 @@ int main( int argc, char **argv ) {
 						break;
 					}
 					default: {
+						/* absolutely evil hacks: the english scripts in phoenix 2 from the en,fr,de version do not appear to fully use the "normal" euro charset */
+						if(state.gamenum == GAME_PHOENIX2) {
+							if(state.script[state.scriptidx]+128 == 1545) {
+								state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_shared[0x16A]); // maps to ”
+								break;
+							}
+							else if(state.script[state.scriptidx]+128 == 1548) {
+								state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[state.isjp][0xCE]); // maps to $
+								break;
+							}
+							else if(state.script[state.scriptidx]+128 == 1554) {
+								state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[state.isjp][0x154]); // maps to é
+								break;
+							}
+							else if(state.script[state.scriptidx]+128 == 1556) {
+								state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[state.isjp][0xDE]); // maps to ;
+								break;
+							}
+							else if(state.script[state.scriptidx]+128 == 1557) {
+								state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[state.isjp][0xDA]); // maps to ç
+								break;
+							}
+							else if(state.script[state.scriptidx]+128 == 1558) {
+								state.outidx += sprintf(state.outbuf+state.outidx, "%s", charset_default[state.isjp][0xCF]); // maps to à
+								break;
+							}
+						}
 						state.outidx += sprintf(state.outbuf+state.outidx, "{%05u}", state.script[state.scriptidx]+128);
 						break;
 					}

@@ -73,13 +73,12 @@ char *shiftdirection[4] = {
 	"SHIFT_LEFT", "SHIFT_RIGHT", "SHIFT_UP", "SHIFT_DOWN"
 };
 
-char *cmd35hints[2][2] = {
-	{
-		"SKIP_IF_FLAG_SET", "SKIP_IF_FLAG_UNSET"
-	},
-	{
-		"JUMP_THIS_SECTION", "JUMP_OTHER_SECTION"
-	}
+char *cmd35flaghint[2] = {
+	"SKIP_IF_FLAG_SET", "SKIP_IF_FLAG_UNSET"
+};
+
+char *cmd35jumphint[2] = {
+	"JUMP_THIS_SECTION", "JUMP_OTHER_SECTION"
 };
 
 /* multilang backgrounds share their number! */
@@ -437,6 +436,22 @@ char *backgrounds[4][4096] = {
 
 char *musicfading[2] = {
 	"FADE_OUT", "FADE_IN"
+};
+
+char *soundplay[2] = {
+	"SOUND_START", "SOUND_STOP"
+};
+
+char *showside[2] = {
+	"SHOW_LEFT", "SHOW_RIGHT"
+};
+
+char *testimonypress[2] = {
+	"SHOWBOX", "HIDEBOX"
+};
+
+char *fademode[4] = {
+	"FADE_NONE", "FADE_FROM_BLACK", "FADE_TO_BLACK", "FADE_FROM_WHITE", "FADE_TO_WHITE"
 };
 
 char *animationstate[2] = {

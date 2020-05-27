@@ -52,8 +52,9 @@ unsigned printCmd02(struct scriptstate *state) {
 
 unsigned printCmd03(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < 4) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, colors[state->script[state->scriptidx+1]]);
+		unsigned color = state->script[state->scriptidx+1];
+		if(color < sizeofarr(colors)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, colors[color]);
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -68,8 +69,10 @@ unsigned printCmd04(struct scriptstate *state) { /* 1 */
 
 unsigned printCmd05(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]], state->script[state->scriptidx+2]);
+		unsigned musicid = state->script[state->scriptidx+1];
+		unsigned fadetime = state->script[state->scriptidx+2];
+		if(musicid < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][musicid]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][musicid], fadetime);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -81,9 +84,10 @@ unsigned printCmd06(struct scriptstate *state) {
 	/* GS1GBA only takes one argument for the sound command */
 	if(state->gamenum == GAME_GS1GBA) {
 		if(state->outputenabled) {
-			unsigned int seNum = state->script[state->scriptidx+1] >> 8;
+			unsigned seNum = state->script[state->scriptidx+1] >> 8;
+			unsigned stopplay = state->script[state->scriptidx+1] & 1;
 			if(seNum < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][seNum]) {
-				state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][seNum], state->script[state->scriptidx+1] & 1);
+				state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %s\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][seNum], soundplay[stopplay]);
 				state->scriptidx += 1+1;
 			}
 			else return printCmdGeneric(state, 1);
@@ -99,7 +103,9 @@ unsigned printCmd07(struct scriptstate *state) {
 
 unsigned printCmd08(struct scriptstate *state) {
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %05u, %05u\n", commands[state->script[state->scriptidx]].name, state->script[state->scriptidx+1]-128, state->script[state->scriptidx+2]-128);
+		unsigned option1section = state->script[state->scriptidx+1]-128;
+		unsigned option2section = state->script[state->scriptidx+2]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commands[state->script[state->scriptidx]].name, option1section, option2section);
 		state->scriptidx += 1+2;
 	}
 	return 2;
@@ -107,7 +113,10 @@ unsigned printCmd08(struct scriptstate *state) {
 
 unsigned printCmd09(struct scriptstate *state) {
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %05u, %05u, %05u\n", commands[state->script[state->scriptidx]].name, state->script[state->scriptidx+1]-128, state->script[state->scriptidx+2]-128, state->script[state->scriptidx+3]-128);
+		unsigned option1section = state->script[state->scriptidx+1]-128;
+		unsigned option2section = state->script[state->scriptidx+2]-128;
+		unsigned option3section = state->script[state->scriptidx+3]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, option1section, option2section, option3section);
 		state->scriptidx += 1+3;
 	}
 	return 3;
@@ -115,7 +124,8 @@ unsigned printCmd09(struct scriptstate *state) {
 
 unsigned printCmd0A(struct scriptstate *state) {
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %05u\n", commands[state->script[state->scriptidx]].name, state->script[state->scriptidx+1]-128);
+		unsigned targetsection = state->script[state->scriptidx+1]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u\n", commands[state->script[state->scriptidx]].name, targetsection);
 		state->scriptidx += 1+1;
 	}
 	return 1;
@@ -137,8 +147,10 @@ unsigned printCmd0E(struct scriptstate *state) {
 	/* the bitshift is needed cause capcom seems to store the person in the upper 8 bits of the 16bit argument...
 	   removed check if argument 1 is less then 55 because it seems to be ok and apollo exceeds this by 5 :/ */
 	if(state->outputenabled) {
-		if((state->script[state->scriptidx+1] >> 8) < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][(state->script[state->scriptidx+1] >> 8)]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][(state->script[state->scriptidx+1] >> 8)] );
+		unsigned nameid = (state->script[state->scriptidx+1] >> 8);
+		unsigned whichside = (state->script[state->scriptidx+1] & 0xF);
+		if(nameid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][nameid] && whichside < sizeofarr(showside)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %s\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][nameid], showside[whichside] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -147,15 +159,24 @@ unsigned printCmd0E(struct scriptstate *state) {
 }
 
 unsigned printCmd0F(struct scriptstate *state) {
-	return printCmdGeneric(state, 2);
+	if(state->outputenabled) {
+		unsigned presssection = state->script[state->scriptidx+1]-128;
+		unsigned hidetextbox = state->script[state->scriptidx+2];
+		if(hidetextbox < sizeofarr(testimonypress)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u %s\n", commands[state->script[state->scriptidx]].name, presssection, testimonypress[hidetextbox]);
+			state->scriptidx += 1+2;
+		}
+		else return printCmdGeneric(state, 2);
+	}
+	return 1;
 }
 
 unsigned printCmd10(struct scriptstate *state) {
 	if(state->outputenabled) {
-		unsigned num = state->script[state->scriptidx+1] & 0xFF;
-		unsigned num2 = (state->script[state->scriptidx+1] & 0x7F00) >> 8;
+		unsigned id = state->script[state->scriptidx+1] & 0xFF;
+		unsigned type = (state->script[state->scriptidx+1] & 0x7F00) >> 8; // needs more checking... maybe a bank or something?
 		unsigned set = state->script[state->scriptidx+1] >> 15;
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, num2, num, set);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, type, id, set);
 		state->scriptidx += 1+1;
 	}
 	return 1;
@@ -166,11 +187,31 @@ unsigned printCmd11(struct scriptstate *state) {
 }
 
 unsigned printCmd12(struct scriptstate *state) {
-	return printCmdGeneric(state, 3);
+	if(state->outputenabled) {
+		unsigned delay = state->script[state->scriptidx+1] & 0xFF;
+		unsigned mode = state->script[state->scriptidx+1] >> 8;
+		unsigned delta = state->script[state->scriptidx+2]; // amount of blending to do per frame
+		unsigned target = state->script[state->scriptidx+3];
+		if(mode < sizeofarr(fademode)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s, %u, %u\n", commands[state->script[state->scriptidx]].name, delay, fademode[mode], delta, target);
+			state->scriptidx += 1+3;
+		}
+		else return printCmdGeneric(state, 3);
+	}
+	return 3;
 }
 
 unsigned printCmd13(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	if(state->outputenabled) {
+		unsigned evidenceid = state->script[state->scriptidx+1] & 0xFF;
+		unsigned whichside = state->script[state->scriptidx+1] >> 8;
+		if(whichside < sizeofarr(showside)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, evidenceid, showside[whichside]);
+			state->scriptidx += 1+1;
+		}
+		else return printCmdGeneric(state, 1);
+	}
+	return 1;
 }
 
 unsigned printCmd14(struct scriptstate *state) {
@@ -203,8 +244,9 @@ unsigned printCmd1A(struct scriptstate *state) {
 
 unsigned printCmd1B(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]] );
+		unsigned bgid = state->script[state->scriptidx+1];
+		if(bgid < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][bgid]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][bgid] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -218,7 +260,9 @@ unsigned printCmd1C(struct scriptstate *state) {
 
 unsigned printCmd1D(struct scriptstate *state) {
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %04u\n", commands[state->script[state->scriptidx]].name, shiftdirection[state->script[state->scriptidx+1]/256], state->script[state->scriptidx+1] % 256);
+		unsigned direction = state->script[state->scriptidx+1] >> 8;
+		unsigned speed = state->script[state->scriptidx+1] & 0xFF;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commands[state->script[state->scriptidx]].name, shiftdirection[direction], speed);
 		state->scriptidx += 1+1;
 	}
 	return 1;
@@ -226,8 +270,11 @@ unsigned printCmd1D(struct scriptstate *state) {
 
 unsigned printCmd1E(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]], state->script[state->scriptidx+2], state->script[state->scriptidx+3]);
+		unsigned personid = state->script[state->scriptidx+1];
+		unsigned unk2 = state->script[state->scriptidx+2];
+		unsigned unk3 = state->script[state->scriptidx+3];
+		if(personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], unk2, unk3);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -249,8 +296,10 @@ unsigned printCmd21(struct scriptstate *state) {
 
 unsigned printCmd22(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+1] < sizeofarr(musicfading)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, musicfading[state->script[state->scriptidx+1]], state->script[state->scriptidx+2]);
+		unsigned inout = state->script[state->scriptidx+1];
+		unsigned fadetime = state->script[state->scriptidx+2];
+		if(inout < sizeofarr(musicfading)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, musicfading[inout], fadetime);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -308,8 +357,10 @@ unsigned printCmd2E(struct scriptstate *state) {
 
 unsigned printCmd2F(struct scriptstate *state) {
 	if(state->outputenabled) {
-		if(state->script[state->scriptidx+2] < sizeofarr(animationstate)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %05u, %s\n", commands[state->script[state->scriptidx]].name, state->script[state->scriptidx+1], animationstate[state->script[state->scriptidx+2]]);
+		unsigned unk1 = state->script[state->scriptidx+1];
+		unsigned anistate = state->script[state->scriptidx+2];
+		if(anistate < sizeofarr(animationstate)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %05u, %s\n", commands[state->script[state->scriptidx]].name, unk1, animationstate[anistate]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -334,6 +385,8 @@ unsigned printCmd33(struct scriptstate *state) {
 	if(state->outputenabled) {
 		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
 		
+		/* this block just iterates through all arguments, sanity checks them and then either prints the corresponding string or a number */
+		/* extra checking done only for the first argument to get the output text done right */
 		if(state->script[state->scriptidx+1] < sizeofarr(locations[ARRGAMENUM(state->gamenum)]) && locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
 			state->textidx += sprintf(state->textfile+state->textidx, " %s", locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]);
 		}
@@ -357,40 +410,45 @@ unsigned printCmd34(struct scriptstate *state) {
 
 unsigned printCmd35(struct scriptstate *state) {
 	/* this needs more looking into. it involves special data to allow jumping at arbitrary offsets in other sections */
-	unsigned targetsection, offset;
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
-		state->textidx += sprintf(state->textfile+state->textidx, " %s, %u, %s, ", cmd35hints[0][state->script[state->scriptidx+1] & 1], state->script[state->scriptidx+1] >> 8, cmd35hints[1][(state->script[state->scriptidx+1] & 0x80) ? 1 : 0]);
-		if(state->script[state->scriptidx+1] & 0x80) {
-			offset = state->specialdata[(state->script[state->scriptidx+2] - state->numsections)].val0;
-			targetsection = state->specialdata[(state->script[state->scriptidx+2] - state->numsections)].val1;
-			state->textidx += sprintf(state->textfile+state->textidx, "%u + %u\n", targetsection, offset/2);
+		unsigned flaghint = state->script[state->scriptidx+1] & 1;
+		unsigned whichflag = state->script[state->scriptidx+1] >> 8;
+		unsigned jumphint = !!(state->script[state->scriptidx+1] & 0x80);
+		/* depending on jumphint this can be either an index into the script special data or a straight offset */
+		unsigned spcidx_thisoffset = state->script[state->scriptidx+2];
+		unsigned offset, targetsection;
+		
+		if(jumphint) {
+			unsigned specialindex = spcidx_thisoffset - state->numsections;
+			offset = state->specialdata[specialindex].val0 / 2;
+			targetsection = state->specialdata[specialindex].val1;
 		}
 		else {
-			state->textidx += sprintf(state->textfile+state->textidx, "%u\n", state->script[state->scriptidx+2]/2);
+			offset = spcidx_thisoffset/2;
+			targetsection = state->section;
 		}
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u + %u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, targetsection, offset);
 		state->scriptidx += 1+2;
 	}
 	return 2;
 }
 
 unsigned printCmd36(struct scriptstate *state) {
-	unsigned targetsection, offset;
-	if(state->outputenabled) {
-		if((state->script[state->scriptidx+1] - state->numsections) < state->numspecialdata) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
-			//~ printf("cmd36 using index %08x(%08x)\n", (state->script[state->scriptidx+1] - state->numsections), state->script[state->scriptidx+1]);
-			offset = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val0;
-			targetsection = state->specialdata[(state->script[state->scriptidx+1] - state->numsections)].val1;
-			state->textidx += sprintf(state->textfile+state->textidx, " %u + %u\n", targetsection, offset/2);
+	/* apollo currently errors out for this, probably related to other commands... */
+	if(state->gamenum == GAME_APOLLO) {
+		return printCmdGeneric(state, 1);
+	}
+	else {
+		if(state->outputenabled) {
+			unsigned specialindex = state->script[state->scriptidx+1] - state->numsections;
+			unsigned offset = state->specialdata[specialindex].val0 / 2;
+			unsigned targetsection = state->specialdata[specialindex].val1;
+			
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u + %u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
 			state->scriptidx += 1+1;
 		}
-		else {
-			//~ printf("cmd36 invalid index! %08x(%08x)\n", (state->script[state->scriptidx+1] - state->numsections), state->script[state->scriptidx+1]);
-			return printCmdGeneric(state, 1);
-		}
+		return 1;
 	}
-	return 1;
 }
 
 unsigned printCmd37(struct scriptstate *state) {
@@ -405,9 +463,12 @@ unsigned printCmd39(struct scriptstate *state) {
 	return printCmdGeneric(state, 1);
 }
 
-unsigned printCmd3A(struct scriptstate *state) { /* 3 */
-	/* has 2 args in GS1 gba */
-	return printCmdGeneric(state, 2);
+unsigned printCmd3A(struct scriptstate *state) {
+	/* has 2 args in GS1GBA */
+	if(state->gamenum == GAME_GS1GBA) {
+		return printCmdGeneric(state, 2);
+	}
+	else return printCmdGeneric(state, 3);
 }
 
 unsigned printCmd3B(struct scriptstate *state) {
@@ -544,8 +605,8 @@ unsigned printCmd5B(struct scriptstate *state) {
 	return printCmdGeneric(state, 2);
 }
 
-unsigned printCmd5C(struct scriptstate *state) { /* 3 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd5C(struct scriptstate *state) {
+	return printCmdGeneric(state, 3);
 }
 
 unsigned printCmd5D(struct scriptstate *state) { /* 0 */
@@ -562,8 +623,17 @@ unsigned printCmd5F(struct scriptstate *state) {
 
 /* commands introduced after GS1 gba */
 
-unsigned printCmd60(struct scriptstate *state) { /* 4 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd60(struct scriptstate *state) {
+	if(state->outputenabled) {
+		unsigned unk1 = state->script[state->scriptidx+1];
+		unsigned itemid = state->script[state->scriptidx+2];
+		unsigned correctsection = state->script[state->scriptidx+3]-128;
+		unsigned othersection = state->script[state->scriptidx+4]-128;
+		
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u, %u\n", commands[state->script[state->scriptidx]].name, unk1, itemid, correctsection, othersection);
+		state->scriptidx += 1+4;
+	}
+	return 4;
 }
 
 unsigned printCmd61(struct scriptstate *state) {
@@ -586,8 +656,8 @@ unsigned printCmd65(struct scriptstate *state) {
 	return printCmdGeneric(state, 2);
 }
 
-unsigned printCmd66(struct scriptstate *state) { /* 3 */
-	return printCmdGeneric(state, 2);
+unsigned printCmd66(struct scriptstate *state) {
+	return printCmdGeneric(state, 3);
 }
 
 unsigned printCmd67(struct scriptstate *state) {
@@ -653,12 +723,12 @@ unsigned printCmd75(struct scriptstate *state) {
 	return printCmdGeneric(state, 4);
 }
 
-unsigned printCmd76(struct scriptstate *state) { /* 2 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd76(struct scriptstate *state) {
+	return printCmdGeneric(state, 2);
 }
 
-unsigned printCmd77(struct scriptstate *state) { /* 2 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd77(struct scriptstate *state) {
+	return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd78(struct scriptstate *state) {
@@ -669,12 +739,12 @@ unsigned printCmd79(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
 
-unsigned printCmd7A(struct scriptstate *state) { /* 1 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd7A(struct scriptstate *state) {
+	return printCmdGeneric(state, 1);
 }
 
-unsigned printCmd7B(struct scriptstate *state) { /* 2 */
-	return printCmdGeneric(state, 0);
+unsigned printCmd7B(struct scriptstate *state) {
+	return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd7C(struct scriptstate *state) {
@@ -692,6 +762,8 @@ unsigned printCmd7E(struct scriptstate *state) { /* 1 */
 unsigned printCmd7F(struct scriptstate *state) { /* 1 */
 	return printCmdGeneric(state, 0);
 }
+
+/* all of the following commands were added to support apollo */
 
 unsigned printCmd80(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
@@ -756,8 +828,12 @@ unsigned printCmd8E(struct scriptstate *state) {
 unsigned printCmd8F(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
+
+/* note that the documentation here is a horrible mix of leftovers from PWSE,
+   half baked reversing attempts and extra knowledge from GS1GBA.
+   take it with a grain of salt */
 command commands[144] = {
-	{ printCmd00, "setup_section" }, 		/* does something? */
+	{ printCmd00, "section_setup" }, 		/* does something? */
 	{ printCmd01, "linebreak" }, 			/* linebreak */
 	{ printCmd02, "pagebreak" }, 			/* paragraph, ends current textbox, waits for player interaction */
 	{ printCmd03, "textcolor" }, 			/* text color, args: 0 white, 1 red, 2 blue, 3 green */
@@ -767,19 +843,19 @@ command commands[144] = {
 	{ printCmd07, "fullscreen_text" }, 		/* switches to fullscreen display, GBA only? */
 	{ printCmd08, "finger_choice_2_args_jmp" }, 	/* select between two choices (either in FS mode with previous opcode or from touchscreen), args: pointers to respective choices in script, followed by endjump? */
 	{ printCmd09, "finger_choice_3_args_jmp" }, 	/* see above with 3 choices */
-	{ printCmd0A, "rejmp" }, 			/* pointer to jump to for multiple choice questions failed once */
+	{ printCmd0A, "pagebreak_section" },		/* pointer to jump to for multiple choice questions failed once */
 	{ printCmd0B, "speed" }, 			/* change text speed, args: frames/character */
 	{ printCmd0C, "wait" }, 			/* wait for specified time units, args: frames to wait */
-	{ printCmd0D, "endjmp" }, 			/* terminates a jump, usually found after all other jumpstatements */
+	{ printCmd0D, "section_end" }, 			/* terminates a jump, usually found after all other jumpstatements */
 	{ printCmd0E, "name" }, 			/* change the name in the top left of a textbox, apparently, arg needs to be shifted to the right by 8 (actual value in upper 8 bits of 16bit arg) */
 	{ printCmd0F, "testimony_box" }, 		/* begins a testimony section, args: ? - ? */
 	{ printCmd10, "flagctl"  },			/* modifies flags (set/unset) */
 	{ printCmd11, "evidence_window_plain" }, 	/* show evidence window without lifebar (as when pressing R) */
-	{ printCmd12, "bgcolor" }, 			/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
+	{ printCmd12, "screen_fade" }, 			/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
 	{ printCmd13, "showevidence" }, 		/* displays little evidence box with SFX, args: evidence to show? */
 	{ printCmd14, "removeevidence" }, 		/* removes above box with SFX */
-	{ printCmd15, "special_jmp" }, 			/* used at the end of testimony boxes for saves and resets? */
-	{ printCmd16, "savegame" }, 			/* displays saving screen */
+	{ printCmd15, "halt" }, 			/* halts script execution (repeats this command). script pointer will be changed externally (by player interaction) */
+	{ printCmd16, "scenario_end_save" }, 		/* displays saving screen */
 	{ printCmd17, "newevidence" }, 			/* adds evidence to court record with animation and SFX, args: object to add */
 	{ printCmd18, "newevidence_noanim" }, 		/* plays new evidence sound with nothing else?, args: ? */
 	{ printCmd19, "cmd19" }, 			/* ? */
@@ -855,7 +931,7 @@ command commands[144] = {
 	{ printCmd5E, "cmd5E" },			/* ? */
 	{ printCmd5F, "cmd5F" },  			/* ? */
 	/* commands introduced after GS1 gba */
-	{ printCmd60, "cmd60" },			/* ?, crash? */
+	{ printCmd60, "psychelock_itemchallenge" },	/* initiates a psychelock item challenge */
 	{ printCmd61, "cmd61" },  			/* ? */
 	{ printCmd62, "cmd62" },  			/* ? */
 	{ printCmd63, "cmd63" },  			/* ?, crash? */
@@ -888,6 +964,7 @@ command commands[144] = {
 	{ printCmd7D, "cmd7D" },			/* reset to capcom animation? */
 	{ printCmd7E, "cmd7E" },			/* ?, crash? */
 	{ printCmd7F, "cmd7F" }, 			/* ?, crash? */
+	/* all of the following commands were added to support apollo */
 	{ printCmd80, "cmd80" },  			/* dummy for apollotesting */
 	{ printCmd81, "cmd81" },  			/* dummy for apollotesting */
 	{ printCmd82, "cmd82" },  			/* dummy for apollotesting */
