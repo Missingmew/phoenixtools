@@ -54,7 +54,7 @@ unsigned printCmd03(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned color = state->script[state->scriptidx+1];
 		if(color < sizeofarr(colors)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, colors[color]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s\n", commands[state->script[state->scriptidx]].name, colors[color]);
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -72,7 +72,7 @@ unsigned printCmd05(struct scriptstate *state) {
 		unsigned musicid = state->script[state->scriptidx+1];
 		unsigned fadetime = state->script[state->scriptidx+2];
 		if(musicid < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][musicid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][musicid], fadetime);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][musicid], fadetime);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -87,7 +87,7 @@ unsigned printCmd06(struct scriptstate *state) {
 			unsigned seNum = state->script[state->scriptidx+1] >> 8;
 			unsigned stopplay = state->script[state->scriptidx+1] & 1;
 			if(seNum < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][seNum]) {
-				state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %s\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][seNum], soundplay[stopplay]);
+				state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][seNum], soundplay[stopplay]);
 				state->scriptidx += 1+1;
 			}
 			else return printCmdGeneric(state, 1);
@@ -150,7 +150,7 @@ unsigned printCmd0E(struct scriptstate *state) {
 		unsigned nameid = (state->script[state->scriptidx+1] >> 8);
 		unsigned whichside = (state->script[state->scriptidx+1] & 0xF);
 		if(nameid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][nameid] && whichside < sizeofarr(showside)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %s\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][nameid], showside[whichside] );
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][nameid], showside[whichside] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -246,7 +246,7 @@ unsigned printCmd1B(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned bgid = state->script[state->scriptidx+1];
 		if(bgid < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][bgid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\"\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][bgid] );
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][bgid] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -274,7 +274,7 @@ unsigned printCmd1E(struct scriptstate *state) {
 		unsigned unk2 = state->script[state->scriptidx+2];
 		unsigned unk3 = state->script[state->scriptidx+3];
 		if(personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], unk2, unk3);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], unk2, unk3);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -299,7 +299,7 @@ unsigned printCmd22(struct scriptstate *state) {
 		unsigned inout = state->script[state->scriptidx+1];
 		unsigned fadetime = state->script[state->scriptidx+2];
 		if(inout < sizeofarr(musicfading)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s \"%s\", %05u\n", commands[state->script[state->scriptidx]].name, musicfading[inout], fadetime);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commands[state->script[state->scriptidx]].name, musicfading[inout], fadetime);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -829,156 +829,187 @@ unsigned printCmd8F(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);
 }
 
+/* names for the commands, eight names per line */
+char *const commandnames[144] = {
+/* 00h */ "section_setup", "linebreak", "pagebreak", "textcolor", "pause", "music", "sound", "fullscreen_text",
+/* 08h */ "finger_choice_2_args_jmp", "finger_choice_3_args_jmp", "pagebreak_section", "speed", "wait", "section_end", "name", "testimony_box",
+/* 10h */ "flagctl", "evidence_window_plain", "screen_fade", "showevidence", "removeevidence", "halt", "scenario_end_save", "newevidence",
+/* 18h */ "newevidence_noanim", "cmd19", "swoosh", "bg", "hidetextbox", "shift_background", "person", "hideperson",
+/* 20h */ "cmd20", "evidence_window_lifebar", "fademusic", "cmd23", "reset", "cmd25", "hide_court_record_button", "shake",
+/* 28h */ "testemony_animation", "return_to_testimony", "cmd2A", "cmd2B", "jmp", "nextpage_button", "nextpage_nobutton", "animation",
+/* 30h */ "cmd30", "personvanish", "cmd32", "setmovelocations", "fadetoblack", "cmd35", "cmd36", "cmd37",
+/* 38h */ "cmd38", "littlesprite", "cmd3A", "cmd3B", "cmd3C", "cmd3D", "cmd3E", "cmd3F",
+/* 40h */ "cmd40", "cmd41", "togglevoicesfx", "show_lifebar", "guilty", "cmd45", "bgtile", "cmd47",
+/* 48h */ "cmd48", "wingame", "cmd4A", "cmd4B", "cmd4C",
+	
+/* commands following are nullsubs in GS1 gba */
+/* 4Dh */ "cmd4D", "wait_noanim", "cmd4F",
+/* 50h */ "cmd50", "cmd51", "cmd52", "cmd53", "lifebarset", "cmd55", "cmd56", "psychoblock",
+/* 58h */ "cmd58", "cmd59", "cmd5A", "cmd5B", "cmd5C", "toggle_center_text", "cmd5E", "cmd5F",
+	
+/* commands introduced after GS1 gba */
+/* 60h */ "psychelock_itemchallenge", "cmd61", "cmd62", "cmd63", "cmd64", "cmd65", "cmd66", "cmd67",
+/* 68h */ "cmd68", "bganim", "switchscript", "cmd6B", "cmd6C", "cmd6D", "cmd6E", "cmd6F",
+/* 70h */ "cmd70", "cmd71", "cmd72", "cmd73", "cmd74", "cmd75", "cmd76", "cmd77",
+
+/* unity maps cmd78 to cmd36. possibly something to do with localization? */
+/* 78h */ "cmd78", "cmd79", "cmd7A", "cmd7B", "cmd7C", "cmd7D", "cmd7E", "cmd7F",
+
+/* all of the following commands were added to support apollo */
+/* 80h */ "cmd80", "cmd81", "cmd82", "cmd83", "cmd84", "cmd85", "cmd86", "cmd87",
+/* 88h */ "cmd88", "cmd89", "cmd8A", "cmd8B", "cmd8C", "cmd8D", "cmd8E", "cmd8F"
+};
+
 /* note that the documentation here is a horrible mix of leftovers from PWSE,
    half baked reversing attempts and extra knowledge from GS1GBA.
    take it with a grain of salt */
 command commands[144] = {
-	{ printCmd00, "section_setup" }, 		/* does something? */
-	{ printCmd01, "linebreak" }, 			/* linebreak */
-	{ printCmd02, "pagebreak" }, 			/* paragraph, ends current textbox, waits for player interaction */
-	{ printCmd03, "textcolor" }, 			/* text color, args: 0 white, 1 red, 2 blue, 3 green */
-	{ printCmd04, "pause" },			/* pause the game, waits for player interaction */
-	{ printCmd05, "music" }, 			/* change the music, args sequence(SDAT index) - fadein time frames (on resume only?) */
-	{ printCmd06, "sound" }, 			/* play a sound effect, args ? - ? */
-	{ printCmd07, "fullscreen_text" }, 		/* switches to fullscreen display, GBA only? */
-	{ printCmd08, "finger_choice_2_args_jmp" }, 	/* select between two choices (either in FS mode with previous opcode or from touchscreen), args: pointers to respective choices in script, followed by endjump? */
-	{ printCmd09, "finger_choice_3_args_jmp" }, 	/* see above with 3 choices */
-	{ printCmd0A, "pagebreak_section" },		/* pointer to jump to for multiple choice questions failed once */
-	{ printCmd0B, "speed" }, 			/* change text speed, args: frames/character */
-	{ printCmd0C, "wait" }, 			/* wait for specified time units, args: frames to wait */
-	{ printCmd0D, "section_end" }, 			/* terminates a jump, usually found after all other jumpstatements */
-	{ printCmd0E, "name" }, 			/* change the name in the top left of a textbox, apparently, arg needs to be shifted to the right by 8 (actual value in upper 8 bits of 16bit arg) */
-	{ printCmd0F, "testimony_box" }, 		/* begins a testimony section, args: ? - ? */
-	{ printCmd10, "flagctl"  },			/* modifies flags (set/unset) */
-	{ printCmd11, "evidence_window_plain" }, 	/* show evidence window without lifebar (as when pressing R) */
-	{ printCmd12, "screen_fade" }, 			/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
-	{ printCmd13, "showevidence" }, 		/* displays little evidence box with SFX, args: evidence to show? */
-	{ printCmd14, "removeevidence" }, 		/* removes above box with SFX */
-	{ printCmd15, "halt" }, 			/* halts script execution (repeats this command). script pointer will be changed externally (by player interaction) */
-	{ printCmd16, "scenario_end_save" }, 		/* displays saving screen */
-	{ printCmd17, "newevidence" }, 			/* adds evidence to court record with animation and SFX, args: object to add */
-	{ printCmd18, "newevidence_noanim" }, 		/* plays new evidence sound with nothing else?, args: ? */
-	{ printCmd19, "cmd19" }, 			/* ? */
-	{ printCmd1A, "swoosh" }, 			/* starts panning the camera from one side of court to the other (always followed by wait 1e?), args: ? */
-	{ printCmd1B, "bg" }, 				/* change background image, args: background to display */
-	{ printCmd1C, "hidetextbox" }, 			/* show textbox(border?), args: 0 show, 1 hide */
-	{ printCmd1D, "shift_background" }, 		/* shifts background?, args: x*256 for direction + pixels/frame */
-	{ printCmd1E, "person" }, 			/* change the character image shown on-screen, args: ?,?,? */
-	{ printCmd1F, "hideperson" }, 			/* instantly hide the character image */
-	{ printCmd20, "cmd20" }, 			/* ? */
-	{ printCmd21, "evidence_window_lifebar" }, 	/* show evidence window with lifebar */
-	{ printCmd22, "fademusic" }, 			/* fades music, args: fadeout/in, frames until 0/full volume */
-	{ printCmd23, "cmd23" }, 			/* ? */
-	{ printCmd24, "reset" }, 			/* reset the game to title screen */
-	{ printCmd25, "cmd25" }, 			/* ? */
-	{ printCmd26, "hide_court_record_button" }, 	/* shows court-record button, args: 0 show, 1 hide */
-	{ printCmd27, "shake" }, 			/* shakes the screen?, args: ? - ? (first seems to be 1e only and second is changing?) */
-	{ printCmd28, "testemony_animation" }, 		/* display "testimony" animation shown before witness testifies, args: ? */
-	{ printCmd29, "return_to_testimony" }, 		/* returns from a wrong answer to the point in testimony, where objection was called?, args: ? */
-	{ printCmd2A, "cmd2A" },  			/* ?, always followed by endjmp? */
-	{ printCmd2B, "cmd2B" },  			/* ? */
-	{ printCmd2C, "jmp" }, 				/* jumps to pointer, args: pointer to target */
-	{ printCmd2D, "nextpage_button" }, 		/* same as p */
-	{ printCmd2E, "nextpage_nobutton" }, 		/* paragraph, ends textbox, no interaction */
-	{ printCmd2F, "animation" }, 			/* display animation (such as "objection!"), args: ? */
-	{ printCmd30, "cmd30" },  			/* ? */
-	{ printCmd31, "personvanish" }, 		/* makes characer vanish, args: ? */
-	{ printCmd32, "cmd32" },  			/* ? */
-	{ printCmd33, "setmovelocations" },		/* sets locations available to move to */
-	{ printCmd34, "fadetoblack" }, 			/* fades to black, args: ? */
-	{ printCmd35, "cmd35" },  			/* ? */
-	{ printCmd36, "cmd36" },			/* ?, unclear description in python */
-	{ printCmd37, "cmd37" },  			/* ? */
-	{ printCmd38, "cmd38" },  			/* ? */
-	{ printCmd39, "littlesprite" }, 		/* makes blip for characters on map in case 4 appear?, args: blip to show? */
-	{ printCmd3A, "cmd3A" },			/* ? */
-	{ printCmd3B, "cmd3B" },  			/* Animation related (begin animation?) */
-	{ printCmd3C, "cmd3C" },  			/* Animation related (makes argument blip flash?) */
-	{ printCmd3D, "cmd3D" },  			/* Animation related (stop animation?) */
-	{ printCmd3E, "cmd3E" },  			/* ? */
-	{ printCmd3F, "cmd3F" },  			/* unknown jump, args: ? */
-	{ printCmd40, "cmd40" },  			/* ? */
-	{ printCmd41, "cmd41" },  			/* ? */
-	{ printCmd42, "togglevoicesfx" }, 		/* toggles play of voice/typewriter sfx, args: 0 play - 1 stop */
-	{ printCmd43, "show_lifebar" }, 		/* show lifebar (with animation), args: 0 slide out - 1 slide in? */
-	{ printCmd44, "guilty" }, 			/* play guilty animation, args: ? */
-	{ printCmd45, "cmd45" },  			/* jump at the end of special messages? */
-	{ printCmd46, "bgtile" }, 			/* change all background tiles, args: tile to change to */
-	{ printCmd47, "cmd47" },  			/* ? */
-	{ printCmd48, "cmd48" },  			/* ? */
-	{ printCmd49, "wingame" }, 			/* return to title, unlock all cases */
-	{ printCmd4A, "cmd4A" },			/* ?, crash? */
-	{ printCmd4B, "cmd4B" },  			/* ? */
-	{ printCmd4C, "cmd4C" },  			/* ? */
+	{ printCmd00, commandnames[0x00] },	/* does something? */
+	{ printCmd01, commandnames[0x01] },	/* linebreak */
+	{ printCmd02, commandnames[0x02] },	/* paragraph, ends current textbox, waits for player interaction */
+	{ printCmd03, commandnames[0x03] },	/* text color, args: 0 white, 1 red, 2 blue, 3 green */
+	{ printCmd04, commandnames[0x04] },	/* pause the game, waits for player interaction */
+	{ printCmd05, commandnames[0x05] },	/* change the music, args sequence(SDAT index) - fadein time frames (on resume only?) */
+	{ printCmd06, commandnames[0x06] },	/* play a sound effect, args ? - ? */
+	{ printCmd07, commandnames[0x07] },	/* switches to fullscreen display, GBA only? */
+	{ printCmd08, commandnames[0x08] },	/* select between two choices (either in FS mode with previous opcode or from touchscreen), args: pointers to respective choices in script, followed by endjump? */
+	{ printCmd09, commandnames[0x09] },	/* see above with 3 choices */
+	{ printCmd0A, commandnames[0x0A] },	/* pointer to jump to for multiple choice questions failed once */
+	{ printCmd0B, commandnames[0x0B] },	/* change text speed, args: frames/character */
+	{ printCmd0C, commandnames[0x0C] },	/* wait for specified time units, args: frames to wait */
+	{ printCmd0D, commandnames[0x0D] },	/* terminates a jump, usually found after all other jumpstatements */
+	{ printCmd0E, commandnames[0x0E] },	/* change the name in the top left of a textbox, apparently, arg needs to be shifted to the right by 8 (actual value in upper 8 bits of 16bit arg) */
+	{ printCmd0F, commandnames[0x0F] },	/* begins a testimony section, args: ? - ? */
+	{ printCmd10, commandnames[0x10] },	/* modifies flags (set/unset) */
+	{ printCmd11, commandnames[0x11] },	/* show evidence window without lifebar (as when pressing R) */
+	{ printCmd12, commandnames[0x12] },	/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
+	{ printCmd13, commandnames[0x13] },	/* displays little evidence box with SFX, args: evidence to show? */
+	{ printCmd14, commandnames[0x14] },	/* removes above box with SFX */
+	{ printCmd15, commandnames[0x15] },	/* halts script execution (repeats this command). script pointer will be changed externally (by player interaction) */
+	{ printCmd16, commandnames[0x16] },	/* displays saving screen */
+	{ printCmd17, commandnames[0x17] },	/* adds evidence to court record with animation and SFX, args: object to add */
+	{ printCmd18, commandnames[0x18] },	/* plays new evidence sound with nothing else?, args: ? */
+	{ printCmd19, commandnames[0x19] },	/* ? */
+	{ printCmd1A, commandnames[0x1A] },	/* starts panning the camera from one side of court to the other (always followed by wait 1e?), args: ? */
+	{ printCmd1B, commandnames[0x1B] },	/* change background image, args: background to display */
+	{ printCmd1C, commandnames[0x1C] },	/* show textbox(border?), args: 0 show, 1 hide */
+	{ printCmd1D, commandnames[0x1D] },	/* shifts background?, args: x*256 for direction + pixels/frame */
+	{ printCmd1E, commandnames[0x1E] },	/* change the character image shown on-screen, args: ?,?,? */
+	{ printCmd1F, commandnames[0x1F] },	/* instantly hide the character image */
+	{ printCmd20, commandnames[0x20] },	/* ? */
+	{ printCmd21, commandnames[0x21] },	/* show evidence window with lifebar */
+	{ printCmd22, commandnames[0x22] },	/* fades music, args: fadeout/in, frames until 0/full volume */
+	{ printCmd23, commandnames[0x23] },	/* ? */
+	{ printCmd24, commandnames[0x24] },	/* reset the game to title screen */
+	{ printCmd25, commandnames[0x25] },	/* ? */
+	{ printCmd26, commandnames[0x26] },	/* shows court-record button, args: 0 show, 1 hide */
+	{ printCmd27, commandnames[0x27] },	/* shakes the screen?, args: ? - ? (first seems to be 1e only and second is changing?) */
+	{ printCmd28, commandnames[0x28] },	/* display "testimony" animation shown before witness testifies, args: ? */
+	{ printCmd29, commandnames[0x29] },	/* returns from a wrong answer to the point in testimony, where objection was called?, args: ? */
+	{ printCmd2A, commandnames[0x2A] },	/* ?, always followed by endjmp? */
+	{ printCmd2B, commandnames[0x2B] },	/* ? */
+	{ printCmd2C, commandnames[0x2C] },	/* jumps to pointer, args: pointer to target */
+	{ printCmd2D, commandnames[0x2D] },	/* same as p */
+	{ printCmd2E, commandnames[0x2E] },	/* paragraph, ends textbox, no interaction */
+	{ printCmd2F, commandnames[0x2F] },	/* display animation (such as "objection!"), args: ? */
+	{ printCmd30, commandnames[0x30] },	/* ? */
+	{ printCmd31, commandnames[0x31] },	/* makes characer vanish, args: ? */
+	{ printCmd32, commandnames[0x32] },	/* ? */
+	{ printCmd33, commandnames[0x33] },	/* sets locations available to move to */
+	{ printCmd34, commandnames[0x34] },	/* fades to black, args: ? */
+	{ printCmd35, commandnames[0x35] },	/* ? */
+	{ printCmd36, commandnames[0x36] },	/* ?, unclear description in python */
+	{ printCmd37, commandnames[0x37] },	/* ? */
+	{ printCmd38, commandnames[0x38] },	/* ? */
+	{ printCmd39, commandnames[0x39] },	/* makes blip for characters on map in case 4 appear?, args: blip to show? */
+	{ printCmd3A, commandnames[0x3A] },	/* ? */
+	{ printCmd3B, commandnames[0x3B] },	/* Animation related (begin animation?) */
+	{ printCmd3C, commandnames[0x3C] },	/* Animation related (makes argument blip flash?) */
+	{ printCmd3D, commandnames[0x3D] },	/* Animation related (stop animation?) */
+	{ printCmd3E, commandnames[0x3E] },	/* ? */
+	{ printCmd3F, commandnames[0x3F] },	/* unknown jump, args: ? */
+	{ printCmd40, commandnames[0x40] },	/* ? */
+	{ printCmd41, commandnames[0x41] },	/* ? */
+	{ printCmd42, commandnames[0x42] },	/* toggles play of voice/typewriter sfx, args: 0 play - 1 stop */
+	{ printCmd43, commandnames[0x43] },	/* show lifebar (with animation), args: 0 slide out - 1 slide in? */
+	{ printCmd44, commandnames[0x44] },	/* play guilty animation, args: ? */
+	{ printCmd45, commandnames[0x45] },	/* jump at the end of special messages? */
+	{ printCmd46, commandnames[0x46] },	/* change all background tiles, args: tile to change to */
+	{ printCmd47, commandnames[0x47] },	/* ? */
+	{ printCmd48, commandnames[0x48] },	/* ? */
+	{ printCmd49, commandnames[0x49] },	/* return to title, unlock all cases */
+	{ printCmd4A, commandnames[0x4A] },	/* ?, crash? */
+	{ printCmd4B, commandnames[0x4B] },	/* ? */
+	{ printCmd4C, commandnames[0x4C] },	/* ? */
 	/* commands following are nullsubs in GS1 gba */
-	{ printCmd4D, "cmd4D" },  			/* ?, not tested? */
-	{ printCmd4E, "wait_noanim" }, 			/* wait for specified time, no character animation, args: time to wait */
-	{ printCmd4F, "cmd4F" },  			/* ? */
-	{ printCmd50, "cmd50" },  			/* ? */
-	{ printCmd51, "cmd51" },  			/* ? */
-	{ printCmd52, "cmd52" },  			/* ? */
-	{ printCmd53, "cmd53" },  			/* ? */
-	{ printCmd54, "lifebarset" }, 			/* various lifebar related things?, args: ?, ? */
-	{ printCmd55, "cmd55" },			/* ?, crash? */
-	{ printCmd56, "cmd56" },  			/* ? */
-	{ printCmd57, "psychoblock" }, 			/* play psychoblock chain and lock appearance animation, args: locks to show */
-	{ printCmd58, "cmd58" },  			/* ? */
-	{ printCmd59, "cmd59" },  			/* ? */
-	{ printCmd5A, "cmd5A" },  			/* ? */
-	{ printCmd5B, "cmd5B" },  			/* ? */
-	{ printCmd5C, "cmd5C" },			/* ?, crash? */
-	{ printCmd5D, "toggle_center_text" },		/* toggles text centering, args: 0 normal alignment - 1 centered */
-	{ printCmd5E, "cmd5E" },			/* ? */
-	{ printCmd5F, "cmd5F" },  			/* ? */
+	{ printCmd4D, commandnames[0x4D] },	/* ?, not tested? */
+	{ printCmd4E, commandnames[0x4E] },	/* wait for specified time, no character animation, args: time to wait */
+	{ printCmd4F, commandnames[0x4F] },	/* ? */
+	{ printCmd50, commandnames[0x50] },	/* ? */
+	{ printCmd51, commandnames[0x51] },	/* ? */
+	{ printCmd52, commandnames[0x52] },	/* ? */
+	{ printCmd53, commandnames[0x53] },	/* ? */
+	{ printCmd54, commandnames[0x54] },	/* various lifebar related things?, args: ?, ? */
+	{ printCmd55, commandnames[0x55] },	/* ?, crash? */
+	{ printCmd56, commandnames[0x56] },	/* ? */
+	{ printCmd57, commandnames[0x57] },	/* play psychoblock chain and lock appearance animation, args: locks to show */
+	{ printCmd58, commandnames[0x58] },	/* ? */
+	{ printCmd59, commandnames[0x59] },	/* ? */
+	{ printCmd5A, commandnames[0x5A] },	/* ? */
+	{ printCmd5B, commandnames[0x5B] },	/* ? */
+	{ printCmd5C, commandnames[0x5C] },	/* ?, crash? */
+	{ printCmd5D, commandnames[0x5D] },	/* toggles text centering, args: 0 normal alignment - 1 centered */
+	{ printCmd5E, commandnames[0x5E] },	/* ? */
+	{ printCmd5F, commandnames[0x5F] },	/* ? */
 	/* commands introduced after GS1 gba */
-	{ printCmd60, "psychelock_itemchallenge" },	/* initiates a psychelock item challenge */
-	{ printCmd61, "cmd61" },  			/* ? */
-	{ printCmd62, "cmd62" },  			/* ? */
-	{ printCmd63, "cmd63" },  			/* ?, crash? */
-	{ printCmd64, "cmd64" },  			/* show special effect?, args: ? */
-	{ printCmd65, "cmd65" },  			/* ? */
-	{ printCmd66, "cmd66" },			/* ? */
-	{ printCmd67, "cmd67" },  			/* ? */
-	{ printCmd68, "cmd68" },  			/* ? */
-	{ printCmd69, "bganim" },			/* play fullscreen animation, args: ? */
-	{ printCmd6A, "switchscript" }, 		/* loads new script and jumps to beginning, args: current case? (python is unclear) */
-	{ printCmd6B, "cmd6B" },  			/* Animation related (load animation? used for maps?) */
-	{ printCmd6C, "cmd6C" },			/* ? */
-	{ printCmd6D, "cmd6D" },  			/* ? */
-	{ printCmd6E, "cmd6E" },  			/* ? */
-	{ printCmd6F, "cmd6F" },  			/* ? */
-	{ printCmd70, "cmd70" },  			/* ? */
-	{ printCmd71, "cmd71" },  			/* ? */
-	{ printCmd72, "cmd72" },  			/* ? */
-	{ printCmd73, "cmd73" },  			/* ?, crash? */
-	{ printCmd74, "cmd74" },			/* ?, crash? */
-	{ printCmd75, "cmd75" },  			/* ?, crash? */
-	{ printCmd76, "cmd76" },			/* ?, crash? */
-	{ printCmd77, "cmd77" },			/* ?, crash? */
+	{ printCmd60, commandnames[0x60] },	/* initiates a psychelock item challenge */
+	{ printCmd61, commandnames[0x61] },	/* ? */
+	{ printCmd62, commandnames[0x62] },	/* ? */
+	{ printCmd63, commandnames[0x63] },	/* ?, crash? */
+	{ printCmd64, commandnames[0x64] },	/* show special effect?, args: ? */
+	{ printCmd65, commandnames[0x65] },	/* ? */
+	{ printCmd66, commandnames[0x66] },	/* ? */
+	{ printCmd67, commandnames[0x67] },	/* ? */
+	{ printCmd68, commandnames[0x68] },	/* ? */
+	{ printCmd69, commandnames[0x69] },	/* play fullscreen animation, args: ? */
+	{ printCmd6A, commandnames[0x6A] },	/* loads new script and jumps to beginning, args: current case? (python is unclear) */
+	{ printCmd6B, commandnames[0x6B] },	/* Animation related (load animation? used for maps?) */
+	{ printCmd6C, commandnames[0x6C] },	/* ? */
+	{ printCmd6D, commandnames[0x6D] },	/* ? */
+	{ printCmd6E, commandnames[0x6E] },	/* ? */
+	{ printCmd6F, commandnames[0x6F] },	/* ? */
+	{ printCmd70, commandnames[0x70] },	/* ? */
+	{ printCmd71, commandnames[0x71] },	/* ? */
+	{ printCmd72, commandnames[0x72] },	/* ? */
+	{ printCmd73, commandnames[0x73] },	/* ?, crash? */
+	{ printCmd74, commandnames[0x74] },	/* ?, crash? */
+	{ printCmd75, commandnames[0x75] },	/* ?, crash? */
+	{ printCmd76, commandnames[0x76] },	/* ?, crash? */
+	{ printCmd77, commandnames[0x77] },	/* ?, crash? */
 	/* unity maps cmd78 to cmd36. possibly something to do with localization? */
-	{ printCmd78, "cmd78" },			/* ?, crash? */
-	{ printCmd79, "cmd79" },  			/* ?, crash? */
-	{ printCmd7A, "cmd7A" },			/* reset to capcom animation? */
-	{ printCmd7B, "cmd7B" },			/* ?, crash? */
-	{ printCmd7C, "cmd7C" },  			/* ?, crash? */
-	{ printCmd7D, "cmd7D" },			/* reset to capcom animation? */
-	{ printCmd7E, "cmd7E" },			/* ?, crash? */
-	{ printCmd7F, "cmd7F" }, 			/* ?, crash? */
+	{ printCmd78, commandnames[0x78] },	/* ?, crash? */
+	{ printCmd79, commandnames[0x79] },	/* ?, crash? */
+	{ printCmd7A, commandnames[0x7A] },	/* reset to capcom animation? */
+	{ printCmd7B, commandnames[0x7B] },	/* ?, crash? */
+	{ printCmd7C, commandnames[0x7C] },	/* ?, crash? */
+	{ printCmd7D, commandnames[0x7D] },	/* reset to capcom animation? */
+	{ printCmd7E, commandnames[0x7E] },	/* ?, crash? */
+	{ printCmd7F, commandnames[0x7F] },	/* ?, crash? */
 	/* all of the following commands were added to support apollo */
-	{ printCmd80, "cmd80" },  			/* dummy for apollotesting */
-	{ printCmd81, "cmd81" },  			/* dummy for apollotesting */
-	{ printCmd82, "cmd82" },  			/* dummy for apollotesting */
-	{ printCmd83, "cmd83" },  			/* dummy for apollotesting */
-	{ printCmd84, "cmd84" },  			/* dummy for apollotesting */
-	{ printCmd85, "cmd85" },  			/* dummy for apollotesting */
-	{ printCmd86, "cmd86" },  			/* dummy for apollotesting */
-	{ printCmd87, "cmd87" },  			/* dummy for apollotesting */
-	{ printCmd88, "cmd88" },  			/* dummy for apollotesting */
-	{ printCmd89, "cmd89" },  			/* dummy for apollotesting */
-	{ printCmd8A, "cmd8A" },  			/* dummy for apollotesting */
-	{ printCmd8B, "cmd8B" },  			/* dummy for apollotesting */
-	{ printCmd8C, "cmd8C" },  			/* dummy for apollotesting */
-	{ printCmd8D, "cmd8D" },  			/* dummy for apollotesting */
-	{ printCmd8E, "cmd8E" },  			/* dummy for apollotesting */
-	{ printCmd8F, "cmd8F" }				/* dummy for apollotesting */
+	{ printCmd80, commandnames[0x80] },	/* dummy for apollotesting */
+	{ printCmd81, commandnames[0x81] },	/* dummy for apollotesting */
+	{ printCmd82, commandnames[0x82] },	/* dummy for apollotesting */
+	{ printCmd83, commandnames[0x83] },	/* dummy for apollotesting */
+	{ printCmd84, commandnames[0x84] },	/* dummy for apollotesting */
+	{ printCmd85, commandnames[0x85] },	/* dummy for apollotesting */
+	{ printCmd86, commandnames[0x86] },	/* dummy for apollotesting */
+	{ printCmd87, commandnames[0x87] },	/* dummy for apollotesting */
+	{ printCmd88, commandnames[0x88] },	/* dummy for apollotesting */
+	{ printCmd89, commandnames[0x89] },	/* dummy for apollotesting */
+	{ printCmd8A, commandnames[0x8A] },	/* dummy for apollotesting */
+	{ printCmd8B, commandnames[0x8B] },	/* dummy for apollotesting */
+	{ printCmd8C, commandnames[0x8C] },	/* dummy for apollotesting */
+	{ printCmd8D, commandnames[0x8D] },	/* dummy for apollotesting */
+	{ printCmd8E, commandnames[0x8E] },	/* dummy for apollotesting */
+	{ printCmd8F, commandnames[0x8F] }	/* dummy for apollotesting */
 };
