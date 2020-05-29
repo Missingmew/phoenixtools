@@ -37,17 +37,19 @@ int main(int argc, char **argv) {
 	- close
 	*/
 	FILE *f, *o;
-	unsigned insize;
+	unsigned insize, gamenum;
 	char *input = NULL;
 	struct ir_script *script = NULL;
 	
-	if(argc != 3) {
+	if(argc != 4) {
 		printf("usage: %s infile outfile\n", argv[0]);
 		return 1;
 	}
 	
-	if(!(f = fopen(argv[1], "r"))) {
-		printf("couldnt open %s as input\n", argv[1]);
+	gamenum = strtoul(argv[1], NULL, 10) - 1;
+	
+	if(!(f = fopen(argv[2], "r"))) {
+		printf("couldnt open %s as input\n", argv[2]);
 		return 1;
 	}
 	
@@ -62,9 +64,14 @@ int main(int argc, char **argv) {
 	lexer_init(input);
 	if(!lexer_scan()) printf("couldnt lex file\n");
 	
-	if(!(script = parser_parse())) return 1;
+	if(!(script = parser_parse(gamenum))) return 1;
 	
 	ir_script_dump(script);
+	
+	
+	if(!ir_script_preprocess(script, gamenum)) return 1;
+	/* for fixing up addresses for sections and labels */
+	//~ ir_script_postprocess(script, gamenum);
 	
 	//~ as_firstpass(ir);
 	//~ as_secondpass(ir);

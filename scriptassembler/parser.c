@@ -61,19 +61,19 @@ unsigned int parser_accept(tokentype ttype, const char *caller) {
 	return lexer_scan();
 }
 
-struct ir_pre_generic *parser_parseCommand00() {
+struct ir_pre_generic *parser_parseCommand00(unsigned gamenum) {
 	GENERIC0ARG(CMD00)
 }
 
-struct ir_pre_generic *parser_parseCommand01() {
+struct ir_pre_generic *parser_parseCommand01(unsigned gamenum) {
 	GENERIC0ARG(CMD01)
 }
 
-struct ir_pre_generic *parser_parseCommand02() {
+struct ir_pre_generic *parser_parseCommand02(unsigned gamenum) {
 	GENERIC0ARG(CMD02)
 }
 
-struct ir_pre_generic *parser_parseCommand03() {
+struct ir_pre_generic *parser_parseCommand03(unsigned gamenum) {
 	char *color;
 	PREPARENDATA(CMD03, 1)
 	ACCEPTRET(color, IDENT)
@@ -81,11 +81,11 @@ struct ir_pre_generic *parser_parseCommand03() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand04() {
+struct ir_pre_generic *parser_parseCommand04(unsigned gamenum) {
 	GENERIC0ARG(CMD04)
 }
 
-struct ir_pre_generic *parser_parseCommand05() {
+struct ir_pre_generic *parser_parseCommand05(unsigned gamenum) {
 	char *music, *fade;
 	PREPARENDATA(CMD05, 2)
 	ACCEPTRET(music, IDENT)
@@ -96,14 +96,13 @@ struct ir_pre_generic *parser_parseCommand05() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand06() {
+struct ir_pre_generic *parser_parseCommand06(unsigned gamenum) {
 	char *sound, *startstop, *fade;
 	PREPARENDATA(CMD06, 2)
 	ACCEPTRET(sound, IDENT)
 	command->data[0] = sound;
 	ACCEPT(COMMA)
-	if(currenttoken.type == IDENT) {
-		command->type = CMD06_GBA;
+	if(gamenum == GAME_GS1GBA) {
 		ACCEPTRET(startstop, IDENT)
 		command->data[1] = startstop;
 	}
@@ -114,35 +113,35 @@ struct ir_pre_generic *parser_parseCommand06() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand07() {
+struct ir_pre_generic *parser_parseCommand07(unsigned gamenum) {
 	GENERIC0ARG(CMD07)
 }
 
-struct ir_pre_generic *parser_parseCommand08() {
+struct ir_pre_generic *parser_parseCommand08(unsigned gamenum) {
 	GENERICNARG(CMD08, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand09() {
+struct ir_pre_generic *parser_parseCommand09(unsigned gamenum) {
 	GENERICNARG(CMD09, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand0a() {
+struct ir_pre_generic *parser_parseCommand0a(unsigned gamenum) {
 	GENERICNARG(CMD0A, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand0b() {
+struct ir_pre_generic *parser_parseCommand0b(unsigned gamenum) {
 	GENERICNARG(CMD0B, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand0c() {
+struct ir_pre_generic *parser_parseCommand0c(unsigned gamenum) {
 	GENERICNARG(CMD0C, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand0d() {
+struct ir_pre_generic *parser_parseCommand0d(unsigned gamenum) {
 	GENERIC0ARG(CMD0D)
 }
 
-struct ir_pre_generic *parser_parseCommand0e() {
+struct ir_pre_generic *parser_parseCommand0e(unsigned gamenum) {
 	char *name, *side;
 	PREPARENDATA(CMD0E, 2)
 	ACCEPTRET(name, IDENT)
@@ -153,7 +152,7 @@ struct ir_pre_generic *parser_parseCommand0e() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand0f() {
+struct ir_pre_generic *parser_parseCommand0f(unsigned gamenum) {
 	char *target1, *hide;
 	PREPARENDATA(CMD0F, 2)
 	ACCEPTRET(target1, INTEGER)
@@ -164,15 +163,15 @@ struct ir_pre_generic *parser_parseCommand0f() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand10() {
+struct ir_pre_generic *parser_parseCommand10(unsigned gamenum) {
 	GENERICNARG(CMD10, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand11() {
+struct ir_pre_generic *parser_parseCommand11(unsigned gamenum) {
 	GENERIC0ARG(CMD11)
 }
 
-struct ir_pre_generic *parser_parseCommand12() {
+struct ir_pre_generic *parser_parseCommand12(unsigned gamenum) {
 	char *delay, *mode, *delta, *target;
 	PREPARENDATA(CMD12, 4)
 	ACCEPTRET(delay, INTEGER)
@@ -189,7 +188,7 @@ struct ir_pre_generic *parser_parseCommand12() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand13() {
+struct ir_pre_generic *parser_parseCommand13(unsigned gamenum) {
 	char *id, *side;
 	PREPARENDATA(CMD13, 2)
 	ACCEPTRET(id, INTEGER)
@@ -200,35 +199,35 @@ struct ir_pre_generic *parser_parseCommand13() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand14() {
+struct ir_pre_generic *parser_parseCommand14(unsigned gamenum) {
 	GENERIC0ARG(CMD14)
 }
 
-struct ir_pre_generic *parser_parseCommand15() {
+struct ir_pre_generic *parser_parseCommand15(unsigned gamenum) {
 	GENERIC0ARG(CMD15)
 }
 
-struct ir_pre_generic *parser_parseCommand16() {
+struct ir_pre_generic *parser_parseCommand16(unsigned gamenum) {
 	GENERIC0ARG(CMD16)
 }
 
-struct ir_pre_generic *parser_parseCommand17() {
+struct ir_pre_generic *parser_parseCommand17(unsigned gamenum) {
 	GENERICNARG(CMD17, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand18() {
+struct ir_pre_generic *parser_parseCommand18(unsigned gamenum) {
 	GENERICNARG(CMD18, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand19() {
+struct ir_pre_generic *parser_parseCommand19(unsigned gamenum) {
 	GENERICNARG(CMD19, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand1a() {
+struct ir_pre_generic *parser_parseCommand1a(unsigned gamenum) {
 	GENERICNARG(CMD1A, 4)
 }
 
-struct ir_pre_generic *parser_parseCommand1b() {
+struct ir_pre_generic *parser_parseCommand1b(unsigned gamenum) {
 	char *bgname;
 	PREPARENDATA(CMD1B, 1)
 	ACCEPTRET(bgname, IDENT)
@@ -236,11 +235,11 @@ struct ir_pre_generic *parser_parseCommand1b() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand1c() {
+struct ir_pre_generic *parser_parseCommand1c(unsigned gamenum) {
 	GENERICNARG(CMD1C, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand1d() {
+struct ir_pre_generic *parser_parseCommand1d(unsigned gamenum) {
 	char *direction, *speed;
 	PREPARENDATA(CMD1D, 2)
 	ACCEPTRET(direction, IDENT)
@@ -251,7 +250,7 @@ struct ir_pre_generic *parser_parseCommand1d() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand1e() {
+struct ir_pre_generic *parser_parseCommand1e(unsigned gamenum) {
 	char *person, *arg2, *arg3;
 	PREPARENDATA(CMD1E, 3)
 	ACCEPTRET(person, IDENT)
@@ -265,19 +264,19 @@ struct ir_pre_generic *parser_parseCommand1e() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand1f() {
+struct ir_pre_generic *parser_parseCommand1f(unsigned gamenum) {
 	GENERIC0ARG(CMD1F)
 }
 
-struct ir_pre_generic *parser_parseCommand20() {
+struct ir_pre_generic *parser_parseCommand20(unsigned gamenum) {
 	GENERICNARG(CMD20, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand21() {
+struct ir_pre_generic *parser_parseCommand21(unsigned gamenum) {
 	GENERIC0ARG(CMD21)
 }
 
-struct ir_pre_generic *parser_parseCommand22() {
+struct ir_pre_generic *parser_parseCommand22(unsigned gamenum) {
 	char *inout, *fadetime;
 	PREPARENDATA(CMD22, 2)
 	ACCEPTRET(inout, IDENT)
@@ -288,55 +287,55 @@ struct ir_pre_generic *parser_parseCommand22() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand23() {
+struct ir_pre_generic *parser_parseCommand23(unsigned gamenum) {
 	GENERICNARG(CMD23, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand24() {
+struct ir_pre_generic *parser_parseCommand24(unsigned gamenum) {
 	GENERIC0ARG(CMD24)
 }
 
-struct ir_pre_generic *parser_parseCommand25() {
+struct ir_pre_generic *parser_parseCommand25(unsigned gamenum) {
 	GENERICNARG(CMD25, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand26() {
+struct ir_pre_generic *parser_parseCommand26(unsigned gamenum) {
 	GENERICNARG(CMD26, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand27() {
+struct ir_pre_generic *parser_parseCommand27(unsigned gamenum) {
 	GENERICNARG(CMD27, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand28() {
+struct ir_pre_generic *parser_parseCommand28(unsigned gamenum) {
 	GENERICNARG(CMD28, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand29() {
+struct ir_pre_generic *parser_parseCommand29(unsigned gamenum) {
 	GENERICNARG(CMD29, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand2a() {
+struct ir_pre_generic *parser_parseCommand2a(unsigned gamenum) {
 	GENERICNARG(CMD2A, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand2b() {
+struct ir_pre_generic *parser_parseCommand2b(unsigned gamenum) {
 	GENERIC0ARG(CMD2B)
 }
 
-struct ir_pre_generic *parser_parseCommand2c() {
+struct ir_pre_generic *parser_parseCommand2c(unsigned gamenum) {
 	GENERICNARG(CMD2C, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand2d() {
+struct ir_pre_generic *parser_parseCommand2d(unsigned gamenum) {
 	GENERIC0ARG(CMD2D)
 }
 
-struct ir_pre_generic *parser_parseCommand2e() {
+struct ir_pre_generic *parser_parseCommand2e(unsigned gamenum) {
 	GENERIC0ARG(CMD2E)
 }
 
-struct ir_pre_generic *parser_parseCommand2f() {
+struct ir_pre_generic *parser_parseCommand2f(unsigned gamenum) {
 	char *arg1, *anistate;
 	PREPARENDATA(CMD2F, 2)
 	ACCEPTRET(arg1, INTEGER)
@@ -347,19 +346,19 @@ struct ir_pre_generic *parser_parseCommand2f() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand30() {
+struct ir_pre_generic *parser_parseCommand30(unsigned gamenum) {
 	GENERICNARG(CMD30, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand31() {
+struct ir_pre_generic *parser_parseCommand31(unsigned gamenum) {
 	GENERICNARG(CMD31, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand32() {
+struct ir_pre_generic *parser_parseCommand32(unsigned gamenum) {
 	GENERICNARG(CMD32, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand33() {
+struct ir_pre_generic *parser_parseCommand33(unsigned gamenum) {
 	char *loc1, *loc2, *loc3, *loc4, *loc5;
 	PREPARENDATA(CMD33, 5)
 	ACCEPTRET(loc1, IDENT)
@@ -379,11 +378,11 @@ struct ir_pre_generic *parser_parseCommand33() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand34() {
+struct ir_pre_generic *parser_parseCommand34(unsigned gamenum) {
 	GENERICNARG(CMD34, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand35() {
+struct ir_pre_generic *parser_parseCommand35(unsigned gamenum) {
 	char *flaghint, *whichflag, *section, *offset;
 	PREPARENDATA(CMD35, 4)
 	ACCEPTRET(flaghint, IDENT)
@@ -400,7 +399,7 @@ struct ir_pre_generic *parser_parseCommand35() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand36() {
+struct ir_pre_generic *parser_parseCommand36(unsigned gamenum) {
 	char *section, *offset;
 	PREPARENDATA(CMD36, 2)
 	ACCEPTRET(section, INTEGER)
@@ -411,183 +410,176 @@ struct ir_pre_generic *parser_parseCommand36() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand37() {
+struct ir_pre_generic *parser_parseCommand37(unsigned gamenum) {
 	GENERICNARG(CMD37, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand38() {
+struct ir_pre_generic *parser_parseCommand38(unsigned gamenum) {
 	GENERICNARG(CMD38, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand39() {
+struct ir_pre_generic *parser_parseCommand39(unsigned gamenum) {
 	GENERICNARG(CMD39, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand3a() {
-	GENERIC0ARG(CMD3A)
+struct ir_pre_generic *parser_parseCommand3a(unsigned gamenum) {
+	if(gamenum == GAME_GS1GBA) {
+		GENERICNARG(CMD3A, 2)
+	}
+	else {
+		GENERICNARG(CMD3A, 3)
+	}
 }
 
-struct ir_pre_generic *parser_parseCommand3b() {
+struct ir_pre_generic *parser_parseCommand3b(unsigned gamenum) {
 	GENERICNARG(CMD3B, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand3c() {
+struct ir_pre_generic *parser_parseCommand3c(unsigned gamenum) {
 	GENERICNARG(CMD3C, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand3d() {
+struct ir_pre_generic *parser_parseCommand3d(unsigned gamenum) {
 	GENERICNARG(CMD3D, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand3e() {
+struct ir_pre_generic *parser_parseCommand3e(unsigned gamenum) {
 	GENERICNARG(CMD3E, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand3f() {
+struct ir_pre_generic *parser_parseCommand3f(unsigned gamenum) {
 	GENERIC0ARG(CMD3F)
 }
 
-struct ir_pre_generic *parser_parseCommand40() {
+struct ir_pre_generic *parser_parseCommand40(unsigned gamenum) {
 	GENERIC0ARG(CMD40)
 }
 
-struct ir_pre_generic *parser_parseCommand41() {
+struct ir_pre_generic *parser_parseCommand41(unsigned gamenum) {
 	GENERIC0ARG(CMD41)
 }
 
-struct ir_pre_generic *parser_parseCommand42() {
+struct ir_pre_generic *parser_parseCommand42(unsigned gamenum) {
 	GENERICNARG(CMD42, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand43() {
+struct ir_pre_generic *parser_parseCommand43(unsigned gamenum) {
 	GENERICNARG(CMD43, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand44() {
+struct ir_pre_generic *parser_parseCommand44(unsigned gamenum) {
 	GENERICNARG(CMD44, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand45() {
+struct ir_pre_generic *parser_parseCommand45(unsigned gamenum) {
 	GENERIC0ARG(CMD45)
 }
 
-struct ir_pre_generic *parser_parseCommand46() {
+struct ir_pre_generic *parser_parseCommand46(unsigned gamenum) {
 	GENERICNARG(CMD46, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand47() {
+struct ir_pre_generic *parser_parseCommand47(unsigned gamenum) {
 	GENERICNARG(CMD47, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand48() {
-	GENERICNARG(CMD42, 2)
+struct ir_pre_generic *parser_parseCommand48(unsigned gamenum) {
+	GENERICNARG(CMD48, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand49() {
+struct ir_pre_generic *parser_parseCommand49(unsigned gamenum) {
 	GENERIC0ARG(CMD49)
 }
 
-struct ir_pre_generic *parser_parseCommand4a() {
+struct ir_pre_generic *parser_parseCommand4a(unsigned gamenum) {
 	GENERICNARG(CMD4A, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand4b() {
+struct ir_pre_generic *parser_parseCommand4b(unsigned gamenum) {
 	GENERICNARG(CMD4B, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand4c() {
+struct ir_pre_generic *parser_parseCommand4c(unsigned gamenum) {
 	GENERIC0ARG(CMD4C)
 }
 
-struct ir_pre_generic *parser_parseCommand4d() {
+struct ir_pre_generic *parser_parseCommand4d(unsigned gamenum) {
 	GENERICNARG(CMD4D, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand4e() {
+struct ir_pre_generic *parser_parseCommand4e(unsigned gamenum) {
 	GENERICNARG(CMD4E, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand4f() {
+struct ir_pre_generic *parser_parseCommand4f(unsigned gamenum) {
 	GENERICNARG(CMD4F, 7)
 }
 
-struct ir_pre_generic *parser_parseCommand50() {
+struct ir_pre_generic *parser_parseCommand50(unsigned gamenum) {
 	GENERICNARG(CMD50, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand51() {
+struct ir_pre_generic *parser_parseCommand51(unsigned gamenum) {
 	GENERICNARG(CMD51, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand52() {
+struct ir_pre_generic *parser_parseCommand52(unsigned gamenum) {
 	GENERICNARG(CMD52, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand53() {
+struct ir_pre_generic *parser_parseCommand53(unsigned gamenum) {
 	GENERIC0ARG(CMD53)
 }
 
-struct ir_pre_generic *parser_parseCommand54() {
+struct ir_pre_generic *parser_parseCommand54(unsigned gamenum) {
 	GENERICNARG(CMD54, 2)
-	char *arg1, *arg2;
-	ACCEPT(CMD54)
-	ACCEPTRET(arg1, INTEGER)
-	ACCEPTRET(arg2, INTEGER)
 }
 
-struct ir_pre_generic *parser_parseCommand55() {
+struct ir_pre_generic *parser_parseCommand55(unsigned gamenum) {
 	GENERICNARG(CMD55, 2)
-	char *arg1, *arg2;
-	ACCEPT(CMD55)
-	ACCEPTRET(arg1, INTEGER)
-	ACCEPTRET(arg2, INTEGER)
 }
 
-struct ir_pre_generic *parser_parseCommand56() {
+struct ir_pre_generic *parser_parseCommand56(unsigned gamenum) {
 	GENERICNARG(CMD56, 2)
-	char *arg1, *arg2;
-	ACCEPT(CMD56)
-	ACCEPTRET(arg1, INTEGER)
-	ACCEPTRET(arg2, INTEGER)
 }
 
-struct ir_pre_generic *parser_parseCommand57() {
+struct ir_pre_generic *parser_parseCommand57(unsigned gamenum) {
 	GENERICNARG(CMD57, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand58() {
+struct ir_pre_generic *parser_parseCommand58(unsigned gamenum) {
 	GENERIC0ARG(CMD58)
 }
 
-struct ir_pre_generic *parser_parseCommand59() {
+struct ir_pre_generic *parser_parseCommand59(unsigned gamenum) {
 	GENERICNARG(CMD59, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand5a() {
+struct ir_pre_generic *parser_parseCommand5a(unsigned gamenum) {
 	GENERICNARG(CMD5A, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand5b() {
+struct ir_pre_generic *parser_parseCommand5b(unsigned gamenum) {
 	GENERICNARG(CMD5B, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand5c() {
+struct ir_pre_generic *parser_parseCommand5c(unsigned gamenum) {
 	GENERICNARG(CMD5C, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand5d() {
+struct ir_pre_generic *parser_parseCommand5d(unsigned gamenum) {
 	GENERICNARG(CMD5D, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand5e() {
+struct ir_pre_generic *parser_parseCommand5e(unsigned gamenum) {
 	GENERICNARG(CMD5E, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand5f() {
+struct ir_pre_generic *parser_parseCommand5f(unsigned gamenum) {
 	GENERICNARG(CMD5F, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand60() {
+struct ir_pre_generic *parser_parseCommand60(unsigned gamenum) {
 	char *arg1, *itemid, *targetgood, *targetbad;
 	PREPARENDATA(CMD60, 4)
 	ACCEPTRET(arg1, INTEGER)
@@ -604,99 +596,99 @@ struct ir_pre_generic *parser_parseCommand60() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand61() {
+struct ir_pre_generic *parser_parseCommand61(unsigned gamenum) {
 	GENERICNARG(CMD61, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand62() {
+struct ir_pre_generic *parser_parseCommand62(unsigned gamenum) {
 	GENERIC0ARG(CMD62)
 }
 
-struct ir_pre_generic *parser_parseCommand63() {
+struct ir_pre_generic *parser_parseCommand63(unsigned gamenum) {
 	GENERIC0ARG(CMD63)
 }
 
-struct ir_pre_generic *parser_parseCommand64() {
+struct ir_pre_generic *parser_parseCommand64(unsigned gamenum) {
 	GENERICNARG(CMD64, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand65() {
+struct ir_pre_generic *parser_parseCommand65(unsigned gamenum) {
 	GENERICNARG(CMD65, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand66() {
+struct ir_pre_generic *parser_parseCommand66(unsigned gamenum) {
 	GENERICNARG(CMD66, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand67() {
+struct ir_pre_generic *parser_parseCommand67(unsigned gamenum) {
 	GENERIC0ARG(CMD67)
 }
 
-struct ir_pre_generic *parser_parseCommand68() {
+struct ir_pre_generic *parser_parseCommand68(unsigned gamenum) {
 	GENERIC0ARG(CMD68)
 }
 
-struct ir_pre_generic *parser_parseCommand69() {
+struct ir_pre_generic *parser_parseCommand69(unsigned gamenum) {
 	GENERICNARG(CMD69, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand6a() {
+struct ir_pre_generic *parser_parseCommand6a(unsigned gamenum) {
 	GENERICNARG(CMD6A, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand6b() {
+struct ir_pre_generic *parser_parseCommand6b(unsigned gamenum) {
 	GENERICNARG(CMD6B, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand6c() {
+struct ir_pre_generic *parser_parseCommand6c(unsigned gamenum) {
 	GENERICNARG(CMD6C, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand6d() {
+struct ir_pre_generic *parser_parseCommand6d(unsigned gamenum) {
 	GENERICNARG(CMD6D, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand6e() {
+struct ir_pre_generic *parser_parseCommand6e(unsigned gamenum) {
 	GENERICNARG(CMD6E, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand6f() {
+struct ir_pre_generic *parser_parseCommand6f(unsigned gamenum) {
 	GENERICNARG(CMD6F, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand70() {
+struct ir_pre_generic *parser_parseCommand70(unsigned gamenum) {
 	GENERICNARG(CMD70, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand71() {
+struct ir_pre_generic *parser_parseCommand71(unsigned gamenum) {
 	GENERICNARG(CMD71, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand72() {
+struct ir_pre_generic *parser_parseCommand72(unsigned gamenum) {
 	GENERIC0ARG(CMD72)
 }
 
-struct ir_pre_generic *parser_parseCommand73() {
+struct ir_pre_generic *parser_parseCommand73(unsigned gamenum) {
 	GENERIC0ARG(CMD73)
 }
 
-struct ir_pre_generic *parser_parseCommand74() {
+struct ir_pre_generic *parser_parseCommand74(unsigned gamenum) {
 	GENERICNARG(CMD74, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand75() {
+struct ir_pre_generic *parser_parseCommand75(unsigned gamenum) {
 	GENERICNARG(CMD75, 3)
 }
 
-struct ir_pre_generic *parser_parseCommand76() {
+struct ir_pre_generic *parser_parseCommand76(unsigned gamenum) {
 	GENERICNARG(CMD76, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand77() {
+struct ir_pre_generic *parser_parseCommand77(unsigned gamenum) {
 	GENERICNARG(CMD77, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand78() {
+struct ir_pre_generic *parser_parseCommand78(unsigned gamenum) {
 	char *section, *offset;
 	PREPARENDATA(CMD78, 2)
 	ACCEPTRET(section, INTEGER)
@@ -707,99 +699,99 @@ struct ir_pre_generic *parser_parseCommand78() {
 	return command;
 }
 
-struct ir_pre_generic *parser_parseCommand79() {
+struct ir_pre_generic *parser_parseCommand79(unsigned gamenum) {
 	GENERIC0ARG(CMD79)
 }
 
-struct ir_pre_generic *parser_parseCommand7a() {
+struct ir_pre_generic *parser_parseCommand7a(unsigned gamenum) {
 	GENERICNARG(CMD7A, 1)
 }
 
-struct ir_pre_generic *parser_parseCommand7b() {
+struct ir_pre_generic *parser_parseCommand7b(unsigned gamenum) {
 	GENERICNARG(CMD7B, 2)
 }
 
-struct ir_pre_generic *parser_parseCommand7c() {
+struct ir_pre_generic *parser_parseCommand7c(unsigned gamenum) {
 	GENERIC0ARG(CMD7C)
 }
 
-struct ir_pre_generic *parser_parseCommand7d() {
+struct ir_pre_generic *parser_parseCommand7d(unsigned gamenum) {
 	GENERIC0ARG(CMD7D)
 }
 
-struct ir_pre_generic *parser_parseCommand7e() {
+struct ir_pre_generic *parser_parseCommand7e(unsigned gamenum) {
 	GENERIC0ARG(CMD7E)
 }
 
-struct ir_pre_generic *parser_parseCommand7f() {
+struct ir_pre_generic *parser_parseCommand7f(unsigned gamenum) {
 	GENERIC0ARG(CMD7F)
 }
 
-struct ir_pre_generic *parser_parseCommand80() {
+struct ir_pre_generic *parser_parseCommand80(unsigned gamenum) {
 	GENERIC0ARG(CMD80)
 }
 
-struct ir_pre_generic *parser_parseCommand81() {
+struct ir_pre_generic *parser_parseCommand81(unsigned gamenum) {
 	GENERIC0ARG(CMD81)
 }
 
-struct ir_pre_generic *parser_parseCommand82() {
+struct ir_pre_generic *parser_parseCommand82(unsigned gamenum) {
 	GENERIC0ARG(CMD82)
 }
 
-struct ir_pre_generic *parser_parseCommand83() {
+struct ir_pre_generic *parser_parseCommand83(unsigned gamenum) {
 	GENERIC0ARG(CMD83)
 }
 
-struct ir_pre_generic *parser_parseCommand84() {
+struct ir_pre_generic *parser_parseCommand84(unsigned gamenum) {
 	GENERIC0ARG(CMD84)
 }
 
-struct ir_pre_generic *parser_parseCommand85() {
+struct ir_pre_generic *parser_parseCommand85(unsigned gamenum) {
 	GENERIC0ARG(CMD85)
 }
 
-struct ir_pre_generic *parser_parseCommand86() {
+struct ir_pre_generic *parser_parseCommand86(unsigned gamenum) {
 	GENERIC0ARG(CMD86)
 }
 
-struct ir_pre_generic *parser_parseCommand87() {
+struct ir_pre_generic *parser_parseCommand87(unsigned gamenum) {
 	GENERIC0ARG(CMD87)
 }
 
-struct ir_pre_generic *parser_parseCommand88() {
+struct ir_pre_generic *parser_parseCommand88(unsigned gamenum) {
 	GENERIC0ARG(CMD88)
 }
 
-struct ir_pre_generic *parser_parseCommand89() {
+struct ir_pre_generic *parser_parseCommand89(unsigned gamenum) {
 	GENERIC0ARG(CMD89)
 }
 
-struct ir_pre_generic *parser_parseCommand8a() {
+struct ir_pre_generic *parser_parseCommand8a(unsigned gamenum) {
 	GENERIC0ARG(CMD8A)
 }
 
-struct ir_pre_generic *parser_parseCommand8b() {
+struct ir_pre_generic *parser_parseCommand8b(unsigned gamenum) {
 	GENERIC0ARG(CMD8B)
 }
 
-struct ir_pre_generic *parser_parseCommand8c() {
+struct ir_pre_generic *parser_parseCommand8c(unsigned gamenum) {
 	GENERIC0ARG(CMD8C)
 }
 
-struct ir_pre_generic *parser_parseCommand8d() {
+struct ir_pre_generic *parser_parseCommand8d(unsigned gamenum) {
 	GENERIC0ARG(CMD8D)
 }
 
-struct ir_pre_generic *parser_parseCommand8e() {
+struct ir_pre_generic *parser_parseCommand8e(unsigned gamenum) {
 	GENERIC0ARG(CMD8E)
 }
 
-struct ir_pre_generic *parser_parseCommand8f() {
+struct ir_pre_generic *parser_parseCommand8f(unsigned gamenum) {
 	GENERIC0ARG(CMD8F)
 }
 
-struct ir_pre_generic *(*parser_parseCommand[144])() = {
+struct ir_pre_generic *(*parser_parseCommand[144])(unsigned gamenum) = {
 	parser_parseCommand00,
 	parser_parseCommand01,
 	parser_parseCommand02,
@@ -946,7 +938,7 @@ struct ir_pre_generic *(*parser_parseCommand[144])() = {
 	parser_parseCommand8f,
 };
 
-struct ir_pre_generic *parser_parseText() {
+struct ir_pre_generic *parser_parseText(unsigned gamenum) {
 	char *text;
 	PREPARENDATA(TEXT, 1)
 	ACCEPTRET(text, STRING)
@@ -954,7 +946,7 @@ struct ir_pre_generic *parser_parseText() {
 	return command;
 }
 
-struct ir_label *parser_parseLabel() {
+struct ir_label *parser_parseLabel(unsigned gamenum) {
 	char *name;
 	struct ir_label *label = malloc(sizeof(struct ir_label));
 	label->type = LABEL;
@@ -964,17 +956,17 @@ struct ir_label *parser_parseLabel() {
 	ACCEPTRET(name, IDENT)
 	ACCEPT(COLON)
 	label->name = name;
-	label->hash = hash(name);
 	return label;
 }
 
-struct ir_section *parser_parseSection() {
+struct ir_section *parser_parseSection(unsigned gamenum) {
 	struct ir_section *section = malloc(sizeof(struct ir_section));
 	char *sectionnum;
 	
 	
 	section->type = SECTION;
 	section->line = currenttoken.line;
+	section->datasize = 0;
 	section->numlabels = 0;
 	section->labels = NULL;
 	section->numprecommands = 0;
@@ -995,13 +987,13 @@ struct ir_section *parser_parseSection() {
 		if(currenttoken.type == INTEGER) ACCEPT(INTEGER)
 		
 		if(currenttoken.type < sizeofarr(commandnames)) {
-			if(!ir_section_appendprecommand(section, parser_parseCommand[currenttoken.type]())) return NULL;
+			if(!ir_section_appendprecommand(section, parser_parseCommand[currenttoken.type](gamenum))) return NULL;
 		}
 		else if(currenttoken.type == TEXT) {
-			if(!ir_section_appendprecommand(section, parser_parseText())) return NULL;
+			if(!ir_section_appendprecommand(section, parser_parseText(gamenum))) return NULL;
 		}
 		else {
-			if(!ir_section_appendlabel(section, parser_parseLabel())) return NULL;
+			if(!ir_section_appendprecommand(section, (struct ir_pre_generic *)parser_parseLabel(gamenum))) return NULL;
 		}
 	}
 	
@@ -1009,14 +1001,14 @@ struct ir_section *parser_parseSection() {
 	return section;
 }
 
-struct ir_script *parser_parse() {
+struct ir_script *parser_parse(unsigned gamenum) {
 	struct ir_script *script = malloc(sizeof(struct ir_script));
 	script->numspecials = 0;
 	script->specials = NULL;
 	script->numsections = 0;
 	script->sections = NULL;
 	while(currenttoken.type != TEXTEOF) {
-		if(!ir_script_appendsection(script, parser_parseSection())) return NULL;
+		if(!ir_script_appendsection(script, parser_parseSection(gamenum))) return NULL;
 	}
 	return script;
 }

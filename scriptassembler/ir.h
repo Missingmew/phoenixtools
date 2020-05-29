@@ -5,7 +5,6 @@
 
 enum irtypes {
 	LABEL = NUMTOKENS+1,
-	CMD06_GBA,
 };
 
 struct ir_list {
@@ -41,14 +40,16 @@ struct ir_section {
 	char *prenum;
 	unsigned num;
 	
+	unsigned datasize;
+	
 	unsigned numlabels;
-	struct ir_list *labels;
+	struct ir_label **labels;
 	
 	unsigned numprecommands;
 	struct ir_list *precommands;
 	
 	unsigned numcommands;
-	struct ir_list *commands;
+	struct ir_generic **commands;
 };
 
 struct ir_script {
@@ -59,26 +60,19 @@ struct ir_script {
 	struct ir_list *sections;
 };
 
+extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned gamenum);
+struct ir_generic *text_preproc(struct ir_pre_generic *pre, unsigned gamenum);
+
 unsigned long hash(void *data);
 
-int ir_sort_sections(const void *a, const void *b);
-
 unsigned ir_section_appendprecommand(struct ir_section *section, struct ir_pre_generic *precommand);
-unsigned ir_section_appendcommand(struct ir_section *section, struct ir_generic *command);
-unsigned ir_section_appendlabel(struct ir_section *section, struct ir_label *label);
 
 unsigned ir_script_appendsection(struct ir_script *script, struct ir_section *section);
 
-void ir_pre_generic_dump(struct ir_pre_generic *generic);
-void ir_generic_dump(struct ir_generic *generic);
-void ir_label_dump(struct ir_label *label);
-void ir_section_dump(struct ir_section *section);
 void ir_script_dump(struct ir_script *script);
 
-void ir_pre_generic_free(struct ir_pre_generic *generic);
-void ir_generic_free(struct ir_generic *generic);
-void ir_label_free(struct ir_label *label);
-void ir_section_free(struct ir_section *section);
 void ir_script_free(struct ir_script *script);
+
+unsigned ir_script_preprocess(struct ir_script *script, unsigned gamenum);
 
 #endif

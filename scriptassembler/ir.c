@@ -15,13 +15,6 @@ unsigned long hash(void *data) {
 	return hash;
 }
 
-int ir_sort_sections(const void *a, const void *b) {
-	const struct ir_section *left = (const struct ir_section *)a;
-	const struct ir_section *right = (const struct ir_section *)b;
-	return left->num - right->num;
-}
-
-
 unsigned ir_section_appendprecommand(struct ir_section *section, struct ir_pre_generic *precommand) {
 	if(!section || !precommand) return 0;
 	if(section->numprecommands == 0) {
@@ -36,46 +29,11 @@ unsigned ir_section_appendprecommand(struct ir_section *section, struct ir_pre_g
 		for(unsigned i = 0; i < section->numprecommands-1; i++) list = list->next;
 		list->next = new;
 	}
+	if(precommand->type == LABEL) section->numlabels++;
+	else section->numcommands++;
 	section->numprecommands++;
 	return 1;
 }
-
-unsigned ir_section_appendcommand(struct ir_section *section, struct ir_generic *command) {
-	if(!section || !command) return 0;
-	if(section->numcommands == 0) {
-		section->commands = malloc(sizeof(struct ir_list));
-		section->commands->next = NULL;
-		section->commands->type = (unsigned int *)command;
-	}
-	else {
-		struct ir_list *list = section->commands, *new = malloc(sizeof(struct ir_list));
-		new->next = NULL;
-		new->type = (unsigned int *)command;
-		for(unsigned i = 0; i < section->numcommands-1; i++) list = list->next;
-		list->next = new;
-	}
-	section->numcommands++;
-	return 1;
-}
-
-unsigned ir_section_appendlabel(struct ir_section *section, struct ir_label *label) {
-	if(!section || !label) return 0;
-	if(section->numlabels == 0) {
-		section->labels = malloc(sizeof(struct ir_list));
-		section->labels->next = NULL;
-		section->labels->type = (unsigned int *)label;
-	}
-	else {
-		struct ir_list *list = section->labels, *new = malloc(sizeof(struct ir_list));
-		new->next = NULL;
-		new->type = (unsigned int *)label;
-		for(unsigned i = 0; i < section->numlabels-1; i++) list = list->next;
-		list->next = new;
-	}
-	section->numlabels++;
-	return 1;
-}
-
 
 unsigned ir_script_appendsection(struct ir_script *script, struct ir_section *section) {
 	if(!script || !section) return 0;
@@ -103,7 +61,10 @@ void ir_pre_generic_dump(struct ir_pre_generic *generic) {
 }
 
 void ir_generic_dump(struct ir_generic *generic) {
-	printf("%s is a stub!\n", __func__);
+	printf("generic type %s at line %u has %u datas\n", generic->type < sizeofarr(commandnames) ? commandnames[generic->type] : tokentypestrings[generic->type-sizeofarr(commandnames)], generic->line, generic->numdata);
+	printf("datas are: ");
+	for(unsigned i = 0; i < generic->numdata; i++) printf("%04x - ", generic->data[i]);
+	printf("\n");
 }
 
 void ir_label_dump(struct ir_label *label) {
@@ -115,9 +76,9 @@ void ir_section_dump(struct ir_section *section) {
 	struct ir_list *iter;
 	printf("Section was on line %u, prenum is %s num is %u\n", section->line, section->prenum, section->num);
 	printf("Section has %u labels, %u precommands, %u commands\n", section->numlabels, section->numprecommands, section->numcommands);
-	for(i = 0, iter = section->labels; i < section->numlabels; i++, iter = iter->next) {
+	for(i = 0; i < section->numlabels; i++) {
 		printf("Dumping label %u\n", i);
-		ir_label_dump((struct ir_label *)iter->type);
+		ir_label_dump(section->labels[i]);
 	}
 	
 	for(i = 0, iter = section->precommands; i < section->numprecommands; i++, iter = iter->next) {
@@ -125,9 +86,9 @@ void ir_section_dump(struct ir_section *section) {
 		ir_pre_generic_dump((struct ir_pre_generic *)iter->type);
 	}
 	
-	for(i = 0, iter = section->commands; i < section->numcommands; i++, iter = iter->next) {
+	for(i = 0; i < section->numcommands; i++) {
 		printf("Dumping command %u\n", i);
-		ir_generic_dump((struct ir_generic *)iter->type);
+		ir_generic_dump(section->commands[i]);
 	}
 }
 
@@ -150,7 +111,8 @@ void ir_pre_generic_free(struct ir_pre_generic *generic) {
 }
 
 void ir_generic_free(struct ir_generic *generic) {
-	printf("%s is a stub!\n", __func__);
+	free(generic->data);
+	free(generic);
 }
 
 void ir_label_free(struct ir_label *label) {
@@ -162,11 +124,11 @@ void ir_section_free(struct ir_section *section) {
 	unsigned i;
 	struct ir_list *iter, *olditer;
 	
-	for(i = 0, iter = section->labels, olditer = NULL; i < section->numlabels; i++, olditer = iter, iter = iter->next) {
-		free(olditer);
-		ir_label_free((struct ir_label *)iter->type);
+	for(i = 0; i < section->numlabels; i++) {
+		ir_label_free(section->labels[i]);
+		free(section->labels[i]);
 	}
-	free(olditer);
+	free(section->labels);
 	
 	for(i = 0, iter = section->precommands, olditer = NULL; i < section->numprecommands; i++, olditer = iter, iter = iter->next) {
 		free(olditer);
@@ -174,11 +136,12 @@ void ir_section_free(struct ir_section *section) {
 	}
 	free(olditer);
 	
-	for(i = 0, iter = section->commands, olditer = NULL; i < section->numcommands; i++, olditer = iter, iter = iter->next) {
-		free(olditer);
-		ir_generic_free((struct ir_generic *)iter->type);
+	for(i = 0; i < section->numcommands; i++) {
+		ir_generic_free(section->commands[i]);
+		free(section->commands[i]);
 	}
-	free(olditer);
+	free(section->commands);
+	
 	free(section->prenum);
 	free(section);
 }
@@ -195,3 +158,51 @@ void ir_script_free(struct ir_script *script) {
 	free(script);
 }
 
+struct ir_generic *ir_precommand_preprocess(struct ir_pre_generic *pre, unsigned gamenum) {
+	if(pre->type < sizeofarr(commandnames)) return command_preproc[pre->type](pre, gamenum);
+	else if(pre->type == TEXT) return text_preproc(pre, gamenum);
+	else {
+		printf("error during preprocessing: encountered unknown type %u\n", pre->type);
+		return NULL;
+	}
+}
+
+struct ir_label *ir_label_preprocess(struct ir_label *lab, unsigned cursecaddr) {
+	lab->hash = hash(lab->name);
+	lab->addr = cursecaddr;
+	return lab;
+}
+
+unsigned ir_section_preprocess(struct ir_section *section, unsigned gamenum) {
+	unsigned i, curcmd, curlab;
+	struct ir_list *iter;
+	
+	/* this could probably be done better */
+	section->commands = malloc(sizeof(struct ir_generic *) * section->numcommands);
+	section->labels = malloc(sizeof(struct ir_label *) * section->numlabels);
+	
+	for(i = 0, curcmd = 0, curlab = 0, iter = section->precommands;i < section->numprecommands; i++, iter = iter->next) {
+		if(*iter->type == LABEL) {
+			section->labels[curlab++] = ir_label_preprocess((struct ir_label *)iter->type, section->datasize);
+		}
+		else {
+			if(!(section->commands[curcmd] = ir_precommand_preprocess((struct ir_pre_generic *)iter->type, gamenum))) return 0;
+			section->datasize += sizeof(uint16_t) * section->commands[curcmd++]->numdata;
+		}
+	}
+	
+	return 1;
+}
+
+unsigned ir_script_preprocess(struct ir_script *script, unsigned gamenum) {
+	unsigned i;
+	struct ir_list *iter;
+	for(i = 0, iter = script->sections;i < script->numsections; i++, iter = iter->next) {
+		if(!ir_section_preprocess((struct ir_section *)iter->type, gamenum)) return 0;
+	}
+	return 1;
+}
+
+void ir_script_postprocess(struct ir_script *script, unsigned gamenum) {
+	
+}
