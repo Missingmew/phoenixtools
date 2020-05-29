@@ -360,7 +360,7 @@ unsigned printCmd2F(struct scriptstate *state) {
 		unsigned unk1 = state->script[state->scriptidx+1];
 		unsigned anistate = state->script[state->scriptidx+2];
 		if(anistate < sizeofarr(animationstate)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %05u, %s\n", commands[state->script[state->scriptidx]].name, unk1, animationstate[anistate]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, unk1, animationstate[anistate]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
