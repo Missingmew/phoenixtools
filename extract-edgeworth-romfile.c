@@ -93,7 +93,7 @@ int main( int argc, char** argv ) {
 		
 		/* NITRO common filetypes */
 		if(curline == LINEUSE) {
-			snprintf(outputname, 256, "%04d-%s", i, mapline);
+			snprintf(outputname, 256, "%04d-%.250s", i, mapline);
 		}
 		else {
 			if( filelist[i].size == 0 ) snprintf( outputname, 256, "%04d-%08x.null", i, filelist[i].offset );

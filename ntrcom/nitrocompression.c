@@ -99,9 +99,9 @@ fail:
 unsigned char *unpackBuffer(unsigned char *source, unsigned int *resultsize, unsigned int *compressedsize) {
 	//~ unsigned char *comsource = source+4;
 	unsigned char *comsource = source;
-	unsigned int type, mode, destinationsize;
+	unsigned int type;
 	type = source[0] >> 4;
-	mode = source[0] & 0xF;
+	//~ mode = source[0] & 0xF;
 	switch(type) {
 		case 1: {
 			return LZDecompress(comsource, (int *)compressedsize, (int *)resultsize);
