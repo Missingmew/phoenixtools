@@ -450,7 +450,7 @@ char *testimonypress[2] = {
 	"SHOWBOX", "HIDEBOX"
 };
 
-char *fademode[4] = {
+char *fademode[5] = {
 	"FADE_NONE", "FADE_FROM_BLACK", "FADE_TO_BLACK", "FADE_FROM_WHITE", "FADE_TO_WHITE"
 };
 

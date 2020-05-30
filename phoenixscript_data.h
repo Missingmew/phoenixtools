@@ -9,7 +9,7 @@ extern char *musicfading[2];
 extern char *soundplay[2];
 extern char *showside[2];
 extern char *testimonypress[2];
-extern char *fademode[4];
+extern char *fademode[5];
 extern char *animationstate[2];
 extern char *sound_data[4][1024];
 extern char *locations[4][256];
