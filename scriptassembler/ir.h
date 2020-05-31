@@ -1,6 +1,9 @@
 #ifndef IR_H_
 #define IR_H_
 
+#include <stdio.h>
+#include <stdint.h>
+
 #include "lexer.h"
 
 enum irtypes {
@@ -64,16 +67,29 @@ struct ir_section {
 	struct ir_generic **commands;
 };
 
+struct ir_special {
+	uint16_t offset;
+	uint16_t section;
+}__attribute__((packed));
+
 struct ir_script {
+	uint32_t startwords;
+	uint32_t *offsettable;
+	
 	unsigned numspecials;
 	struct ir_special *specials;
 	
 	unsigned numsections;
 	struct ir_list *sections;
+	struct ir_section **secarr;
 };
 
 extern int currentsection;
 extern unsigned currentspecials;
+
+void ir_script_emit(FILE *o, struct ir_script *script);
+
+void ir_script_fixup(struct ir_script *script, unsigned gamenum);
 
 unsigned cleanNumber(char *str);
 extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned gamenum);

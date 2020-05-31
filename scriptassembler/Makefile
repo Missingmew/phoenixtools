@@ -1,4 +1,4 @@
-OBJS = lexer.o parser.o ir.o ir_preproc.o
+OBJS = lexer.o parser.o ir.o ir_preproc.o ir_fixup.o ir_emit.o
 
 all: assemble-phoenix-script.elf
 

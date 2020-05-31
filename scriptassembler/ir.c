@@ -88,10 +88,10 @@ void ir_section_dump(struct ir_section *section) {
 		}
 	}
 	
-	for(i = 0, iter = section->precommands; i < section->numprecommands; i++, iter = iter->next) {
-		printf("Dumping precommand %u\n", i);
-		ir_pre_generic_dump((struct ir_pre_generic *)iter->type);
-	}
+	//~ for(i = 0, iter = section->precommands; i < section->numprecommands; i++, iter = iter->next) {
+		//~ printf("Dumping precommand %u\n", i);
+		//~ ir_pre_generic_dump((struct ir_pre_generic *)iter->type);
+	//~ }
 	
 	if(section->commands) {
 		for(i = 0; i < section->numcommands; i++) {
@@ -162,6 +162,8 @@ void ir_script_free(struct ir_script *script) {
 		ir_section_free((struct ir_section *)iter->type);
 	}
 	free(olditer);
+	free(script->secarr);
+	free(script->offsettable);
 	free(script);
 }
 
@@ -208,7 +210,9 @@ unsigned ir_section_preprocess(struct ir_section *section, unsigned gamenum) {
 unsigned ir_script_preprocess(struct ir_script *script, unsigned gamenum) {
 	unsigned i;
 	struct ir_list *iter;
+	script->secarr = malloc(sizeof(struct ir_section *) * script->numsections);
 	for(i = 0, iter = script->sections;i < script->numsections; i++, iter = iter->next) {
+		script->secarr[i] = (struct ir_section *)iter->type;
 		if(!ir_section_preprocess((struct ir_section *)iter->type, gamenum)) return 0;
 	}
 	script->numspecials = currentspecials;

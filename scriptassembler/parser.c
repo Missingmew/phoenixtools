@@ -629,7 +629,7 @@ struct ir_pre_generic *parser_parseCommand68(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand69(unsigned gamenum) {
-	GENERICNARG(CMD69, 1)
+	GENERICNARG(CMD69, 2)
 }
 
 struct ir_pre_generic *parser_parseCommand6a(unsigned gamenum) {

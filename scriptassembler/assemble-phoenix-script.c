@@ -72,17 +72,22 @@ int main(int argc, char **argv) {
 	
 	ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
-	//~ ir_script_postprocess(script, gamenum);
+	ir_script_fixup(script, gamenum);
 	
-	//~ as_firstpass(ir);
-	//~ as_secondpass(ir);
+	ir_script_dump(script);
 	
-	//~ emit(o, &thescript);
+	
+	if(!(o = fopen(argv[3], "wb"))) {
+		printf("couldnt open %s as output\n", argv[3]);
+		return 1;
+	}
+	
+	ir_script_emit(o, script);
 	
 	ir_script_free(script);
 	
 	lexer_finalize();
 	
 	free(input);
-	//~ fclose(o);
+	fclose(o);
 }

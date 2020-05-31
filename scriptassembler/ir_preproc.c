@@ -7,16 +7,18 @@
 #include "../phoenixscript_charsets.h"
 
 #define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
-
-#define SETUPGEN \
+	
+#define SETUPGENSPEC(size) \
 	struct ir_generic *gen = malloc(sizeof(struct ir_generic)); \
 	gen->type = pre->type; \
 	gen->line = pre->line; \
 	/* reserve one additional data slot for command itself */ \
-	gen->numdata = pre->numdata+1; \
-	gen->data = malloc(sizeof(struct ir_datapacket) * (pre->numdata+1)); \
+	gen->numdata = size+1; \
+	gen->data = malloc(sizeof(struct ir_datapacket) * (size+1)); \
 	gen->data[0].type = DATARAW; \
 	gen->data[0].data = pre->type;
+
+#define SETUPGEN SETUPGENSPEC(pre->numdata)
 
 #define PREPROCERR(thing) \
 	{ printf("preproc error(%s): lookup for %s in line %u failed\n", __func__, thing, pre->line); return NULL; }
@@ -38,7 +40,7 @@ int lookupStr(char **arr, char *str, int size) {
 /* remove all escapes and replace by literal character */
 char *unescapeStr(char *str) {
 	unsigned i;
-	char *ret = malloc(strlen(str));
+	char *ret = malloc(strlen(str)+1);
 	for(i = 0; *str; i++, str++) {
 		if(*str == '\\') {
 			str++;
@@ -62,7 +64,11 @@ unsigned utf8len(char *str) {
 	unsigned ret = 0;
 	while(*str) {
 		ret++;
-		str += bytesforchar(*str);
+		if(*str == '{') {
+			while(*str != '}') str++;
+			str++;
+		}
+		else str += bytesforchar(*str);
 	}
 	return ret;
 }
@@ -147,7 +153,7 @@ struct ir_generic *preproc_Command0a(struct ir_pre_generic *pre, unsigned gamenu
 struct ir_generic *preproc_Command0e(struct ir_pre_generic *pre, unsigned gamenum) {
 	unsigned short data;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(1)
 	LOOKUP(idx, speakers[ARRGAMENUM(gamenum)], pre->data[0]);
 	data = idx << 8;
 	LOOKUP(idx, showside, pre->data[1]);
@@ -161,7 +167,7 @@ struct ir_generic *preproc_Command0f(struct ir_pre_generic *pre, unsigned gamenu
 	int idx;
 	SETUPGEN
 	gen->data[1].type = DATARAW;
-	gen->data[1].data = cleanNumber(pre->data[0]) + 128;
+	gen->data[1].data = cleanNumber(pre->data[0]);
 	LOOKUP(idx, testimonypress, pre->data[1]);
 	gen->data[2].type = DATARAW;
 	gen->data[2].data = idx;
@@ -170,7 +176,7 @@ struct ir_generic *preproc_Command0f(struct ir_pre_generic *pre, unsigned gamenu
 
 struct ir_generic *preproc_Command10(struct ir_pre_generic *pre, unsigned gamenum) {
 	unsigned short data;
-	SETUPGEN
+	SETUPGENSPEC(1)
 	data = cleanNumber(pre->data[0]) << 8;
 	data += cleanNumber(pre->data[1]);
 	data |= cleanNumber(pre->data[2]) << 15;
@@ -182,7 +188,7 @@ struct ir_generic *preproc_Command10(struct ir_pre_generic *pre, unsigned gamenu
 struct ir_generic *preproc_Command12(struct ir_pre_generic *pre, unsigned gamenum) {
 	unsigned short data;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(3)
 	data = cleanNumber(pre->data[0]);
 	LOOKUP(idx, fademode, pre->data[1]);
 	data += idx << 8;
@@ -198,7 +204,7 @@ struct ir_generic *preproc_Command12(struct ir_pre_generic *pre, unsigned gamenu
 struct ir_generic *preproc_Command13(struct ir_pre_generic *pre, unsigned gamenum) {
 	unsigned short data;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(1)
 	data = cleanNumber(pre->data[0]);
 	LOOKUP(idx, showside, pre->data[1]);
 	data += idx << 8;
@@ -219,7 +225,7 @@ struct ir_generic *preproc_Command1b(struct ir_pre_generic *pre, unsigned gamenu
 struct ir_generic *preproc_Command1d(struct ir_pre_generic *pre, unsigned gamenum) {
 	unsigned short data;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(1)
 	LOOKUP(idx, shiftdirection, pre->data[0]);
 	data = idx << 8;
 	data += cleanNumber(pre->data[1]);
@@ -278,7 +284,7 @@ struct ir_generic *preproc_Command33(struct ir_pre_generic *pre, unsigned gamenu
 struct ir_generic *preproc_Command35(struct ir_pre_generic *pre, unsigned gamenum) {
 	unsigned short data, section;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(2)
 	LOOKUP(idx, cmd35flaghint, pre->data[0]);
 	data = idx;
 	data += cleanNumber(pre->data[1]) << 8;
@@ -301,9 +307,9 @@ struct ir_generic *preproc_Command35(struct ir_pre_generic *pre, unsigned gamenu
 
 /* this needs additional work due to how special data is handled */
 struct ir_generic *preproc_Command36(struct ir_pre_generic *pre, unsigned gamenum) {
-	SETUPGEN
+	SETUPGENSPEC(1)
 	gen->data[1].type = DATASECOFF;
-	gen->data[1].data = (cleanNumber(pre->data[1]) << 16) + cleanNumber(pre->data[2]);
+	gen->data[1].data = (cleanNumber(pre->data[0]) << 16) + cleanNumber(pre->data[1]);
 	currentspecials++;
 	return gen;
 }
@@ -473,8 +479,8 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned 
 };
 
 struct ir_generic *text_preproc(struct ir_pre_generic *pre, unsigned gamenum) {
-	char *unescaped, thechar[5];
-	unsigned i = 0, len;
+	char *unescaped, thechar[16];
+	unsigned i = 0, len, spclen;
 	int idx;
 	struct ir_generic *gen = malloc(sizeof(struct ir_generic));
 	gen->type = pre->type;
@@ -483,10 +489,16 @@ struct ir_generic *text_preproc(struct ir_pre_generic *pre, unsigned gamenum) {
 	len = utf8len(unescaped);
 	gen->numdata = len;
 	gen->data = malloc(sizeof(struct ir_datapacket) * len);
-	for(char *cur = unescaped; *cur; cur += bytesforchar(*cur)) {
+	for(char *cur = unescaped; *cur; cur += spclen ? spclen : bytesforchar(*cur)) {
+		spclen = 0;
 		gen->data[i].type = DATARAW;
-		memset(thechar, 0, 5);
-		memcpy(thechar, cur, bytesforchar(*cur));
+		memset(thechar, 0, 16);
+		if(*cur == '{') {
+			while(cur[spclen] != '}') spclen++;
+			spclen++;
+			memcpy(thechar, cur, spclen);
+		}
+		else memcpy(thechar, cur, bytesforchar(*cur));
 		if((idx = lookupStr(charset_shared, thechar, sizeofarr(charset_shared))) >= 0) gen->data[i].data = idx + 128;
 		else if((idx = lookupStr(charset_default[0], thechar, sizeofarr(charset_default[0]))) >= 0) gen->data[i].data = idx+128;
 		else if((idx = lookupStr(charset_japanese_extended[ARRGAMENUM(gamenum)], thechar, sizeofarr(charset_japanese_extended[ARRGAMENUM(gamenum)]))) >= 0) gen->data[i].data = idx+256;
