@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	struct ir_script *script = NULL;
 	
 	if(argc != 4) {
-		printf("usage: %s infile outfile\n", argv[0]);
+		printf("usage: %s gamenum infile outfile\n", argv[0]);
 		return 1;
 	}
 	
@@ -68,8 +68,9 @@ int main(int argc, char **argv) {
 	
 	ir_script_dump(script);
 	
-	
 	if(!ir_script_preprocess(script, gamenum)) return 1;
+	
+	ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
 	//~ ir_script_postprocess(script, gamenum);
 	

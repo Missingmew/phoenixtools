@@ -19,11 +19,23 @@ struct ir_pre_generic {
 	char **data;
 };
 
+enum datapackettype {
+	DATARAW,
+	DATALOOKUPSEC,
+	DATALOOKUPLAB,
+	DATASECOFF,
+};
+
+struct ir_datapacket {
+	unsigned type;
+	unsigned data;
+};
+
 struct ir_generic {
 	unsigned type;
 	unsigned line;
 	unsigned numdata;
-	unsigned short *data;
+	struct ir_datapacket *data;
 };
 
 struct ir_label {
@@ -60,6 +72,10 @@ struct ir_script {
 	struct ir_list *sections;
 };
 
+extern int currentsection;
+extern unsigned currentspecials;
+
+unsigned cleanNumber(char *str);
 extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned gamenum);
 struct ir_generic *text_preproc(struct ir_pre_generic *pre, unsigned gamenum);
 

@@ -277,18 +277,18 @@ struct ir_pre_generic *parser_parseCommand21(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand22(unsigned gamenum) {
-	char *inout, *fadetime;
-	PREPARENDATA(CMD22, 2)
-	ACCEPTRET(inout, IDENT)
-	ACCEPT(COMMA)
-	ACCEPTRET(fadetime, INTEGER)
-	command->data[0] = inout;
-	command->data[1] = fadetime;
-	return command;
+	GENERICNARG(CMD22, 2)
 }
 
 struct ir_pre_generic *parser_parseCommand23(unsigned gamenum) {
-	GENERICNARG(CMD23, 2)
+	char *arg1, *pause;
+	PREPARENDATA(CMD23, 2)
+	ACCEPTRET(arg1, INTEGER)
+	ACCEPT(COMMA)
+	ACCEPTRET(pause, IDENT)
+	command->data[0] = arg1;
+	command->data[1] = pause;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand24(unsigned gamenum) {
