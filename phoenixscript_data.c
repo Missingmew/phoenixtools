@@ -438,8 +438,12 @@ char *musicfading[2] = {
 	"FADE_OUT", "FADE_IN"
 };
 
+char *musicpause[2] = {
+	"MUSIC_PAUSE", "MUSIC_PLAY"
+};
+
 char *soundplay[2] = {
-	"SOUND_START", "SOUND_STOP"
+	"SOUND_STOP", "SOUND_START"
 };
 
 char *showside[2] = {
@@ -455,7 +459,7 @@ char *fademode[5] = {
 };
 
 char *animationstate[2] = {
-	"ANIM_START", "ANIM_STOP"
+	"ANIM_STOP", "ANIM_START"
 };
 
 /* 1024 is a placeholder, change when all things are known */

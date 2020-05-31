@@ -295,19 +295,28 @@ unsigned printCmd21(struct scriptstate *state) {
 }
 
 unsigned printCmd22(struct scriptstate *state) {
+	/* first arg is skipped by the game in GS1GBA, not sure about others and NDS */
 	if(state->outputenabled) {
-		unsigned inout = state->script[state->scriptidx+1];
+		unsigned arg1 = state->script[state->scriptidx+1];
 		unsigned fadetime = state->script[state->scriptidx+2];
-		if(inout < sizeofarr(musicfading)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commands[state->script[state->scriptidx]].name, musicfading[inout], fadetime);
-			state->scriptidx += 1+2;
-		}
-		else return printCmdGeneric(state, 2);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commands[state->script[state->scriptidx]].name, arg1, fadetime);
+		state->scriptidx += 1+2;
 	}
 	return 2;
 }
 
 unsigned printCmd23(struct scriptstate *state) {
+	/* first arg is skipped by the game in GS1GBA, not sure about others and NDS */
+	if(state->outputenabled) {
+		unsigned arg1 = state->script[state->scriptidx+1];
+		unsigned pause = state->script[state->scriptidx+2];
+		if(pause < sizeofarr(musicpause)) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, arg1, musicpause[pause]);
+			state->scriptidx += 1+2;
+		}
+		else return printCmdGeneric(state, 2);
+	}
+	return 2;
 	return printCmdGeneric(state, 2);
 }
 
@@ -835,7 +844,7 @@ char *const commandnames[144] = {
 /* 08h */ "finger_choice_2_args_jmp", "finger_choice_3_args_jmp", "pagebreak_section", "speed", "wait", "section_end", "name", "testimony_box",
 /* 10h */ "flagctl", "evidence_window_plain", "screen_fade", "showevidence", "removeevidence", "halt", "scenario_end_save", "newevidence",
 /* 18h */ "newevidence_noanim", "cmd19", "swoosh", "bg", "hidetextbox", "shift_background", "person", "hideperson",
-/* 20h */ "cmd20", "evidence_window_lifebar", "fademusic", "cmd23", "reset", "cmd25", "hide_court_record_button", "shake",
+/* 20h */ "cmd20", "evidence_window_lifebar", "fademusic", "pausemusic", "reset", "cmd25", "hide_court_record_button", "shake",
 /* 28h */ "testemony_animation", "return_to_testimony", "cmd2A", "cmd2B", "jmp", "nextpage_button", "nextpage_nobutton", "animation",
 /* 30h */ "cmd30", "personvanish", "cmd32", "setmovelocations", "fadetoblack", "cmd35", "cmd36", "cmd37",
 /* 38h */ "cmd38", "littlesprite", "cmd3A", "cmd3B", "cmd3C", "cmd3D", "cmd3E", "cmd3F",
