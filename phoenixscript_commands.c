@@ -274,7 +274,7 @@ unsigned printCmd1E(struct scriptstate *state) {
 		unsigned unk2 = state->script[state->scriptidx+2];
 		unsigned unk3 = state->script[state->scriptidx+3];
 		if(personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %05u, %05u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], unk2, unk3);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], unk2, unk3);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
