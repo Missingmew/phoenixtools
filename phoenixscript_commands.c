@@ -160,10 +160,11 @@ unsigned printCmd0E(struct scriptstate *state) {
 
 unsigned printCmd0F(struct scriptstate *state) {
 	if(state->outputenabled) {
-		unsigned presssection = state->script[state->scriptidx+1]-128;
+		/* this does _NOT_ use the 128 offset for the section */
+		unsigned presssection = state->script[state->scriptidx+1];
 		unsigned hidetextbox = state->script[state->scriptidx+2];
 		if(hidetextbox < sizeofarr(testimonypress)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u %s\n", commands[state->script[state->scriptidx]].name, presssection, testimonypress[hidetextbox]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, presssection, testimonypress[hidetextbox]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);

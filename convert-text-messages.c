@@ -239,11 +239,11 @@ int main( int argc, char **argv ) {
 	state.outputenabled = 1;
 	
 	//~ numScripts--;
-	state.textidx += sprintf( state.textfile+state.textidx, "begin special data\n");
-	for(unsigned i = 0; i < state.numspecialdata; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i].val0, state.specialdata[i].val1);
-	state.textidx += sprintf( state.textfile+state.textidx, "end special data\n");
+	//~ state.textidx += sprintf( state.textfile+state.textidx, "begin special data\n");
+	//~ for(unsigned i = 0; i < state.numspecialdata; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i].val0, state.specialdata[i].val1);
+	//~ state.textidx += sprintf( state.textfile+state.textidx, "end special data\n");
 	
-	state.textidx += sprintf(state.textfile+state.textidx, "section 0\n" );
+	state.textidx += sprintf(state.textfile+state.textidx, "SECTION 0\n" );
 	intext = 0;
 	while( state.scriptidx < state.scriptsize/2) {
 		if(state.maxtext - 100 < state.textidx) {
@@ -257,7 +257,7 @@ int main( int argc, char **argv ) {
 		if( getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections ) > 0 ) {
 			state.section = getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections );
 			state.sectionoff = state.scriptidx;
-			state.textidx += sprintf( state.textfile+state.textidx, "endsection\nsection %03u\n", state.section);
+			state.textidx += sprintf( state.textfile+state.textidx, "ENDSECTION\nSECTION %u\n", state.section);
 		}
 		//~ printf("memidx %08x (off %08x)\n", state.scriptidx, state.scriptidx*2+numScripts*4);
 		if(prepareToken(&state.script[state.scriptidx], state.gamenum, state.isjp, state.isunity)) {
@@ -337,7 +337,7 @@ int main( int argc, char **argv ) {
 	if(state.outidx) {
 		state.textidx += sprintf(state.textfile+state.textidx, "text \"%s\"\n", state.outbuf);
 	}
-	state.textidx += sprintf( state.textfile+state.textidx, "endsection\n" );
+	state.textidx += sprintf( state.textfile+state.textidx, "ENDSECTION\n" );
 	fwrite(state.textfile, state.textidx, 1, o);
 	fclose(f);
 	fclose(o);
