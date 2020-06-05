@@ -309,7 +309,7 @@ struct ir_generic *preproc_Command35(struct ir_pre_generic *pre, unsigned gamenu
 struct ir_generic *preproc_Command36(struct ir_pre_generic *pre, unsigned gamenum) {
 	SETUPGENSPEC(1)
 	gen->data[1].type = DATASECOFF;
-	gen->data[1].data = (cleanNumber(pre->data[0]) << 16) + cleanNumber(pre->data[1]);
+	gen->data[1].data = (cleanNumber(pre->data[0]) << 16) + cleanNumber(pre->data[1])*2;
 	currentspecials++;
 	return gen;
 }
@@ -376,7 +376,7 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned 
 	preproc_Generic, /* 0x29 */
 	preproc_Generic, /* 0x2a */
 	preproc_Generic, /* 0x2b */
-	preproc_Generic, /* 0x2c */
+	preproc_Command0a, /* 0x2c */
 	preproc_Generic, /* 0x2d */
 	preproc_Generic, /* 0x2e */
 	preproc_Command2f, /* 0x2f */

@@ -430,6 +430,7 @@ unsigned printCmd35(struct scriptstate *state) {
 		
 		if(jumphint) {
 			unsigned specialindex = spcidx_thisoffset - state->numsections;
+			//~ fprintf(stderr, "%s at %08x is farjump using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, specialindex);
 			offset = state->specialdata[specialindex].val0 / 2;
 			targetsection = state->specialdata[specialindex].val1;
 		}
@@ -451,6 +452,7 @@ unsigned printCmd36(struct scriptstate *state) {
 	else {
 		if(state->outputenabled) {
 			unsigned specialindex = state->script[state->scriptidx+1] - state->numsections;
+			//~ fprintf(stderr, "%s at %08x is farjump using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, specialindex);
 			unsigned offset = state->specialdata[specialindex].val0 / 2;
 			unsigned targetsection = state->specialdata[specialindex].val1;
 			

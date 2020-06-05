@@ -101,12 +101,20 @@ void ir_section_dump(struct ir_section *section) {
 	}
 }
 
+void ir_special_dump(struct ir_special *special) {
+	printf("Special has targetsection %u and targetoffset %u\n", special->section, special->offset);
+}
+
 void ir_script_dump(struct ir_script *script) {
 	unsigned i;
-	//~ struct ir_special *special;
 	struct ir_list *iter;
 	
 	printf("Script has %u specials and %u sections\n", script->numspecials, script->numsections);
+	if(script->specials) {
+		for(i = 0; i < script->numspecials; i++) {
+			ir_special_dump(&script->specials[i]);
+		}
+	}
 	for(i = 0, iter = script->sections; i < script->numsections; i++, iter = iter->next) {
 		printf("Dumping section %u\n", i);
 		ir_section_dump((struct ir_section *)iter->type);

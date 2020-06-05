@@ -10,6 +10,9 @@ void ir_script_emit(FILE *o, struct ir_script *script) {
 	struct ir_generic *command;
 	fwrite(&script->startwords, sizeof(uint32_t), 1, o);
 	fwrite(script->offsettable, sizeof(uint32_t) * script->numsections, 1, o);
+	for(unsigned i = 0; i < script->numspecials; i++) {
+		fwrite(&script->specials[i], sizeof(struct ir_special), 1, o);
+	}
 	for(cursec = 0; cursec < script->numsections; cursec++) {
 		section = script->secarr[cursec];
 		for(curcmd = 0; curcmd < section->numcommands; curcmd++) {
