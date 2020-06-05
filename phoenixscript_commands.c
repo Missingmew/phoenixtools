@@ -245,9 +245,10 @@ unsigned printCmd1A(struct scriptstate *state) {
 
 unsigned printCmd1B(struct scriptstate *state) {
 	if(state->outputenabled) {
-		unsigned bgid = state->script[state->scriptidx+1];
+		unsigned bgid = state->script[state->scriptidx+1] & 0x7FFF;
+		unsigned shift = state->script[state->scriptidx+1] >> 15;
 		if(bgid < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][bgid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][bgid] );
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][bgid], bgshift[shift] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -271,11 +272,13 @@ unsigned printCmd1D(struct scriptstate *state) {
 
 unsigned printCmd1E(struct scriptstate *state) {
 	if(state->outputenabled) {
-		unsigned personid = state->script[state->scriptidx+1];
+		unsigned personid = state->script[state->scriptidx+1] & 0x1FFF;
+		unsigned hflip = (state->script[state->scriptidx+1] >> 13) & 1;
+		unsigned placement = state->script[state->scriptidx+1] >> 14;
 		unsigned unk2 = state->script[state->scriptidx+2];
 		unsigned unk3 = state->script[state->scriptidx+3];
 		if(personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], unk2, unk3);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s, %u, %u, %u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], personplacement[placement], hflip, unk2, unk3);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -430,9 +433,9 @@ unsigned printCmd35(struct scriptstate *state) {
 		
 		if(jumphint) {
 			unsigned specialindex = spcidx_thisoffset - state->numsections;
-			//~ fprintf(stderr, "%s at %08x is farjump using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, specialindex);
 			offset = state->specialdata[specialindex].val0 / 2;
 			targetsection = state->specialdata[specialindex].val1;
+			fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, targetsection, offset, specialindex);
 		}
 		else {
 			offset = spcidx_thisoffset/2;
@@ -452,9 +455,9 @@ unsigned printCmd36(struct scriptstate *state) {
 	else {
 		if(state->outputenabled) {
 			unsigned specialindex = state->script[state->scriptidx+1] - state->numsections;
-			//~ fprintf(stderr, "%s at %08x is farjump using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, specialindex);
 			unsigned offset = state->specialdata[specialindex].val0 / 2;
 			unsigned targetsection = state->specialdata[specialindex].val1;
+			fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, targetsection, offset, specialindex);
 			
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %u + %u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
 			state->scriptidx += 1+1;

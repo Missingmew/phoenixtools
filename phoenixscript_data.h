@@ -10,12 +10,14 @@ extern char *musicpause[2];
 extern char *soundplay[2];
 extern char *showside[2];
 extern char *testimonypress[2];
-extern char *fademode[5];
+extern char *fademode[6];
 extern char *animationstate[2];
 extern char *sound_data[4][1024];
 extern char *locations[4][256];
 
 extern char *cmd35flaghint[2];
 extern char *cmd35jumphint[2];
+extern char *bgshift[2];
+extern char *personplacement[4];
 
 #endif

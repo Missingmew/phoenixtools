@@ -228,7 +228,8 @@ int main( int argc, char **argv ) {
 		state.specialdata = (specialdatapack *)&scriptOffsets[specialaddrs[0]];
 		state.numspecialdata = (numScripts-specialaddrs[0]);
 		state.numsections = specialaddrs[0];
-		//~ fprintf(stderr, "start of specialdata at %08x\n", 4+specialaddrs[0]*4);
+		fprintf(stderr, "start of specialdata at %08x\n", 4+specialaddrs[0]*4);
+		printf("have %u specials\n", state.numspecialdata);
 	}
 	else {
 		state.numsections = numScripts;
