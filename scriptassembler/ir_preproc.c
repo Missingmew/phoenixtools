@@ -214,11 +214,15 @@ struct ir_generic *preproc_Command13(struct ir_pre_generic *pre, unsigned gamenu
 }
 
 struct ir_generic *preproc_Command1b(struct ir_pre_generic *pre, unsigned gamenum) {
+	unsigned short data;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(1)
 	LOOKUP(idx, backgrounds[ARRGAMENUM(gamenum)], pre->data[0]);
+	data = idx;
+	LOOKUP(idx, bgshift, pre->data[1]);
+	data += 0x8000 * idx;
 	gen->data[1].type = DATARAW;
-	gen->data[1].data = idx;
+	gen->data[1].data = data;
 	return gen;
 }
 
@@ -235,15 +239,20 @@ struct ir_generic *preproc_Command1d(struct ir_pre_generic *pre, unsigned gamenu
 }
 
 struct ir_generic *preproc_Command1e(struct ir_pre_generic *pre, unsigned gamenum) {
+	unsigned short data;
 	int idx;
-	SETUPGEN
+	SETUPGENSPEC(3)
 	LOOKUP(idx, speakers[ARRGAMENUM(gamenum)], pre->data[0]);
+	data = idx;
+	LOOKUP(idx, personplacement, pre->data[1]);
+	data |= idx << 14;
+	data |= cleanNumber(pre->data[2]) << 13;
 	gen->data[1].type = DATARAW;
-	gen->data[1].data = idx;
+	gen->data[1].data = data;
 	gen->data[2].type = DATARAW;
-	gen->data[2].data = cleanNumber(pre->data[1]);
+	gen->data[2].data = cleanNumber(pre->data[3]);
 	gen->data[3].type = DATARAW;
-	gen->data[3].data = cleanNumber(pre->data[2]);
+	gen->data[3].data = cleanNumber(pre->data[4]);
 	return gen;
 }
 

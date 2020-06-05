@@ -164,12 +164,12 @@ void ir_section_free(struct ir_section *section) {
 void ir_script_free(struct ir_script *script) {
 	unsigned i;
 	struct ir_list *iter, *olditer;
-	if(script->numspecials) free(script->specials);
 	for(i = 0, iter = script->sections, olditer = NULL;i < script->numsections; i++, olditer = iter, iter = iter->next) {
 		free(olditer);
 		ir_section_free((struct ir_section *)iter->type);
 	}
 	free(olditer);
+	free(script->specials);
 	free(script->secarr);
 	free(script->offsettable);
 	free(script);

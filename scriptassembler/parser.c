@@ -9,9 +9,12 @@
 
 #include "../phoenixscript_commands.h"
 
-#define CHECKTOKENTYPE(x, caller) if(currenttoken.type != x) { printf("parser (%s): Syntax error at line %u, column %u: expected %s but got %s\n", caller, currenttoken.line, currenttoken.column, ttype < sizeofarr(commandnames) ? commandnames[ttype] : tokentypestrings[ttype-sizeofarr(commandnames)], currenttoken.type < sizeofarr(commandnames) ? commandnames[currenttoken.type] : tokentypestrings[currenttoken.type-sizeofarr(commandnames)]); return 0; }
+#define CHECKTOKENTYPE(ttype, caller) if(currenttoken.type != ttype) { printf("parser (%s): Syntax error at line %u, column %u: expected %s but got %s\n", caller, currenttoken.line, currenttoken.column, ttype < sizeofarr(commandnames) ? commandnames[ttype] : tokentypestrings[ttype-sizeofarr(commandnames)], currenttoken.type < sizeofarr(commandnames) ? commandnames[currenttoken.type] : tokentypestrings[currenttoken.type-sizeofarr(commandnames)]); return 0; }
 #define ACCEPT(tok) if(!parser_accept(tok, __func__)) return NULL;
 #define ACCEPTRET(ret,tok) if(!(ret = parser_acceptret(tok, __func__))) return NULL;
+
+#define CHECKTOKENTYPEEITHER(ttype1, ttype2, caller) if(currenttoken.type != ttype1 && currenttoken.type != ttype2) { printf("parser (%s): Syntax error at line %u, column %u: expected %s or %s but got %s\n", caller, currenttoken.line, currenttoken.column, ttype1 < sizeofarr(commandnames) ? commandnames[ttype1] : tokentypestrings[ttype1-sizeofarr(commandnames)], ttype2 < sizeofarr(commandnames) ? commandnames[ttype2] : tokentypestrings[ttype2-sizeofarr(commandnames)], currenttoken.type < sizeofarr(commandnames) ? commandnames[currenttoken.type] : tokentypestrings[currenttoken.type-sizeofarr(commandnames)]); return 0; }
+#define ACCEPTRETEITHER(ret,tok1,tok2) if(!(ret = parser_acceptreteither(tok1,tok2, __func__))) return NULL;
 
 #define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
@@ -59,6 +62,12 @@ unsigned int parser_accept(tokentype ttype, const char *caller) {
 	CHECKTOKENTYPE(ttype, caller)
 	free(currenttoken.string);
 	return lexer_scan();
+}
+
+char *parser_acceptreteither(tokentype ttype1, tokentype ttype2, const char *caller) {
+	CHECKTOKENTYPEEITHER(ttype1, ttype2, caller)
+	char *ret = currenttoken.string;
+	return lexer_scan() ? ret : NULL;
 }
 
 struct ir_pre_generic *parser_parseCommand00(unsigned gamenum) {
@@ -228,10 +237,13 @@ struct ir_pre_generic *parser_parseCommand1a(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand1b(unsigned gamenum) {
-	char *bgname;
-	PREPARENDATA(CMD1B, 1)
+	char *bgname, *shift;
+	PREPARENDATA(CMD1B, 2)
 	ACCEPTRET(bgname, IDENT)
 	command->data[0] = bgname;
+	ACCEPT(COMMA)
+	ACCEPTRET(shift, IDENT)
+	command->data[1] = shift;
 	return command;
 }
 
@@ -251,16 +263,22 @@ struct ir_pre_generic *parser_parseCommand1d(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand1e(unsigned gamenum) {
-	char *person, *arg2, *arg3;
-	PREPARENDATA(CMD1E, 3)
+	char *person, *placement, *hflip, *arg2, *arg3;
+	PREPARENDATA(CMD1E, 5)
 	ACCEPTRET(person, IDENT)
+	ACCEPT(COMMA)
+	ACCEPTRET(placement, IDENT)
+	ACCEPT(COMMA)
+	ACCEPTRET(hflip, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(arg2, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(arg3, INTEGER)
 	command->data[0] = person;
-	command->data[1] = arg2;
-	command->data[2] = arg3;
+	command->data[1] = placement;
+	command->data[2] = hflip;
+	command->data[3] = arg2;
+	command->data[4] = arg3;
 	return command;
 }
 
@@ -677,7 +695,7 @@ struct ir_pre_generic *parser_parseCommand74(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand75(unsigned gamenum) {
-	GENERICNARG(CMD75, 3)
+	GENERICNARG(CMD75, 4)
 }
 
 struct ir_pre_generic *parser_parseCommand76(unsigned gamenum) {
