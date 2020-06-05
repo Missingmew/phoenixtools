@@ -467,7 +467,7 @@
 0x01f2a3dc	2	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-1.gbapal"	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-1"	 32	4
 0x01f2c368	2	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-2.gbapal"	"common/graphics/backgrounds/case5/evidence-lockers-right-with-print-luminol-2"	 32	4
 0x01f30cbc	2	"common/graphics/backgrounds/bg203-lana-hugging-ema.gbapal"	"common/graphics/backgrounds/bg203-lana-hugging-ema"	 32	4
-0x01f39120	2	"common/graphics/backgrounds/case5/young-lana-with-ema.gbapal"	"common/graphics/backgrounds/case5/young-lana-with-ema"	 32	4
+0x01f39120	2	"common/graphics/backgrounds/bg204-young-lana-with-ema.gbapal"	"common/graphics/backgrounds/bg204-young-lana-with-ema"	 32	4
 
 0x01f41098	2	"common/graphics/backgrounds/bg230-background-for-dancing-badger.gbapal"	"common/graphics/backgrounds/bg230-background-for-dancing-badger"	 32	4
 
