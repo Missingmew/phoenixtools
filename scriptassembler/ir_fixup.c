@@ -25,56 +25,48 @@ int findidx(struct lut *lut, unsigned valid, uint16_t offset, uint16_t section) 
 	return -1;
 }
 
-void ir_script_fixup(struct ir_script *script, unsigned gamenum) {
-	uint32_t curoffset;
-	uint16_t targetsec, targetoff;
-	unsigned cursec, curcmd, curdata, curspecial, tofree;
+int findhash(unsigned long *hashes, unsigned count, unsigned long what) {
+	for(unsigned i = 0; i < count; i++) if(hashes[i] == what) {
+		printf("%s what %lx found %lx at %u\n", __func__, what, hashes[i], i);
+		return i;
+	}
+	return -1;
+}
+
+unsigned ir_script_fixup(struct ir_script *script, unsigned gamenum) {
+	unsigned lutsize = 0, curhash = 0, curfixup = 0, curspecial = 0;
+	unsigned curoffset;
+	unsigned long *hashes;
+	unsigned long **fixups;
 	int idx;
 	struct ir_section *section;
 	struct ir_generic *command;
-	struct lut *LUT;
-	if(script->numspecials) {
-		LUT = malloc(sizeof(struct lut) * script->numspecials);
-		for(unsigned i = 0; i < script->numspecials; i++) {
-			LUT[i].numfixup = 0;
-			LUT[i].fixup = malloc(sizeof(unsigned *) * script->numspecials);
-		}
-		tofree = script->numspecials;
-		script->specials = malloc(sizeof(struct ir_special) * script->numspecials);
-	
-		/* find and set up specials area */
-		curspecial = 0;
-		for(cursec = 0; cursec < script->numsections; cursec++) {
+	for(unsigned i = 0; i < script->numsections; i++) lutsize += script->secarr[i]->numlabels;
+	if(lutsize) {
+		fixups = malloc(sizeof(unsigned long *) * script->numspecials);
+		hashes = malloc(sizeof(unsigned long) * lutsize);
+		script->specials = malloc(sizeof(struct ir_special) * lutsize);
+		/* fetch all labels from all sections, construct LUT data, store addresses which need fixup and store hashes for fixup */
+		for(unsigned cursec = 0; cursec < script->numsections; cursec++) {
 			section = script->secarr[cursec];
-			for(curcmd = 0; curcmd < section->numcommands; curcmd++) {
+			/* grab labels from section and construct LUT data, storing hash for fixup later */
+			for(unsigned curlab = 0; curlab < section->numlabels; curlab++) {
+				hashes[curhash++] = section->labels[curlab]->hash;
+				script->specials[curspecial].section = cursec;
+				script->specials[curspecial++].offset = section->labels[curlab]->addr;
+			}
+			/* collect stuff needed to fix up commands */
+			for(unsigned curcmd = 0; curcmd < section->numcommands; curcmd++) {
 				command = section->commands[curcmd];
 				switch(command->type) {
+					/* rather ugly hack: if label points outside current section fixup flag and fall through, else fixup data and be done */
 					case CMD35:
 					case CMD36: 
-					case CMD78: {
-						for(curdata = 0; curdata < command->numdata; curdata++) {
-							if(command->data[curdata].type == DATASECOFF) {
-								targetoff = command->data[curdata].data & 0xFFFF;
-								targetsec = (command->data[curdata].data >> 16) & 0xFFFF;
-								/* check if we have a usable LUT entry on hand, if so use that */
-								if((idx = findidx(LUT, curspecial, targetoff, targetsec)) > -1) {
-									//~ command->data[curdata].data = script->numsections+idx;
-									
-									LUT[idx].fixup[LUT[idx].numfixup++] = &(command->data[curdata].data);
-								}
-								/* otherwise create a new lut entry */
-								else {
-									//~ script->specials[curspecial].offset = targetoff;
-									//~ script->specials[curspecial].section = targetsec;
-									//~ command->data[curdata].data = script->numsections+curspecial;
-									
-									LUT[curspecial].data.offset = targetoff;
-									LUT[curspecial].data.section = targetsec;
-									LUT[curspecial].fixup[LUT[curspecial].numfixup++] = &(command->data[curdata].data);
-									
-									curspecial++;
-								}
-								
+					case CMD78:
+					case CMD7A: {
+						for(unsigned curdata = 0; curdata < command->numdata; curdata++) {
+							if(command->data[curdata].type == DATALOOKUPLAB) {
+								fixups[curfixup++] = &command->data[curdata].data;
 								command->data[curdata].type = DATARAW;
 							}
 						}
@@ -86,26 +78,26 @@ void ir_script_fixup(struct ir_script *script, unsigned gamenum) {
 				}
 			}
 		}
-		if(curspecial < script->numspecials) script->numspecials = curspecial;
-		qsort(LUT, script->numspecials, sizeof(struct lut), lutcompare);
 		
-		for(unsigned i = 0; i < script->numspecials; i++) {
-			for(unsigned j = 0; j < LUT[i].numfixup; j++) {
-				*(LUT[i].fixup[j]) = script->numsections + i;
+		for(unsigned i = 0; i < curfixup; i++) {
+			if((idx = findhash(hashes, curhash, *fixups[i])) < 0) {
+				printf("fixup (%s): failed to find label for hash %08lx\n", __func__, *fixups[i]);
+				return 0;
 			}
-			script->specials[i] = LUT[i].data;
+			else *(fixups[i]) = script->numsections + idx;
 		}
-		
-		for(unsigned i = 0; i < tofree; i++) free(LUT[i].fixup);
-		free(LUT);
+		free(fixups);
+		free(hashes);
+		script->numspecials = lutsize;
 	}
 	
 	/* set up section offset table and startwords */
 	script->startwords = script->numsections + script->numspecials;
 	script->offsettable = malloc(sizeof(uint32_t) * script->numsections);
 	curoffset = 4 + script->startwords * 4;
-	for(cursec = 0; cursec < script->numsections; cursec++) {
+	for(unsigned cursec = 0; cursec < script->numsections; cursec++) {
 		script->offsettable[cursec] = curoffset;
 		curoffset += script->secarr[cursec]->datasize;
 	}
+	return 1;
 }

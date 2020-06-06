@@ -67,20 +67,20 @@ void ir_generic_dump(struct ir_generic *generic) {
 	printf("generic type %s at line %u has %u datas\n", generic->type < sizeofarr(commandnames) ? commandnames[generic->type] : tokentypestrings[generic->type-sizeofarr(commandnames)], generic->line, generic->numdata);
 	printf("datas are: ");
 	for(unsigned i = 0; i < generic->numdata; i++) {
-		printf("(%x - %04x) - ", generic->data[i].type, generic->data[i].data);
+		printf("(%x - %04lx) - ", generic->data[i].type, generic->data[i].data);
 	}
 	printf("\n");
 }
 
 void ir_label_dump(struct ir_label *label) {
-	printf("Label %s hash %lu addr %u\n", label->name, label->hash, label->addr);
+	printf("Label %s hash %lx addr %u\n", label->name, label->hash, label->addr);
 }
 
 void ir_section_dump(struct ir_section *section) {
 	unsigned i;
 	struct ir_list *iter;
-	printf("Section was on line %u, prenum is %s num is %u\n", section->line, section->prenum, section->num);
-	printf("Section has %u labels, %u precommands, %u commands\n", section->numlabels, section->numprecommands, section->numcommands);
+	//~ printf("Section was on line %u, prenum is %s num is %u\n", section->line, section->prenum, section->num);
+	//~ printf("Section has %u labels, %u precommands, %u commands\n", section->numlabels, section->numprecommands, section->numcommands);
 	if(section->labels) {
 		for(i = 0; i < section->numlabels; i++) {
 			printf("Dumping label %u\n", i);
@@ -93,12 +93,12 @@ void ir_section_dump(struct ir_section *section) {
 		//~ ir_pre_generic_dump((struct ir_pre_generic *)iter->type);
 	//~ }
 	
-	if(section->commands) {
-		for(i = 0; i < section->numcommands; i++) {
-			printf("Dumping command %u\n", i);
-			ir_generic_dump(section->commands[i]);
-		}
-	}
+	//~ if(section->commands) {
+		//~ for(i = 0; i < section->numcommands; i++) {
+			//~ printf("Dumping command %u\n", i);
+			//~ ir_generic_dump(section->commands[i]);
+		//~ }
+	//~ }
 }
 
 void ir_special_dump(struct ir_special *special) {
@@ -116,7 +116,7 @@ void ir_script_dump(struct ir_script *script) {
 		}
 	}
 	for(i = 0, iter = script->sections; i < script->numsections; i++, iter = iter->next) {
-		printf("Dumping section %u\n", i);
+		//~ printf("Dumping section %u\n", i);
 		ir_section_dump((struct ir_section *)iter->type);
 	}
 }
@@ -141,14 +141,11 @@ void ir_section_free(struct ir_section *section) {
 	unsigned i;
 	struct ir_list *iter, *olditer;
 	
-	for(i = 0; i < section->numlabels; i++) {
-		ir_label_free(section->labels[i]);
-	}
-	free(section->labels);
-	
+	/* do not free labels separetely from their array, use the precommands for that */
 	for(i = 0, iter = section->precommands, olditer = NULL; i < section->numprecommands; i++, olditer = iter, iter = iter->next) {
 		free(olditer);
-		ir_pre_generic_free((struct ir_pre_generic *)iter->type);
+		if(*iter->type == LABEL) ir_label_free((struct ir_label *)iter->type);
+		else ir_pre_generic_free((struct ir_pre_generic *)iter->type);
 	}
 	free(olditer);
 	
@@ -156,6 +153,7 @@ void ir_section_free(struct ir_section *section) {
 		ir_generic_free(section->commands[i]);
 	}
 	free(section->commands);
+	free(section->labels);
 	
 	free(section->prenum);
 	free(section);

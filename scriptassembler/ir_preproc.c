@@ -297,28 +297,41 @@ struct ir_generic *preproc_Command35(struct ir_pre_generic *pre, unsigned gamenu
 	LOOKUP(idx, cmd35flaghint, pre->data[0]);
 	data = idx;
 	data += cleanNumber(pre->data[1]) << 8;
-	section = cleanNumber(pre->data[2]);
+	LOOKUP(idx, cmd35jumphint, pre->data[2]);
 	/* if target is not current section set MSB of lower byte */
-	data += currentsection != section ? 0x80 : 0;
+	data += idx ? 0x80 : 0;
+	//~ section = cleanNumber(pre->data[2]);
+	/* this needs a fixup depending on where the label points to later */
 	gen->data[1].type = DATARAW;
 	gen->data[1].data = data;
-	if(currentsection != section) {
-		gen->data[2].type = DATASECOFF;
-		gen->data[2].data = (section << 16) + cleanNumber(pre->data[3])*2;
-	}
-	else {
+	/* if target is in current section, finalize data here, else wait for fixup */
+	if(!idx) {
 		gen->data[2].type = DATARAW;
 		gen->data[2].data = cleanNumber(pre->data[3])*2;
 	}
-	currentspecials++;
+	else {
+		gen->data[2].type = DATALOOKUPLAB;
+		gen->data[2].data = hash(pre->data[3]);
+		printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[3], hash(pre->data[3]));
+		currentspecials++;
+	}
+	//~ if(currentsection != section) {
+		//~ gen->data[2].type = DATASECOFF;
+		//~ gen->data[2].data = (section << 16) + cleanNumber(pre->data[3])*2;
+	//~ }
+	//~ else {
+		//~ gen->data[2].type = DATARAW;
+		//~ gen->data[2].data = cleanNumber(pre->data[3])*2;
+	//~ }
 	return gen;
 }
 
 /* this needs additional work due to how special data is handled */
 struct ir_generic *preproc_Command36(struct ir_pre_generic *pre, unsigned gamenum) {
 	SETUPGENSPEC(1)
-	gen->data[1].type = DATASECOFF;
-	gen->data[1].data = (cleanNumber(pre->data[0]) << 16) + cleanNumber(pre->data[1])*2;
+	gen->data[1].type = DATALOOKUPLAB;
+	gen->data[1].data = hash(pre->data[0]);
+	printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[0], hash(pre->data[0]));
 	currentspecials++;
 	return gen;
 }
@@ -337,6 +350,10 @@ struct ir_generic *preproc_Command60(struct ir_pre_generic *pre, unsigned gamenu
 }
 
 struct ir_generic *preproc_Command78(struct ir_pre_generic *pre, unsigned gamenum) {
+	return preproc_Command36(pre, gamenum);
+}
+
+struct ir_generic *preproc_Command7A(struct ir_pre_generic *pre, unsigned gamenum) {
 	return preproc_Command36(pre, gamenum);
 }
 
@@ -463,7 +480,7 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned 
 	preproc_Generic, /* 0x77 */
 	preproc_Command78, /* 0x78 */
 	preproc_Generic, /* 0x79 */
-	preproc_Generic, /* 0x7a */
+	preproc_Command7A, /* 0x7a */
 	preproc_Generic, /* 0x7b */
 	preproc_Generic, /* 0x7c */
 	preproc_Generic, /* 0x7d */

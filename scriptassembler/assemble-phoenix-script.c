@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 	
 	ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
-	ir_script_fixup(script, gamenum);
+	if(!ir_script_fixup(script, gamenum)) return 1;
 	
 	ir_script_dump(script);
 	

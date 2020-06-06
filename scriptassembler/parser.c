@@ -401,30 +401,27 @@ struct ir_pre_generic *parser_parseCommand34(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand35(unsigned gamenum) {
-	char *flaghint, *whichflag, *section, *offset;
+	char *flaghint, *whichflag, *farjump, *label;
 	PREPARENDATA(CMD35, 4)
 	ACCEPTRET(flaghint, IDENT)
 	ACCEPT(COMMA)
 	ACCEPTRET(whichflag, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(section, INTEGER)
-	ACCEPT(PLUS)
-	ACCEPTRET(offset, INTEGER)
+	ACCEPTRET(farjump, IDENT)
+	ACCEPT(COMMA)
+	ACCEPTRETEITHER(label, IDENT, INTEGER)
 	command->data[0] = flaghint;
 	command->data[1] = whichflag;
-	command->data[2] = section;
-	command->data[3] = offset;
+	command->data[2] = farjump;
+	command->data[3] = label;
 	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand36(unsigned gamenum) {
-	char *section, *offset;
-	PREPARENDATA(CMD36, 2)
-	ACCEPTRET(section, INTEGER)
-	ACCEPT(PLUS)
-	ACCEPTRET(offset, INTEGER)
-	command->data[0] = section;
-	command->data[1] = offset;
+	char *label;
+	PREPARENDATA(CMD36, 1)
+	ACCEPTRET(label, IDENT)
+	command->data[0] = label;
 	return command;
 }
 
@@ -707,13 +704,10 @@ struct ir_pre_generic *parser_parseCommand77(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand78(unsigned gamenum) {
-	char *section, *offset;
-	PREPARENDATA(CMD78, 2)
-	ACCEPTRET(section, INTEGER)
-	ACCEPT(PLUS)
-	ACCEPTRET(offset, INTEGER)
-	command->data[0] = section;
-	command->data[1] = offset;
+	char *label;
+	PREPARENDATA(CMD78, 1)
+	ACCEPTRET(label, IDENT)
+	command->data[0] = label;
 	return command;
 }
 
@@ -722,7 +716,11 @@ struct ir_pre_generic *parser_parseCommand79(unsigned gamenum) {
 }
 
 struct ir_pre_generic *parser_parseCommand7a(unsigned gamenum) {
-	GENERICNARG(CMD7A, 1)
+	char *label;
+	PREPARENDATA(CMD7A, 1)
+	ACCEPTRET(label, IDENT)
+	command->data[0] = label;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand7b(unsigned gamenum) {

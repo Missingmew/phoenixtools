@@ -24,14 +24,12 @@ struct ir_pre_generic {
 
 enum datapackettype {
 	DATARAW,
-	DATALOOKUPSEC,
 	DATALOOKUPLAB,
-	DATASECOFF,
 };
 
 struct ir_datapacket {
 	unsigned type;
-	unsigned data;
+	unsigned long data;
 };
 
 struct ir_generic {
@@ -89,7 +87,7 @@ extern unsigned currentspecials;
 
 void ir_script_emit(FILE *o, struct ir_script *script);
 
-void ir_script_fixup(struct ir_script *script, unsigned gamenum);
+unsigned ir_script_fixup(struct ir_script *script, unsigned gamenum);
 
 unsigned cleanNumber(char *str);
 extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned gamenum);
