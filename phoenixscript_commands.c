@@ -433,15 +433,16 @@ unsigned printCmd35(struct scriptstate *state) {
 		
 		if(jumphint) {
 			unsigned specialindex = spcidx_thisoffset - state->numsections;
-			offset = state->specialdata[specialindex].val0 / 2;
-			targetsection = state->specialdata[specialindex].val1;
+			offset = state->jumplut[specialindex].offset / 2;
+			targetsection = state->jumplut[specialindex].section;
 			fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, targetsection, offset, specialindex);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %s, label%u_%u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, cmd35jumphint[jumphint], targetsection, offset);
 		}
 		else {
 			offset = spcidx_thisoffset/2;
-			targetsection = state->section;
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %s, %u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, cmd35jumphint[jumphint], offset);
 		}
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u + %u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, targetsection, offset);
+		//~ state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u + %u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, targetsection, offset);
 		state->scriptidx += 1+2;
 	}
 	return 2;
@@ -455,11 +456,12 @@ unsigned printCmd36(struct scriptstate *state) {
 	else {
 		if(state->outputenabled) {
 			unsigned specialindex = state->script[state->scriptidx+1] - state->numsections;
-			unsigned offset = state->specialdata[specialindex].val0 / 2;
-			unsigned targetsection = state->specialdata[specialindex].val1;
+			unsigned offset = state->jumplut[specialindex].offset / 2;
+			unsigned targetsection = state->jumplut[specialindex].section;
 			fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, targetsection, offset, specialindex);
 			
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u + %u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
+			//~ state->textidx += sprintf(state->textfile+state->textidx, "%s %u + %u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s label%u_%u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
 			state->scriptidx += 1+1;
 		}
 		return 1;
@@ -755,7 +757,7 @@ unsigned printCmd79(struct scriptstate *state) {
 }
 
 unsigned printCmd7A(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	return printCmd36(state);
 }
 
 unsigned printCmd7B(struct scriptstate *state) {
@@ -852,7 +854,7 @@ char *const commandnames[144] = {
 /* 18h */ "newevidence_noanim", "cmd19", "swoosh", "bg", "hidetextbox", "shift_background", "person", "hideperson",
 /* 20h */ "cmd20", "evidence_window_lifebar", "fademusic", "pausemusic", "reset", "cmd25", "hide_court_record_button", "shake",
 /* 28h */ "testemony_animation", "return_to_testimony", "cmd2A", "cmd2B", "jmp", "nextpage_button", "nextpage_nobutton", "animation",
-/* 30h */ "cmd30", "personvanish", "cmd32", "setmovelocations", "fadetoblack", "cmd35", "cmd36", "cmd37",
+/* 30h */ "cmd30", "personvanish", "cmd32", "setmovelocations", "fadetoblack", "jmp_conditional", "jmp_far", "cmd37",
 /* 38h */ "cmd38", "littlesprite", "cmd3A", "cmd3B", "cmd3C", "cmd3D", "cmd3E", "cmd3F",
 /* 40h */ "cmd40", "cmd41", "togglevoicesfx", "show_lifebar", "guilty", "cmd45", "bgtile", "cmd47",
 /* 48h */ "cmd48", "wingame", "cmd4A", "cmd4B", "cmd4C",
@@ -868,7 +870,7 @@ char *const commandnames[144] = {
 /* 70h */ "cmd70", "cmd71", "cmd72", "cmd73", "cmd74", "cmd75", "cmd76", "cmd77",
 
 /* unity maps cmd78 to cmd36. possibly something to do with localization? */
-/* 78h */ "cmd78", "cmd79", "cmd7A", "cmd7B", "cmd7C", "cmd7D", "cmd7E", "cmd7F",
+/* 78h */ "cmd78", "cmd79", "jmp_far_nolife", "cmd7B", "cmd7C", "cmd7D", "cmd7E", "cmd7F",
 
 /* all of the following commands were added to support apollo */
 /* 80h */ "cmd80", "cmd81", "cmd82", "cmd83", "cmd84", "cmd85", "cmd86", "cmd87",

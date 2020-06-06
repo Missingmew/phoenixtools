@@ -8,9 +8,9 @@
 #define ARRGAMENUM(x) (x % 4)
 
 typedef struct special {
-	uint16_t val0;
-	uint16_t val1;
-}__attribute__((packed)) specialdatapack;
+	uint16_t offset;
+	uint16_t section;
+}__attribute__((packed)) jumplutpack;
 
 struct scriptstate {
 	unsigned gamenum;
@@ -29,8 +29,8 @@ struct scriptstate {
 	unsigned sectionoff;
 	uint32_t *sectionlist;
 	unsigned numsections;
-	specialdatapack *specialdata;
-	unsigned numspecialdata;
+	jumplutpack *jumplut;
+	unsigned numjumplut;
 	
 	unsigned textstart;
 	

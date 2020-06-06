@@ -34,6 +34,11 @@ int getMemidxIndex( unsigned int memidx, uint32_t *list, unsigned int count ) {
 	return -1;
 }
 
+int isLabelLocation(jumplutpack *lut, unsigned count, unsigned section, unsigned offset) {
+	for(unsigned i = 0; i < count; i++) if(section == lut[i].section && offset == lut[i].offset/2) return i;
+	return -1;
+}
+
 /* returns non-zero if token is text, zero if command */
 unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int isjp, unsigned int isunity) {
 	if(*token < 128 || (gamenum == GAME_APOLLO && *token < 128+16)) return 0; // opcode for script
@@ -91,7 +96,7 @@ int main( int argc, char **argv ) {
 	FILE *f, *o;
 	unsigned i, j;
 	unsigned int fileSize, gamenum, intext;
-	uint32_t numScripts, *scriptOffsets = NULL, *specialaddrs = NULL;
+	uint32_t numScripts, *scriptOffsets = NULL, *jumplutaddrs = NULL;
 	//~ command *curop;
 	char escapebuf[OUTBUFSIZE*2];
 	struct scriptstate state;
@@ -157,7 +162,7 @@ int main( int argc, char **argv ) {
 	fread( &numScripts, sizeof(uint32_t), 1, f );
 	scriptOffsets = malloc( numScripts * sizeof(uint32_t));
 	/* need this to find number of sections and specialdata */
-	specialaddrs = malloc( numScripts * sizeof(uint32_t));
+	jumplutaddrs = malloc( numScripts * sizeof(uint32_t));
 	
 	fread(scriptOffsets, sizeof(uint32_t)*numScripts, 1, f);
 	
@@ -173,8 +178,8 @@ int main( int argc, char **argv ) {
 	state.section = 0;
 	state.sectionoff = 0;
 	state.sectionlist = scriptOffsets;
-	state.specialdata = NULL;
-	state.numspecialdata = 0;
+	state.jumplut = NULL;
+	state.numjumplut = 0;
 	state.numsections = 0;
 	
 	/* disable text output to scan for commands that use special data */
@@ -190,16 +195,17 @@ int main( int argc, char **argv ) {
 		switch(state.script[i]) {
 			case 0x35: {
 				if(state.script[i+1] & 0x80 && state.script[i+2] && numScripts > state.script[i+2]) {
-					specialaddrs[j++] = state.script[i+2];
+					jumplutaddrs[j++] = state.script[i+2];
 				}
 				i += 2;
 				break;
 			}
-			/* 78 is mapped to 36 in unity... */
+			/* 78 is mapped to 36 in unity... 7A uses the same principle for our purposes */
 			case 0x36:
-			case 0x78: {
+			case 0x78:
+			case 0x7A: {
 				if(state.script[i+1] && numScripts > state.script[i+1]) {
-					specialaddrs[j++] = state.script[i+1];
+					jumplutaddrs[j++] = state.script[i+1];
 				}
 				i += 1;
 				break;
@@ -215,34 +221,34 @@ int main( int argc, char **argv ) {
 		   to mark the end of actual section offsets and the beginning of specialdata
 		   as well as calculate the number of each */
 		
-		/* specialaddrs now holds all known indices for j uses of special data
+		/* jumplutaddrs now holds all known indices for j uses of special data
 		   qsort the array and use the first index from the result as begin of specialdata */
-		qsort(specialaddrs, j, sizeof(uint32_t), compare_uint32);
+		qsort(jumplutaddrs, j, sizeof(uint32_t), compare_uint32);
 		
 		//~ printf("found the following specialaddr indices:\n");
-		//~ for(unsigned i = 0; i < j; i++) printf("%08x\n", specialaddrs[i]);
+		//~ for(unsigned i = 0; i < j; i++) printf("%08x\n", jumplutaddrs[i]);
 		
-		//~ printf("first specialdata index is %08x(%08x)\n", specialaddrs[0], specialaddrs[0]*4+4);
-		//~ printf("have %08x special uint32\n", (numScripts-specialaddrs[0]));
+		//~ printf("first specialdata index is %08x(%08x)\n", jumplutaddrs[0], jumplutaddrs[0]*4+4);
+		//~ printf("have %08x special uint32\n", (numScripts-jumplutaddrs[0]));
 		
-		state.specialdata = (specialdatapack *)&scriptOffsets[specialaddrs[0]];
-		state.numspecialdata = (numScripts-specialaddrs[0]);
-		state.numsections = specialaddrs[0];
-		fprintf(stderr, "start of specialdata at %08x\n", 4+specialaddrs[0]*4);
-		printf("have %u specials\n", state.numspecialdata);
+		state.jumplut = (jumplutpack *)&scriptOffsets[jumplutaddrs[0]];
+		state.numjumplut = (numScripts-jumplutaddrs[0]);
+		state.numsections = jumplutaddrs[0];
+		fprintf(stderr, "start of specialdata at %08x\n", 4+jumplutaddrs[0]*4);
+		printf("have %u specials\n", state.numjumplut);
 	}
 	else {
 		state.numsections = numScripts;
 	}
 	
-	//~ printf("have %u specialdata and %u(%08x) sections\n", state.numspecialdata, state.numsections, state.numsections);
+	//~ printf("have %u specialdata and %u(%08x) sections\n", state.numjumplut, state.numsections, state.numsections);
 	
 	/* enable text output for actual dumping */
 	state.outputenabled = 1;
 	
 	//~ numScripts--;
 	//~ state.textidx += sprintf( state.textfile+state.textidx, "begin special data\n");
-	//~ for(unsigned i = 0; i < state.numspecialdata; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.specialdata[i].val0, state.specialdata[i].val1);
+	//~ for(unsigned i = 0; i < state.numjumplut; i++) state.textidx +=sprintf( state.textfile+state.textidx, "%04x %04x\n", state.jumplut[i].val0, state.jumplut[i].val1);
 	//~ state.textidx += sprintf( state.textfile+state.textidx, "end special data\n");
 	
 	state.textidx += sprintf(state.textfile+state.textidx, "SECTION 0\n" );
@@ -260,6 +266,9 @@ int main( int argc, char **argv ) {
 			state.section = getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections );
 			state.sectionoff = state.scriptidx;
 			state.textidx += sprintf( state.textfile+state.textidx, "ENDSECTION\nSECTION %u\n", state.section);
+		}
+		if(isLabelLocation(state.jumplut, state.numjumplut, state.section, state.scriptidx - state.sectionoff) > -1) {
+			state.textidx += sprintf( state.textfile+state.textidx, "label%u_%u:\n", state.section, state.scriptidx - state.sectionoff);
 		}
 		//~ printf("memidx %08x (off %08x)\n", state.scriptidx, state.scriptidx*2+numScripts*4);
 		if(prepareToken(&state.script[state.scriptidx], state.gamenum, state.isjp, state.isunity)) {
@@ -345,7 +354,7 @@ int main( int argc, char **argv ) {
 	fclose(o);
 	free(outfilename);
 	free(scriptOffsets);
-	free(specialaddrs);
+	free(jumplutaddrs);
 	free(state.script);
 	free(state.textfile);
 	free(state.outbuf);
