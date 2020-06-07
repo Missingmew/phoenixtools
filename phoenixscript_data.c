@@ -298,10 +298,10 @@ char *backgrounds[4][4096] = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0,
 		//250
 		0, 0, 0, 0, 0,
-		0, //255
+		"BG255_SPC_BLACK_SCREEN", //255
 		0, 0, 0, 0,
 		
-		[4095] = "BGSPC_BLACK_SCREEN"
+		[4095] = "BG4095_SPC_BLACK_SCREEN"
 		// 32884 seems to be gants office yet again?
 	},
 	{
