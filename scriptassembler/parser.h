@@ -3,6 +3,6 @@
 
 #include "ir.h"
 
-struct ir_script *parser_parse(unsigned gamenum);
+struct ir_script *parser_parse(struct asconfig *config);
 
 #endif

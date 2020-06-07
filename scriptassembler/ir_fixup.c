@@ -33,7 +33,7 @@ int findhash(unsigned long *hashes, unsigned count, unsigned long what) {
 	return -1;
 }
 
-unsigned ir_script_fixup(struct ir_script *script, unsigned gamenum) {
+unsigned ir_script_fixup(struct ir_script *script) {
 	unsigned lutsize = 0, curhash = 0, curfixup = 0, curspecial = 0;
 	unsigned curoffset;
 	unsigned long *hashes;

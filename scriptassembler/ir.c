@@ -173,9 +173,9 @@ void ir_script_free(struct ir_script *script) {
 	free(script);
 }
 
-struct ir_generic *ir_precommand_preprocess(struct ir_pre_generic *pre, unsigned gamenum) {
-	if(pre->type < sizeofarr(commandnames)) return command_preproc[pre->type](pre, gamenum);
-	else if(pre->type == TEXT) return text_preproc(pre, gamenum);
+struct ir_generic *ir_precommand_preprocess(struct ir_pre_generic *pre, struct asconfig *config) {
+	if(pre->type < sizeofarr(commandnames)) return command_preproc[pre->type](pre, config);
+	else if(pre->type == TEXT) return text_preproc(pre, config);
 	else {
 		printf("error during preprocessing: encountered unknown type %u\n", pre->type);
 		return NULL;
@@ -188,7 +188,7 @@ struct ir_label *ir_label_preprocess(struct ir_label *lab, unsigned cursecaddr) 
 	return lab;
 }
 
-unsigned ir_section_preprocess(struct ir_section *section, unsigned gamenum) {
+unsigned ir_section_preprocess(struct ir_section *section, struct asconfig *config) {
 	unsigned i, curcmd, curlab;
 	struct ir_list *iter;
 	
@@ -203,7 +203,7 @@ unsigned ir_section_preprocess(struct ir_section *section, unsigned gamenum) {
 			section->labels[curlab++] = ir_label_preprocess((struct ir_label *)iter->type, section->datasize);
 		}
 		else {
-			if(!(section->commands[curcmd] = ir_precommand_preprocess((struct ir_pre_generic *)iter->type, gamenum))) return 0;
+			if(!(section->commands[curcmd] = ir_precommand_preprocess((struct ir_pre_generic *)iter->type, config))) return 0;
 			section->datasize += sizeof(uint16_t) * section->commands[curcmd++]->numdata;
 		}
 	}
@@ -213,18 +213,18 @@ unsigned ir_section_preprocess(struct ir_section *section, unsigned gamenum) {
 	return 1;
 }
 
-unsigned ir_script_preprocess(struct ir_script *script, unsigned gamenum) {
+unsigned ir_script_preprocess(struct ir_script *script, struct asconfig *config) {
 	unsigned i;
 	struct ir_list *iter;
 	script->secarr = malloc(sizeof(struct ir_section *) * script->numsections);
 	for(i = 0, iter = script->sections;i < script->numsections; i++, iter = iter->next) {
 		script->secarr[i] = (struct ir_section *)iter->type;
-		if(!ir_section_preprocess((struct ir_section *)iter->type, gamenum)) return 0;
+		if(!ir_section_preprocess((struct ir_section *)iter->type, config)) return 0;
 	}
 	script->numspecials = currentspecials;
 	return 1;
 }
 
-void ir_script_postprocess(struct ir_script *script, unsigned gamenum) {
+void ir_script_postprocess(struct ir_script *script, struct asconfig *config) {
 	
 }

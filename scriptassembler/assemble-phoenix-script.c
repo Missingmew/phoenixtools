@@ -5,28 +5,8 @@
 #include "lexer.h"
 #include "parser.h"
 #include "ir.h"
-
-struct specialdata {
-	uint16_t offset;
-	uint16_t section;
-}__attribute__((packed));
-
-struct section {
-	unsigned start;
-	unsigned long *labels;
-	
-	uint16_t *code;
-};
-
-struct script {
-	uint32_t numsections;
-	uint32_t *sectionoffsets;
-	
-	unsigned numspecial;
-	struct specialdata *specials;
-	
-	struct section *sections;
-};
+#include "asconfig.h"
+#include "../phoenixscript_commands.h"
 
 int main(int argc, char **argv) {
 	/* idea:
@@ -37,16 +17,25 @@ int main(int argc, char **argv) {
 	- close
 	*/
 	FILE *f, *o;
-	unsigned insize, gamenum;
+	unsigned insize;
 	char *input = NULL;
 	struct ir_script *script = NULL;
+	struct asconfig config;
 	
 	if(argc != 4) {
 		printf("usage: %s gamenum infile outfile\n", argv[0]);
 		return 1;
 	}
 	
-	gamenum = strtoul(argv[1], NULL, 10) - 1;
+	config.gamenum = strtoul(argv[1], NULL, 10) - 1;
+	config.isjp = 0;
+	
+	if( config.gamenum >= GAME_NUMGAMES ) {
+		printf("unsupported gamenum %d\n", config.gamenum+1);
+		return 1;
+	}
+	
+	if(config.gamenum == GAME_GS1GBA) config.isjp = 1;
 	
 	if(!(f = fopen(argv[2], "r"))) {
 		printf("couldnt open %s as input\n", argv[2]);
@@ -64,15 +53,15 @@ int main(int argc, char **argv) {
 	lexer_init(input);
 	if(!lexer_scan()) printf("couldnt lex file\n");
 	
-	if(!(script = parser_parse(gamenum))) return 1;
+	if(!(script = parser_parse(&config))) return 1;
 	
 	ir_script_dump(script);
 	
-	if(!ir_script_preprocess(script, gamenum)) return 1;
+	if(!ir_script_preprocess(script, &config)) return 1;
 	
 	ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
-	if(!ir_script_fixup(script, gamenum)) return 1;
+	if(!ir_script_fixup(script)) return 1;
 	
 	ir_script_dump(script);
 	

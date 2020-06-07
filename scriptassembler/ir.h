@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "lexer.h"
+#include "asconfig.h"
 
 enum irtypes {
 	LABEL = NUMTOKENS+1,
@@ -87,11 +88,11 @@ extern unsigned currentspecials;
 
 void ir_script_emit(FILE *o, struct ir_script *script);
 
-unsigned ir_script_fixup(struct ir_script *script, unsigned gamenum);
+unsigned ir_script_fixup(struct ir_script *script);
 
 unsigned cleanNumber(char *str);
-extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, unsigned gamenum);
-struct ir_generic *text_preproc(struct ir_pre_generic *pre, unsigned gamenum);
+extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, struct asconfig *config);
+struct ir_generic *text_preproc(struct ir_pre_generic *pre, struct asconfig *config);
 
 unsigned long hash(void *data);
 
@@ -103,6 +104,6 @@ void ir_script_dump(struct ir_script *script);
 
 void ir_script_free(struct ir_script *script);
 
-unsigned ir_script_preprocess(struct ir_script *script, unsigned gamenum);
+unsigned ir_script_preprocess(struct ir_script *script, struct asconfig *config);
 
 #endif
