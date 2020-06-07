@@ -14,6 +14,11 @@ char *supportedgamenames[] = {
 	"PWAA", "JFA", "TT", "AJAA", "GS1GBA"
 };
 
+struct localjumpinfo {
+	unsigned index;
+	unsigned target;
+};
+
 int compare_uint32(const void *a, const void *b) {
 	uint32_t arg1 = *((uint32_t *)a);
 	uint32_t arg2 = *((uint32_t *)b);
@@ -22,20 +27,18 @@ int compare_uint32(const void *a, const void *b) {
 	return 0;
 }
 
-int getOffsetIndex( unsigned int offset, uint32_t *list, unsigned int count ) {
-	int i;
-	for( i = 0; i < count; i++ ) if( offset == list[i] ) return i;
-	return -1;
-}
-
-int getMemidxIndex( unsigned int memidx, uint32_t *list, unsigned int count ) {
-	int i, sub = list[0];
-	for( i = 0; i < count; i++ ) if( memidx == (list[i]-sub)/2 ) return i;
+int isSectionStart(uint32_t *list, unsigned count, unsigned index) {
+	for(unsigned i = 0; i < count; i++) if(list[i] == index) return i;
 	return -1;
 }
 
 int isLabelLocation(jumplutpack *lut, unsigned count, unsigned section, unsigned offset) {
 	for(unsigned i = 0; i < count; i++) if(section == lut[i].section && offset == lut[i].offset/2) return i;
+	return -1;
+}
+
+int isLocalLabelLocation(struct localjumpinfo *jumps, unsigned count, unsigned section, unsigned offset) {
+	for(unsigned i = 0; i < count; i++) if(section == jumps[i].index && offset == jumps[i].target) return 1;
 	return -1;
 }
 
@@ -95,8 +98,9 @@ void escapeText(char *dst, char* src) {
 int main( int argc, char **argv ) {
 	FILE *f, *o;
 	unsigned i, j;
-	unsigned int fileSize, gamenum, intext;
+	unsigned int fileSize, gamenum, intext, numlocaljumps;
 	uint32_t numScripts, *scriptOffsets = NULL, *jumplutaddrs = NULL;
+	struct localjumpinfo *localjumps = NULL;
 	//~ command *curop;
 	char escapebuf[OUTBUFSIZE*2];
 	struct scriptstate state;
@@ -190,12 +194,17 @@ int main( int argc, char **argv ) {
 	/* find the beginning and amount of "special" data */
 	/* parse the script, catching all cmd35 and cmd36/78 (which are known to use special data)
 	   and saving the indices of the "scriptOffsets" they access */
-	for(i = 0, j = 0; i < state.scriptsize/2; i++) {
-		if(state.script[i] > 0x7F || (state.gamenum == GAME_APOLLO && state.script[i] > 0x8F)) continue;
+	for(i = 0, j = 0, numlocaljumps = 0; i < state.scriptsize/2; i++) {
+		if((state.gamenum == GAME_APOLLO && state.script[i] > 0x8F) || (state.gamenum != GAME_APOLLO && state.script[i] > 0x7F)) continue;
 		switch(state.script[i]) {
 			case 0x35: {
 				if(state.script[i+1] & 0x80 && state.script[i+2] && numScripts > state.script[i+2]) {
 					jumplutaddrs[j++] = state.script[i+2];
+				}
+				else if(!(state.script[i+1] & 0x80)) {
+					localjumps = realloc(localjumps, (numlocaljumps+1)*sizeof(struct localjumpinfo));
+					localjumps[numlocaljumps].index = i;
+					localjumps[numlocaljumps++].target = state.script[i+2]/2;
 				}
 				i += 2;
 				break;
@@ -234,11 +243,25 @@ int main( int argc, char **argv ) {
 		state.jumplut = (jumplutpack *)&scriptOffsets[jumplutaddrs[0]];
 		state.numjumplut = (numScripts-jumplutaddrs[0]);
 		state.numsections = jumplutaddrs[0];
-		fprintf(stderr, "start of specialdata at %08x\n", 4+jumplutaddrs[0]*4);
-		printf("have %u specials\n", state.numjumplut);
+		//~ fprintf(stderr, "start of specialdata at %08x\n", 4+jumplutaddrs[0]*4);
+		//~ printf("have %u specials\n", state.numjumplut);
 	}
 	else {
 		state.numsections = numScripts;
+	}
+	
+	/* fix up sectionlist to have it hold the indices used during the dump */
+	for(i = 1; i < state.numsections; i++) state.sectionlist[i] = (state.sectionlist[i]-state.sectionlist[0])/2;
+	state.sectionlist[0] = 0;
+	/* fix up local jump structs to make index hold the appropriate section */
+	for(i = 0; i < numlocaljumps; i++) {
+		for(j = 1; j < state.numsections; j++) {
+			if(localjumps[i].index < state.sectionlist[j]) {
+				localjumps[i].index = j-1;
+				break;
+			}
+		}
+		if(j == state.numsections) localjumps[i].index = j-1;
 	}
 	
 	//~ printf("have %u specialdata and %u(%08x) sections\n", state.numjumplut, state.numsections, state.numsections);
@@ -253,7 +276,7 @@ int main( int argc, char **argv ) {
 	
 	state.textidx += sprintf(state.textfile+state.textidx, "SECTION 0\n" );
 	intext = 0;
-	while( state.scriptidx < state.scriptsize/2) {
+	while(state.scriptidx < state.scriptsize/2) {
 		if(state.maxtext - 100 < state.textidx) {
 			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
 			if(!(state.textfile = realloc(state.textfile, state.maxtext*2))) {
@@ -262,13 +285,16 @@ int main( int argc, char **argv ) {
 			}
 			state.maxtext *= 2;
 		}
-		if( getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections ) > 0 ) {
-			state.section = getMemidxIndex( state.scriptidx, state.sectionlist, state.numsections );
+		if(isSectionStart(state.sectionlist, state.numsections, state.scriptidx) > 0) {
+			state.section = isSectionStart(state.sectionlist, state.numsections, state.scriptidx);
 			state.sectionoff = state.scriptidx;
-			state.textidx += sprintf( state.textfile+state.textidx, "ENDSECTION\nSECTION %u\n", state.section);
+			state.textidx += sprintf(state.textfile+state.textidx, "ENDSECTION\nSECTION %u\n", state.section);
 		}
 		if(isLabelLocation(state.jumplut, state.numjumplut, state.section, state.scriptidx - state.sectionoff) > -1) {
-			state.textidx += sprintf( state.textfile+state.textidx, "label%u_%u:\n", state.section, state.scriptidx - state.sectionoff);
+			state.textidx += sprintf(state.textfile+state.textidx, "label%u_%u:\n", state.section, state.scriptidx - state.sectionoff);
+		}
+		if(isLocalLabelLocation(localjumps, numlocaljumps, state.section, state.scriptidx - state.sectionoff) > -1) {
+			state.textidx += sprintf(state.textfile+state.textidx, ".label%u_%u:\n", state.section, state.scriptidx - state.sectionoff);
 		}
 		//~ printf("memidx %08x (off %08x)\n", state.scriptidx, state.scriptidx*2+numScripts*4);
 		if(prepareToken(&state.script[state.scriptidx], state.gamenum, state.isjp, state.isunity)) {
@@ -355,6 +381,7 @@ int main( int argc, char **argv ) {
 	free(outfilename);
 	free(scriptOffsets);
 	free(jumplutaddrs);
+	free(localjumps);
 	free(state.script);
 	free(state.textfile);
 	free(state.outbuf);
