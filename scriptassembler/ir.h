@@ -25,7 +25,8 @@ struct ir_pre_generic {
 
 enum datapackettype {
 	DATARAW,
-	DATALOOKUPLAB,
+	DATALOOKUPLOCAL,
+	DATALOOKUPGLOBAL,
 };
 
 struct ir_datapacket {

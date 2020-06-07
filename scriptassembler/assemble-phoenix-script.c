@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 	
 	if(!(script = parser_parse(&config))) return 1;
 	
-	ir_script_dump(script);
+	//~ ir_script_dump(script);
 	
 	if(!ir_script_preprocess(script, &config)) return 1;
 	
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 	/* for fixing up addresses for sections and labels */
 	if(!ir_script_fixup(script)) return 1;
 	
-	ir_script_dump(script);
+	//~ ir_script_dump(script);
 	
 	
 	if(!(o = fopen(argv[3], "wb"))) {

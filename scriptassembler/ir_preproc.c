@@ -307,13 +307,15 @@ struct ir_generic *preproc_Command35(struct ir_pre_generic *pre, struct asconfig
 	gen->data[1].data = data;
 	/* if target is in current section, finalize data here, else wait for fixup */
 	if(!idx) {
-		gen->data[2].type = DATARAW;
-		gen->data[2].data = cleanNumber(pre->data[3])*2;
+		gen->data[2].type = DATALOOKUPLOCAL;
+		//~ gen->data[2].data = cleanNumber(pre->data[3])*2;
+		gen->data[2].data = hash(pre->data[3]);
+		//~ printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[3], hash(pre->data[3]));
 	}
 	else {
-		gen->data[2].type = DATALOOKUPLAB;
+		gen->data[2].type = DATALOOKUPGLOBAL;
 		gen->data[2].data = hash(pre->data[3]);
-		printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[3], hash(pre->data[3]));
+		//~ printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[3], hash(pre->data[3]));
 		currentspecials++;
 	}
 	//~ if(currentsection != section) {
@@ -330,9 +332,9 @@ struct ir_generic *preproc_Command35(struct ir_pre_generic *pre, struct asconfig
 /* this needs additional work due to how special data is handled */
 struct ir_generic *preproc_Command36(struct ir_pre_generic *pre, struct asconfig *config) {
 	SETUPGENSPEC(1)
-	gen->data[1].type = DATALOOKUPLAB;
+	gen->data[1].type = DATALOOKUPGLOBAL;
 	gen->data[1].data = hash(pre->data[0]);
-	printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[0], hash(pre->data[0]));
+	//~ printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[0], hash(pre->data[0]));
 	currentspecials++;
 	return gen;
 }
@@ -535,4 +537,56 @@ struct ir_generic *text_preproc(struct ir_pre_generic *pre, struct asconfig *con
 	};
 	free(unescaped);
 	return gen;
+}
+
+struct ir_generic *ir_precommand_preprocess(struct ir_pre_generic *pre, struct asconfig *config) {
+	if(pre->type < sizeofarr(commandnames)) return command_preproc[pre->type](pre, config);
+	else if(pre->type == TEXT) return text_preproc(pre, config);
+	else {
+		printf("error during preprocessing: encountered unknown type %u\n", pre->type);
+		return NULL;
+	}
+}
+
+struct ir_label *ir_label_preprocess(struct ir_label *lab, unsigned cursecaddr) {
+	lab->hash = hash(lab->name);
+	lab->addr = cursecaddr;
+	return lab;
+}
+
+unsigned ir_section_preprocess(struct ir_section *section, struct asconfig *config) {
+	unsigned i, curcmd, curlab;
+	struct ir_list *iter;
+	
+	section->num = cleanNumber(section->prenum);
+	currentsection = section->num;
+	
+	section->commands = malloc(sizeof(struct ir_generic *) * section->numcommands);
+	section->labels = malloc(sizeof(struct ir_label *) * section->numlabels);
+	
+	for(i = 0, curcmd = 0, curlab = 0, iter = section->precommands;i < section->numprecommands; i++, iter = iter->next) {
+		if(*iter->type == LABEL) {
+			section->labels[curlab++] = ir_label_preprocess((struct ir_label *)iter->type, section->datasize);
+		}
+		else {
+			if(!(section->commands[curcmd] = ir_precommand_preprocess((struct ir_pre_generic *)iter->type, config))) return 0;
+			section->datasize += sizeof(uint16_t) * section->commands[curcmd++]->numdata;
+		}
+	}
+	
+	currentsection = -1;
+	
+	return 1;
+}
+
+unsigned ir_script_preprocess(struct ir_script *script, struct asconfig *config) {
+	unsigned i;
+	struct ir_list *iter;
+	script->secarr = malloc(sizeof(struct ir_section *) * script->numsections);
+	for(i = 0, iter = script->sections;i < script->numsections; i++, iter = iter->next) {
+		script->secarr[i] = (struct ir_section *)iter->type;
+		if(!ir_section_preprocess((struct ir_section *)iter->type, config)) return 0;
+	}
+	script->numspecials = currentspecials;
+	return 1;
 }

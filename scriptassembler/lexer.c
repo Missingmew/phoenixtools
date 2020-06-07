@@ -111,7 +111,7 @@ unsigned int lexer_scan(void) {
 			
 		}
 		// regular token
-		else if(isalpha(*(state.current))) {
+		else if(isalpha(*(state.current)) || *(state.current) == '.') {
 			unsigned i;
 			// identifier
 			TAKEIT

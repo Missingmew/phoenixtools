@@ -409,7 +409,8 @@ struct ir_pre_generic *parser_parseCommand35(struct asconfig *config) {
 	ACCEPT(COMMA)
 	ACCEPTRET(farjump, IDENT)
 	ACCEPT(COMMA)
-	ACCEPTRETEITHER(label, IDENT, INTEGER)
+	//~ ACCEPTRETEITHER(label, IDENT, INTEGER)
+	ACCEPTRET(label, IDENT)
 	command->data[0] = flaghint;
 	command->data[1] = whichflag;
 	command->data[2] = farjump;
