@@ -41,11 +41,9 @@ struct scriptstate {
 
 typedef struct cmd {
 	unsigned (*print)(struct scriptstate *);
-	char *const name;
+	char *name;
 } command;
 
-
-extern char *const commandnames[0x90];
 extern command commands[0x90]; // 144
 
 enum supportedgames {

@@ -848,7 +848,9 @@ unsigned printCmd8F(struct scriptstate *state) {
 }
 
 /* names for the commands, eight names per line */
-char *const commandnames[144] = {
+/* length of 256 is arbitrarily chosen but should be enough to hold all possible strings
+   its required to allow the definition of commands below to use commandnames for initialization */
+char commandnames[144][256] = {
 /* 00h */ "section_setup", "linebreak", "pagebreak", "textcolor", "pause", "music", "sound", "fullscreen_text",
 /* 08h */ "finger_choice_2_args_jmp", "finger_choice_3_args_jmp", "pagebreak_section", "speed", "wait", "section_end", "name", "testimony_box",
 /* 10h */ "flagctl", "evidence_window_plain", "screen_fade", "showevidence", "removeevidence", "halt", "scenario_end_save", "newevidence",
