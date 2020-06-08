@@ -19,8 +19,8 @@ int findlocalhash(struct locallut *hashes, unsigned count, unsigned long what) {
 
 unsigned ir_script_fixup(struct ir_script *script) {
 	unsigned lutsize = 0, curhash = 0, curfixup = 0, curspecial = 0, curlocal;
-	unsigned curoffset;
-	unsigned long *hashes;
+	unsigned curoffset, sectionhashoffset;
+	unsigned long *hashes, *sectionhashes;
 	unsigned long **fixups;
 	int idx;
 	struct ir_section *section;
@@ -37,6 +37,8 @@ unsigned ir_script_fixup(struct ir_script *script) {
 		for(unsigned cursec = 0; cursec < script->numsections; cursec++) {
 			curlocal = 0;
 			section = script->secarr[cursec];
+			sectionhashes = &hashes[curhash];
+			sectionhashoffset = curhash;
 			locals = malloc(sizeof(struct locallut) * section->numlabels);
 			/* grab labels from section and construct LUT data, storing hash for fixup later */
 			for(unsigned curlab = 0; curlab < section->numlabels; curlab++) {
@@ -62,16 +64,31 @@ unsigned ir_script_fixup(struct ir_script *script) {
 					case CMD7A: {
 						for(unsigned curdata = 0; curdata < command->numdata; curdata++) {
 							if(command->data[curdata].type == DATALOOKUPGLOBAL) {
-								fixups[curfixup++] = &command->data[curdata].data;
 								command->data[curdata].type = DATARAW;
+								
+								fixups[curfixup++] = &command->data[curdata].data;
 							}
+							/* a local lookup will try to find a local label first, then check the globals */
 							else if(command->data[curdata].type == DATALOOKUPLOCAL) {
-								if((idx = findlocalhash(locals, curlocal, command->data[curdata].data)) < 0) {
+								command->data[curdata].type = DATARAW;
+								
+								idx = findlocalhash(locals, curlocal, command->data[curdata].data);
+								/* if we found a local label use that */
+								if(idx > -1) {
+									command->data[curdata].data = locals[idx].addr;
+									break;
+								}
+								idx = findhash(sectionhashes, curhash - sectionhashoffset, command->data[curdata].data);
+								/* if we found a global label use that */
+								if(idx > -1) {
+									command->data[curdata].data = script->specials[idx+sectionhashoffset].offset;
+									break;
+								}
+								/* else error out */
+								else {
 									printf("fixup (%s): failed to find label for hash %08lx\n", __func__, command->data[curdata].data);
 									return 0;
 								}
-								else command->data[curdata].data = locals[idx].addr;
-								command->data[curdata].type = DATARAW;
 							}
 						}
 						break;
