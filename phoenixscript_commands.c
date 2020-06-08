@@ -7,17 +7,31 @@
 
 /* structure and prettyprinting functions for commands as presented in the GBA/NDS games */
 
-/* all jump commands have the target encoded as _section numbers_ with 128 added on top */
 /* personvanish arg1:
 	03 - show
 	04 - hide
 */
 /* numbers in comments are arguments as stated in MessageSystem from unity */
 
+int isSectionStart(uint32_t *list, unsigned count, unsigned index) {
+	for(unsigned i = 0; i < count; i++) if(list[i] == index) return i;
+	return -1;
+}
+
+int isLabelLocation(jumplutpack *lut, unsigned count, unsigned section, unsigned offset) {
+	for(unsigned i = 0; i < count; i++) if(section == lut[i].section && offset == lut[i].offset/2) return i;
+	return -1;
+}
+
+int isLocalLabelLocation(struct localjumpinfo *jumps, unsigned count, unsigned section, unsigned offset) {
+	for(unsigned i = 0; i < count; i++) if(section == jumps[i].index && offset == jumps[i].target) return 1;
+	return -1;
+}
+
 unsigned printCmdGeneric(struct scriptstate *state, unsigned args) {
 	unsigned i;
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s", commandnames[state->script[state->scriptidx]]);
 		state->scriptidx++;
 		if(args) {
 			state->textidx += sprintf(state->textfile+state->textidx, " %05u", state->script[state->scriptidx]);
@@ -54,7 +68,7 @@ unsigned printCmd03(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned color = state->script[state->scriptidx+1];
 		if(color < sizeofarr(colors)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s\n", commands[state->script[state->scriptidx]].name, colors[color]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s\n", commandnames[state->script[state->scriptidx]], colors[color]);
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -72,7 +86,7 @@ unsigned printCmd05(struct scriptstate *state) {
 		unsigned musicid = state->script[state->scriptidx+1];
 		unsigned fadetime = state->script[state->scriptidx+2];
 		if(musicid < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][musicid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][musicid], fadetime);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commandnames[state->script[state->scriptidx]], sound_data[ARRGAMENUM(state->gamenum)][musicid], fadetime);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -87,7 +101,7 @@ unsigned printCmd06(struct scriptstate *state) {
 			unsigned seNum = state->script[state->scriptidx+1] >> 8;
 			unsigned stopplay = state->script[state->scriptidx+1] & 1;
 			if(seNum < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][seNum]) {
-				state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commands[state->script[state->scriptidx]].name, sound_data[ARRGAMENUM(state->gamenum)][seNum], soundplay[stopplay]);
+				state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commandnames[state->script[state->scriptidx]], sound_data[ARRGAMENUM(state->gamenum)][seNum], soundplay[stopplay]);
 				state->scriptidx += 1+1;
 			}
 			else return printCmdGeneric(state, 1);
@@ -105,7 +119,7 @@ unsigned printCmd08(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned option1section = state->script[state->scriptidx+1]-128;
 		unsigned option2section = state->script[state->scriptidx+2]-128;
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commands[state->script[state->scriptidx]].name, option1section, option2section);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commandnames[state->script[state->scriptidx]], option1section, option2section);
 		state->scriptidx += 1+2;
 	}
 	return 2;
@@ -116,7 +130,7 @@ unsigned printCmd09(struct scriptstate *state) {
 		unsigned option1section = state->script[state->scriptidx+1]-128;
 		unsigned option2section = state->script[state->scriptidx+2]-128;
 		unsigned option3section = state->script[state->scriptidx+3]-128;
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, option1section, option2section, option3section);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commandnames[state->script[state->scriptidx]], option1section, option2section, option3section);
 		state->scriptidx += 1+3;
 	}
 	return 3;
@@ -125,7 +139,7 @@ unsigned printCmd09(struct scriptstate *state) {
 unsigned printCmd0A(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned targetsection = state->script[state->scriptidx+1]-128;
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u\n", commands[state->script[state->scriptidx]].name, targetsection);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u\n", commandnames[state->script[state->scriptidx]], targetsection);
 		state->scriptidx += 1+1;
 	}
 	return 1;
@@ -150,7 +164,7 @@ unsigned printCmd0E(struct scriptstate *state) {
 		unsigned nameid = (state->script[state->scriptidx+1] >> 8);
 		unsigned whichside = (state->script[state->scriptidx+1] & 0xF);
 		if(nameid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][nameid] && whichside < sizeofarr(showside)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][nameid], showside[whichside] );
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commandnames[state->script[state->scriptidx]], speakers[ARRGAMENUM(state->gamenum)][nameid], showside[whichside] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -164,7 +178,7 @@ unsigned printCmd0F(struct scriptstate *state) {
 		unsigned presssection = state->script[state->scriptidx+1];
 		unsigned hidetextbox = state->script[state->scriptidx+2];
 		if(hidetextbox < sizeofarr(testimonypress)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, presssection, testimonypress[hidetextbox]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], presssection, testimonypress[hidetextbox]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -177,7 +191,7 @@ unsigned printCmd10(struct scriptstate *state) {
 		unsigned id = state->script[state->scriptidx+1] & 0xFF;
 		unsigned type = (state->script[state->scriptidx+1] & 0x7F00) >> 8; // needs more checking... maybe a bank or something?
 		unsigned set = state->script[state->scriptidx+1] >> 15;
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commands[state->script[state->scriptidx]].name, type, id, set);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commandnames[state->script[state->scriptidx]], type, id, set);
 		state->scriptidx += 1+1;
 	}
 	return 1;
@@ -194,7 +208,7 @@ unsigned printCmd12(struct scriptstate *state) {
 		unsigned delta = state->script[state->scriptidx+2]; // amount of blending to do per frame
 		unsigned target = state->script[state->scriptidx+3];
 		if(mode < sizeofarr(fademode)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s, %u, %u\n", commands[state->script[state->scriptidx]].name, delay, fademode[mode], delta, target);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s, %u, %u\n", commandnames[state->script[state->scriptidx]], delay, fademode[mode], delta, target);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -207,7 +221,7 @@ unsigned printCmd13(struct scriptstate *state) {
 		unsigned evidenceid = state->script[state->scriptidx+1] & 0xFF;
 		unsigned whichside = state->script[state->scriptidx+1] >> 8;
 		if(whichside < sizeofarr(showside)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, evidenceid, showside[whichside]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], evidenceid, showside[whichside]);
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -248,7 +262,7 @@ unsigned printCmd1B(struct scriptstate *state) {
 		unsigned bgid = state->script[state->scriptidx+1] & 0x7FFF;
 		unsigned shift = state->script[state->scriptidx+1] >> 15;
 		if(bgid < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][bgid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commands[state->script[state->scriptidx]].name, backgrounds[ARRGAMENUM(state->gamenum)][bgid], bgshift[shift] );
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commandnames[state->script[state->scriptidx]], backgrounds[ARRGAMENUM(state->gamenum)][bgid], bgshift[shift] );
 			state->scriptidx += 1+1;
 		}
 		else return printCmdGeneric(state, 1);
@@ -264,7 +278,7 @@ unsigned printCmd1D(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned direction = state->script[state->scriptidx+1] >> 8;
 		unsigned speed = state->script[state->scriptidx+1] & 0xFF;
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commands[state->script[state->scriptidx]].name, shiftdirection[direction], speed);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commandnames[state->script[state->scriptidx]], shiftdirection[direction], speed);
 		state->scriptidx += 1+1;
 	}
 	return 1;
@@ -278,7 +292,7 @@ unsigned printCmd1E(struct scriptstate *state) {
 		unsigned unk2 = state->script[state->scriptidx+2];
 		unsigned unk3 = state->script[state->scriptidx+3];
 		if(personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s, %u, %u, %u\n", commands[state->script[state->scriptidx]].name, speakers[ARRGAMENUM(state->gamenum)][personid], personplacement[placement], hflip, unk2, unk3);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s, %u, %u, %u\n", commandnames[state->script[state->scriptidx]], speakers[ARRGAMENUM(state->gamenum)][personid], personplacement[placement], hflip, unk2, unk3);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -303,7 +317,7 @@ unsigned printCmd22(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned arg1 = state->script[state->scriptidx+1];
 		unsigned fadetime = state->script[state->scriptidx+2];
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commands[state->script[state->scriptidx]].name, arg1, fadetime);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commandnames[state->script[state->scriptidx]], arg1, fadetime);
 		state->scriptidx += 1+2;
 	}
 	return 2;
@@ -315,7 +329,7 @@ unsigned printCmd23(struct scriptstate *state) {
 		unsigned arg1 = state->script[state->scriptidx+1];
 		unsigned pause = state->script[state->scriptidx+2];
 		if(pause < sizeofarr(musicpause)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, arg1, musicpause[pause]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], arg1, musicpause[pause]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -373,7 +387,7 @@ unsigned printCmd2F(struct scriptstate *state) {
 		unsigned unk1 = state->script[state->scriptidx+1];
 		unsigned anistate = state->script[state->scriptidx+2];
 		if(anistate < sizeofarr(animationstate)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commands[state->script[state->scriptidx]].name, unk1, animationstate[anistate]);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], unk1, animationstate[anistate]);
 			state->scriptidx += 1+2;
 		}
 		else return printCmdGeneric(state, 2);
@@ -396,7 +410,7 @@ unsigned printCmd32(struct scriptstate *state) {
 unsigned printCmd33(struct scriptstate *state) {
 	unsigned i;
 	if(state->outputenabled) {
-		state->textidx += sprintf(state->textfile+state->textidx, "%s", commands[state->script[state->scriptidx]].name);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s", commandnames[state->script[state->scriptidx]]);
 		
 		/* this block just iterates through all arguments, sanity checks them and then either prints the corresponding string or a number */
 		/* extra checking done only for the first argument to get the output text done right */
@@ -435,15 +449,17 @@ unsigned printCmd35(struct scriptstate *state) {
 			unsigned specialindex = spcidx_thisoffset - state->numsections;
 			offset = state->jumplut[specialindex].offset / 2;
 			targetsection = state->jumplut[specialindex].section;
-			//~ fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, targetsection, offset, specialindex);
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %s, label%u_%u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, cmd35jumphint[jumphint], targetsection, offset);
+			//~ fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commandnames[state->script[state->scriptidx]], state->scriptidx, state->section, targetsection, offset, specialindex);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %s, label%u_%u\n", commandnames[state->script[state->scriptidx]], cmd35flaghint[flaghint], whichflag, cmd35jumphint[jumphint], targetsection, offset);
 		}
 		else {
+			unsigned hasglobal;
 			offset = spcidx_thisoffset/2;
-			//~ fprintf(stderr, "%s at %08x in section %u is nearjump to %u\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, offset);
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %s, .label%u_%u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, cmd35jumphint[jumphint], state->section, offset);
+			hasglobal = -1 < isLabelLocation(state->jumplut, state->numjumplut, state->section, offset); 
+			//~ fprintf(stderr, "%s at %08x in section %u is nearjump to %u\n", commandnames[state->script[state->scriptidx]], state->scriptidx, state->section, offset);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %s, %slabel%u_%u\n", commandnames[state->script[state->scriptidx]], cmd35flaghint[flaghint], whichflag, cmd35jumphint[jumphint], hasglobal ? "" : ".", state->section, offset);
 		}
-		//~ state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u + %u\n", commands[state->script[state->scriptidx]].name, cmd35flaghint[flaghint], whichflag, targetsection, offset);
+		//~ state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u, %u + %u\n", commandnames[state->script[state->scriptidx]], cmd35flaghint[flaghint], whichflag, targetsection, offset);
 		state->scriptidx += 1+2;
 	}
 	return 2;
@@ -459,10 +475,10 @@ unsigned printCmd36(struct scriptstate *state) {
 			unsigned specialindex = state->script[state->scriptidx+1] - state->numsections;
 			unsigned offset = state->jumplut[specialindex].offset / 2;
 			unsigned targetsection = state->jumplut[specialindex].section;
-			//~ fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commands[state->script[state->scriptidx]].name, state->scriptidx, state->section, targetsection, offset, specialindex);
+			//~ fprintf(stderr, "%s at %08x in section %u is farjump to %u + %u using specialindex %08x\n", commandnames[state->script[state->scriptidx]], state->scriptidx, state->section, targetsection, offset, specialindex);
 			
-			//~ state->textidx += sprintf(state->textfile+state->textidx, "%s %u + %u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
-			state->textidx += sprintf(state->textfile+state->textidx, "%s label%u_%u\n", commands[state->script[state->scriptidx]].name, targetsection, offset);
+			//~ state->textidx += sprintf(state->textfile+state->textidx, "%s %u + %u\n", commandnames[state->script[state->scriptidx]], targetsection, offset);
+			state->textidx += sprintf(state->textfile+state->textidx, "%s label%u_%u\n", commandnames[state->script[state->scriptidx]], targetsection, offset);
 			state->scriptidx += 1+1;
 		}
 		return 1;
@@ -648,7 +664,7 @@ unsigned printCmd60(struct scriptstate *state) {
 		unsigned correctsection = state->script[state->scriptidx+3]-128;
 		unsigned othersection = state->script[state->scriptidx+4]-128;
 		
-		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u, %u\n", commands[state->script[state->scriptidx]].name, unk1, itemid, correctsection, othersection);
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u, %u\n", commandnames[state->script[state->scriptidx]], unk1, itemid, correctsection, othersection);
 		state->scriptidx += 1+4;
 	}
 	return 4;
@@ -850,7 +866,7 @@ unsigned printCmd8F(struct scriptstate *state) {
 /* names for the commands, eight names per line */
 /* length of 256 is arbitrarily chosen but should be enough to hold all possible strings
    its required to allow the definition of commands below to use commandnames for initialization */
-char commandnames[144][256] = {
+char *commandnames[144] = {
 /* 00h */ "section_setup", "linebreak", "pagebreak", "textcolor", "pause", "music", "sound", "fullscreen_text",
 /* 08h */ "finger_choice_2_args_jmp", "finger_choice_3_args_jmp", "pagebreak_section", "speed", "wait", "section_end", "name", "testimony_box",
 /* 10h */ "flagctl", "evidence_window_plain", "screen_fade", "showevidence", "removeevidence", "halt", "scenario_end_save", "newevidence",
@@ -883,153 +899,152 @@ char commandnames[144][256] = {
 /* note that the documentation here is a horrible mix of leftovers from PWSE,
    half baked reversing attempts and extra knowledge from GS1GBA.
    take it with a grain of salt */
-command commands[144] = {
-	{ printCmd00, commandnames[0x00] },	/* does something? */
-	{ printCmd01, commandnames[0x01] },	/* linebreak */
-	{ printCmd02, commandnames[0x02] },	/* paragraph, ends current textbox, waits for player interaction */
-	{ printCmd03, commandnames[0x03] },	/* text color, args: 0 white, 1 red, 2 blue, 3 green */
-	{ printCmd04, commandnames[0x04] },	/* pause the game, waits for player interaction */
-	{ printCmd05, commandnames[0x05] },	/* change the music, args sequence(SDAT index) - fadein time frames (on resume only?) */
-	{ printCmd06, commandnames[0x06] },	/* play a sound effect, args ? - ? */
-	{ printCmd07, commandnames[0x07] },	/* switches to fullscreen display, GBA only? */
-	{ printCmd08, commandnames[0x08] },	/* select between two choices (either in FS mode with previous opcode or from touchscreen), args: pointers to respective choices in script, followed by endjump? */
-	{ printCmd09, commandnames[0x09] },	/* see above with 3 choices */
-	{ printCmd0A, commandnames[0x0A] },	/* pointer to jump to for multiple choice questions failed once */
-	{ printCmd0B, commandnames[0x0B] },	/* change text speed, args: frames/character */
-	{ printCmd0C, commandnames[0x0C] },	/* wait for specified time units, args: frames to wait */
-	{ printCmd0D, commandnames[0x0D] },	/* terminates a jump, usually found after all other jumpstatements */
-	{ printCmd0E, commandnames[0x0E] },	/* change the name in the top left of a textbox, apparently, arg needs to be shifted to the right by 8 (actual value in upper 8 bits of 16bit arg) */
-	{ printCmd0F, commandnames[0x0F] },	/* begins a testimony section, args: ? - ? */
-	{ printCmd10, commandnames[0x10] },	/* modifies flags (set/unset) */
-	{ printCmd11, commandnames[0x11] },	/* show evidence window without lifebar (as when pressing R) */
-	{ printCmd12, commandnames[0x12] },	/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
-	{ printCmd13, commandnames[0x13] },	/* displays little evidence box with SFX, args: evidence to show? */
-	{ printCmd14, commandnames[0x14] },	/* removes above box with SFX */
-	{ printCmd15, commandnames[0x15] },	/* halts script execution (repeats this command). script pointer will be changed externally (by player interaction) */
-	{ printCmd16, commandnames[0x16] },	/* displays saving screen */
-	{ printCmd17, commandnames[0x17] },	/* adds evidence to court record with animation and SFX, args: object to add */
-	{ printCmd18, commandnames[0x18] },	/* plays new evidence sound with nothing else?, args: ? */
-	{ printCmd19, commandnames[0x19] },	/* ? */
-	{ printCmd1A, commandnames[0x1A] },	/* starts panning the camera from one side of court to the other (always followed by wait 1e?), args: ? */
-	{ printCmd1B, commandnames[0x1B] },	/* change background image, args: background to display */
-	{ printCmd1C, commandnames[0x1C] },	/* show textbox(border?), args: 0 show, 1 hide */
-	{ printCmd1D, commandnames[0x1D] },	/* shifts background?, args: x*256 for direction + pixels/frame */
-	{ printCmd1E, commandnames[0x1E] },	/* change the character image shown on-screen, args: ?,?,? */
-	{ printCmd1F, commandnames[0x1F] },	/* instantly hide the character image */
-	{ printCmd20, commandnames[0x20] },	/* ? */
-	{ printCmd21, commandnames[0x21] },	/* show evidence window with lifebar */
-	{ printCmd22, commandnames[0x22] },	/* fades music, args: fadeout/in, frames until 0/full volume */
-	{ printCmd23, commandnames[0x23] },	/* ? */
-	{ printCmd24, commandnames[0x24] },	/* reset the game to title screen */
-	{ printCmd25, commandnames[0x25] },	/* ? */
-	{ printCmd26, commandnames[0x26] },	/* shows court-record button, args: 0 show, 1 hide */
-	{ printCmd27, commandnames[0x27] },	/* shakes the screen?, args: ? - ? (first seems to be 1e only and second is changing?) */
-	{ printCmd28, commandnames[0x28] },	/* display "testimony" animation shown before witness testifies, args: ? */
-	{ printCmd29, commandnames[0x29] },	/* returns from a wrong answer to the point in testimony, where objection was called?, args: ? */
-	{ printCmd2A, commandnames[0x2A] },	/* ?, always followed by endjmp? */
-	{ printCmd2B, commandnames[0x2B] },	/* ? */
-	{ printCmd2C, commandnames[0x2C] },	/* jumps to pointer, args: pointer to target */
-	{ printCmd2D, commandnames[0x2D] },	/* same as p */
-	{ printCmd2E, commandnames[0x2E] },	/* paragraph, ends textbox, no interaction */
-	{ printCmd2F, commandnames[0x2F] },	/* display animation (such as "objection!"), args: ? */
-	{ printCmd30, commandnames[0x30] },	/* ? */
-	{ printCmd31, commandnames[0x31] },	/* makes characer vanish, args: ? */
-	{ printCmd32, commandnames[0x32] },	/* ? */
-	{ printCmd33, commandnames[0x33] },	/* sets locations available to move to */
-	{ printCmd34, commandnames[0x34] },	/* fades to black, args: ? */
-	{ printCmd35, commandnames[0x35] },	/* ? */
-	{ printCmd36, commandnames[0x36] },	/* ?, unclear description in python */
-	{ printCmd37, commandnames[0x37] },	/* ? */
-	{ printCmd38, commandnames[0x38] },	/* ? */
-	{ printCmd39, commandnames[0x39] },	/* makes blip for characters on map in case 4 appear?, args: blip to show? */
-	{ printCmd3A, commandnames[0x3A] },	/* ? */
-	{ printCmd3B, commandnames[0x3B] },	/* Animation related (begin animation?) */
-	{ printCmd3C, commandnames[0x3C] },	/* Animation related (makes argument blip flash?) */
-	{ printCmd3D, commandnames[0x3D] },	/* Animation related (stop animation?) */
-	{ printCmd3E, commandnames[0x3E] },	/* ? */
-	{ printCmd3F, commandnames[0x3F] },	/* unknown jump, args: ? */
-	{ printCmd40, commandnames[0x40] },	/* ? */
-	{ printCmd41, commandnames[0x41] },	/* ? */
-	{ printCmd42, commandnames[0x42] },	/* toggles play of voice/typewriter sfx, args: 0 play - 1 stop */
-	{ printCmd43, commandnames[0x43] },	/* show lifebar (with animation), args: 0 slide out - 1 slide in? */
-	{ printCmd44, commandnames[0x44] },	/* play guilty animation, args: ? */
-	{ printCmd45, commandnames[0x45] },	/* jump at the end of special messages? */
-	{ printCmd46, commandnames[0x46] },	/* change all background tiles, args: tile to change to */
-	{ printCmd47, commandnames[0x47] },	/* ? */
-	{ printCmd48, commandnames[0x48] },	/* ? */
-	{ printCmd49, commandnames[0x49] },	/* return to title, unlock all cases */
-	{ printCmd4A, commandnames[0x4A] },	/* ?, crash? */
-	{ printCmd4B, commandnames[0x4B] },	/* ? */
-	{ printCmd4C, commandnames[0x4C] },	/* ? */
+unsigned (*printcommands[0x90])(struct scriptstate *) = {
+	printCmd00,	/* does something? */
+	printCmd01,	/* linebreak */
+	printCmd02,	/* paragraph, ends current textbox, waits for player interaction */
+	printCmd03,	/* text color, args: 0 white, 1 red, 2 blue, 3 green */
+	printCmd04,	/* pause the game, waits for player interaction */
+	printCmd05,	/* change the music, args sequence(SDAT index) - fadein time frames (on resume only?) */
+	printCmd06,	/* play a sound effect, args ? - ? */
+	printCmd07,	/* switches to fullscreen display, GBA only? */
+	printCmd08,	/* select between two choices (either in FS mode with previous opcode or from touchscreen), args: pointers to respective choices in script, followed by endjump? */
+	printCmd09,	/* see above with 3 choices */
+	printCmd0A,	/* pointer to jump to for multiple choice questions failed once */
+	printCmd0B,	/* change text speed, args: frames/character */
+	printCmd0C,	/* wait for specified time units, args: frames to wait */
+	printCmd0D,	/* terminates a jump, usually found after all other jumpstatements */
+	printCmd0E,	/* change the name in the top left of a textbox, apparently, arg needs to be shifted to the right by 8 (actual value in upper 8 bits of 16bit arg) */
+	printCmd0F,	/* begins a testimony section, args: ? - ? */
+	printCmd10,	/* modifies flags (set/unset) */
+	printCmd11,	/* show evidence window without lifebar (as when pressing R) */
+	printCmd12,	/* flashes the screen? args(?) color, fadein, fadeout in frames? args in python not clear enough :/ */
+	printCmd13,	/* displays little evidence box with SFX, args: evidence to show? */
+	printCmd14,	/* removes above box with SFX */
+	printCmd15,	/* halts script execution (repeats this command). script pointer will be changed externally (by player interaction) */
+	printCmd16,	/* displays saving screen */
+	printCmd17,	/* adds evidence to court record with animation and SFX, args: object to add */
+	printCmd18,	/* plays new evidence sound with nothing else?, args: ? */
+	printCmd19,	/* ? */
+	printCmd1A,	/* starts panning the camera from one side of court to the other (always followed by wait 1e?), args: ? */
+	printCmd1B,	/* change background image, args: background to display */
+	printCmd1C,	/* show textbox(border?), args: 0 show, 1 hide */
+	printCmd1D,	/* shifts background?, args: x*256 for direction + pixels/frame */
+	printCmd1E,	/* change the character image shown on-screen, args: ?,?,? */
+	printCmd1F,	/* instantly hide the character image */
+	printCmd20,	/* ? */
+	printCmd21,	/* show evidence window with lifebar */
+	printCmd22,	/* fades music, args: fadeout/in, frames until 0/full volume */
+	printCmd23,	/* ? */
+	printCmd24,	/* reset the game to title screen */
+	printCmd25,	/* ? */
+	printCmd26,	/* shows court-record button, args: 0 show, 1 hide */
+	printCmd27,	/* shakes the screen?, args: ? - ? (first seems to be 1e only and second is changing?) */
+	printCmd28,	/* display "testimony" animation shown before witness testifies, args: ? */
+	printCmd29,	/* returns from a wrong answer to the point in testimony, where objection was called?, args: ? */
+	printCmd2A,	/* ?, always followed by endjmp? */
+	printCmd2B,	/* ? */
+	printCmd2C,	/* jumps to pointer, args: pointer to target */
+	printCmd2D,	/* same as p */
+	printCmd2E,	/* paragraph, ends textbox, no interaction */
+	printCmd2F,	/* display animation (such as "objection!"), args: ? */
+	printCmd30,	/* ? */
+	printCmd31,	/* makes characer vanish, args: ? */
+	printCmd32,	/* ? */
+	printCmd33,	/* sets locations available to move to */
+	printCmd34,	/* fades to black, args: ? */
+	printCmd35,	/* ? */
+	printCmd36,	/* ?, unclear description in python */
+	printCmd37,	/* ? */
+	printCmd38,	/* ? */
+	printCmd39,	/* makes blip for characters on map in case 4 appear?, args: blip to show? */
+	printCmd3A,	/* ? */
+	printCmd3B,	/* Animation related (begin animation?) */
+	printCmd3C,	/* Animation related (makes argument blip flash?) */
+	printCmd3D,	/* Animation related (stop animation?) */
+	printCmd3E,	/* ? */
+	printCmd3F,	/* unknown jump, args: ? */
+	printCmd40,	/* ? */
+	printCmd41,	/* ? */
+	printCmd42,	/* toggles play of voice/typewriter sfx, args: 0 play - 1 stop */
+	printCmd43,	/* show lifebar (with animation), args: 0 slide out - 1 slide in? */
+	printCmd44,	/* play guilty animation, args: ? */
+	printCmd45,	/* jump at the end of special messages? */
+	printCmd46,	/* change all background tiles, args: tile to change to */
+	printCmd47,	/* ? */
+	printCmd48,	/* ? */
+	printCmd49,	/* return to title, unlock all cases */
+	printCmd4A,	/* ?, crash? */
+	printCmd4B,	/* ? */
+	printCmd4C,	/* ? */
 	/* commands following are nullsubs in GS1 gba */
-	{ printCmd4D, commandnames[0x4D] },	/* ?, not tested? */
-	{ printCmd4E, commandnames[0x4E] },	/* wait for specified time, no character animation, args: time to wait */
-	{ printCmd4F, commandnames[0x4F] },	/* ? */
-	{ printCmd50, commandnames[0x50] },	/* ? */
-	{ printCmd51, commandnames[0x51] },	/* ? */
-	{ printCmd52, commandnames[0x52] },	/* ? */
-	{ printCmd53, commandnames[0x53] },	/* ? */
-	{ printCmd54, commandnames[0x54] },	/* various lifebar related things?, args: ?, ? */
-	{ printCmd55, commandnames[0x55] },	/* ?, crash? */
-	{ printCmd56, commandnames[0x56] },	/* ? */
-	{ printCmd57, commandnames[0x57] },	/* play psychoblock chain and lock appearance animation, args: locks to show */
-	{ printCmd58, commandnames[0x58] },	/* ? */
-	{ printCmd59, commandnames[0x59] },	/* ? */
-	{ printCmd5A, commandnames[0x5A] },	/* ? */
-	{ printCmd5B, commandnames[0x5B] },	/* ? */
-	{ printCmd5C, commandnames[0x5C] },	/* ?, crash? */
-	{ printCmd5D, commandnames[0x5D] },	/* toggles text centering, args: 0 normal alignment - 1 centered */
-	{ printCmd5E, commandnames[0x5E] },	/* ? */
-	{ printCmd5F, commandnames[0x5F] },	/* ? */
+	printCmd4D,	/* ?, not tested? */
+	printCmd4E,	/* wait for specified time, no character animation, args: time to wait */
+	printCmd4F,	/* ? */
+	printCmd50,	/* ? */
+	printCmd51,	/* ? */
+	printCmd52,	/* ? */
+	printCmd53,	/* ? */
+	printCmd54,	/* various lifebar related things?, args: ?, ? */
+	printCmd55,	/* ?, crash? */
+	printCmd56,	/* ? */
+	printCmd57,	/* play psychoblock chain and lock appearance animation, args: locks to show */
+	printCmd58,	/* ? */
+	printCmd59,	/* ? */
+	printCmd5A,	/* ? */
+	printCmd5B,	/* ? */
+	printCmd5C,	/* ?, crash? */
+	printCmd5D,	/* toggles text centering, args: 0 normal alignment - 1 centered */
+	printCmd5E,	/* ? */
+	printCmd5F,	/* ? */
 	/* commands introduced after GS1 gba */
-	{ printCmd60, commandnames[0x60] },	/* initiates a psychelock item challenge */
-	{ printCmd61, commandnames[0x61] },	/* ? */
-	{ printCmd62, commandnames[0x62] },	/* ? */
-	{ printCmd63, commandnames[0x63] },	/* ?, crash? */
-	{ printCmd64, commandnames[0x64] },	/* show special effect?, args: ? */
-	{ printCmd65, commandnames[0x65] },	/* ? */
-	{ printCmd66, commandnames[0x66] },	/* ? */
-	{ printCmd67, commandnames[0x67] },	/* ? */
-	{ printCmd68, commandnames[0x68] },	/* ? */
-	{ printCmd69, commandnames[0x69] },	/* play fullscreen animation, args: ? */
-	{ printCmd6A, commandnames[0x6A] },	/* loads new script and jumps to beginning, args: current case? (python is unclear) */
-	{ printCmd6B, commandnames[0x6B] },	/* Animation related (load animation? used for maps?) */
-	{ printCmd6C, commandnames[0x6C] },	/* ? */
-	{ printCmd6D, commandnames[0x6D] },	/* ? */
-	{ printCmd6E, commandnames[0x6E] },	/* ? */
-	{ printCmd6F, commandnames[0x6F] },	/* ? */
-	{ printCmd70, commandnames[0x70] },	/* ? */
-	{ printCmd71, commandnames[0x71] },	/* ? */
-	{ printCmd72, commandnames[0x72] },	/* ? */
-	{ printCmd73, commandnames[0x73] },	/* ?, crash? */
-	{ printCmd74, commandnames[0x74] },	/* ?, crash? */
-	{ printCmd75, commandnames[0x75] },	/* ?, crash? */
-	{ printCmd76, commandnames[0x76] },	/* ?, crash? */
-	{ printCmd77, commandnames[0x77] },	/* ?, crash? */
-	/* unity maps cmd78 to cmd36. possibly something to do with localization? */
-	{ printCmd78, commandnames[0x78] },	/* ?, crash? */
-	{ printCmd79, commandnames[0x79] },	/* ?, crash? */
-	{ printCmd7A, commandnames[0x7A] },	/* reset to capcom animation? */
-	{ printCmd7B, commandnames[0x7B] },	/* ?, crash? */
-	{ printCmd7C, commandnames[0x7C] },	/* ?, crash? */
-	{ printCmd7D, commandnames[0x7D] },	/* reset to capcom animation? */
-	{ printCmd7E, commandnames[0x7E] },	/* ?, crash? */
-	{ printCmd7F, commandnames[0x7F] },	/* ?, crash? */
+	printCmd60,	/* initiates a psychelock item challenge */
+	printCmd61,	/* ? */
+	printCmd62,	/* ? */
+	printCmd63,	/* ?, crash? */
+	printCmd64,	/* show special effect?, args: ? */
+	printCmd65,	/* ? */
+	printCmd66,	/* ? */
+	printCmd67,	/* ? */
+	printCmd68,	/* ? */
+	printCmd69,	/* play fullscreen animation, args: ? */
+	printCmd6A,	/* loads new script and jumps to beginning, args: current case? (python is unclear) */
+	printCmd6B,	/* Animation related (load animation? used for maps?) */
+	printCmd6C,	/* ? */
+	printCmd6D,	/* ? */
+	printCmd6E,	/* ? */
+	printCmd6F,	/* ? */
+	printCmd70,	/* ? */
+	printCmd71,	/* ? */
+	printCmd72,	/* ? */
+	printCmd73,	/* ?, crash? */
+	printCmd74,	/* ?, crash? */
+	printCmd75,	/* ?, crash? */
+	printCmd76,	/* ?, crash? */
+	printCmd77,	/* ?, crash? */
+	printCmd78,	/* unity maps cmd78 to cmd36. possibly something to do with localization? */
+	printCmd79,	/* ?, crash? */
+	printCmd7A,	/* found in phoenix 1 case 5, jumps if life is zero */
+	printCmd7B,	/* ?, crash? */
+	printCmd7C,	/* ?, crash? */
+	printCmd7D,	/* reset to capcom animation? */
+	printCmd7E,	/* ?, crash? */
+	printCmd7F,	/* ?, crash? */
 	/* all of the following commands were added to support apollo */
-	{ printCmd80, commandnames[0x80] },	/* dummy for apollotesting */
-	{ printCmd81, commandnames[0x81] },	/* dummy for apollotesting */
-	{ printCmd82, commandnames[0x82] },	/* dummy for apollotesting */
-	{ printCmd83, commandnames[0x83] },	/* dummy for apollotesting */
-	{ printCmd84, commandnames[0x84] },	/* dummy for apollotesting */
-	{ printCmd85, commandnames[0x85] },	/* dummy for apollotesting */
-	{ printCmd86, commandnames[0x86] },	/* dummy for apollotesting */
-	{ printCmd87, commandnames[0x87] },	/* dummy for apollotesting */
-	{ printCmd88, commandnames[0x88] },	/* dummy for apollotesting */
-	{ printCmd89, commandnames[0x89] },	/* dummy for apollotesting */
-	{ printCmd8A, commandnames[0x8A] },	/* dummy for apollotesting */
-	{ printCmd8B, commandnames[0x8B] },	/* dummy for apollotesting */
-	{ printCmd8C, commandnames[0x8C] },	/* dummy for apollotesting */
-	{ printCmd8D, commandnames[0x8D] },	/* dummy for apollotesting */
-	{ printCmd8E, commandnames[0x8E] },	/* dummy for apollotesting */
-	{ printCmd8F, commandnames[0x8F] }	/* dummy for apollotesting */
+	printCmd80,	/* dummy for apollotesting */
+	printCmd81,	/* dummy for apollotesting */
+	printCmd82,	/* dummy for apollotesting */
+	printCmd83,	/* dummy for apollotesting */
+	printCmd84,	/* dummy for apollotesting */
+	printCmd85,	/* dummy for apollotesting */
+	printCmd86,	/* dummy for apollotesting */
+	printCmd87,	/* dummy for apollotesting */
+	printCmd88,	/* dummy for apollotesting */
+	printCmd89,	/* dummy for apollotesting */
+	printCmd8A,	/* dummy for apollotesting */
+	printCmd8B,	/* dummy for apollotesting */
+	printCmd8C,	/* dummy for apollotesting */
+	printCmd8D,	/* dummy for apollotesting */
+	printCmd8E,	/* dummy for apollotesting */
+	printCmd8F,	/* dummy for apollotesting */
 };

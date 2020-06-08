@@ -12,6 +12,12 @@ typedef struct special {
 	uint16_t section;
 }__attribute__((packed)) jumplutpack;
 
+
+struct localjumpinfo {
+	unsigned index;
+	unsigned target;
+};
+
 struct scriptstate {
 	unsigned gamenum;
 	unsigned isjp;
@@ -32,6 +38,9 @@ struct scriptstate {
 	jumplutpack *jumplut;
 	unsigned numjumplut;
 	
+	struct localjumpinfo *localjumps;
+	unsigned numlocaljumps;
+	
 	unsigned textstart;
 	
 	/* this will disable output related functionality in print functions
@@ -39,12 +48,13 @@ struct scriptstate {
 	unsigned outputenabled;
 };
 
-typedef struct cmd {
-	unsigned (*print)(struct scriptstate *);
-	char *name;
-} command;
+//~ typedef struct cmd {
+	//~ unsigned (*print)(struct scriptstate *);
+	//~ char *name;
+//~ } command;
 
-extern command commands[0x90]; // 144
+extern char *commandnames[144];
+extern unsigned (*printcommands[0x90])(struct scriptstate *); // 144
 
 enum supportedgames {
 	GAME_PHOENIX1,
@@ -54,5 +64,11 @@ enum supportedgames {
 	GAME_GS1GBA,
 	GAME_NUMGAMES
 };
+
+int isSectionStart(uint32_t *list, unsigned count, unsigned index);
+
+int isLabelLocation(jumplutpack *lut, unsigned count, unsigned section, unsigned offset);
+
+int isLocalLabelLocation(struct localjumpinfo *jumps, unsigned count, unsigned section, unsigned offset);
 
 #endif

@@ -14,32 +14,12 @@ char *supportedgamenames[] = {
 	"PWAA", "JFA", "TT", "AJAA", "GS1GBA"
 };
 
-struct localjumpinfo {
-	unsigned index;
-	unsigned target;
-};
-
 int compare_uint32(const void *a, const void *b) {
 	uint32_t arg1 = *((uint32_t *)a);
 	uint32_t arg2 = *((uint32_t *)b);
 	if(arg1 < arg2) return -1;
 	if(arg1 > arg2) return 1;
 	return 0;
-}
-
-int isSectionStart(uint32_t *list, unsigned count, unsigned index) {
-	for(unsigned i = 0; i < count; i++) if(list[i] == index) return i;
-	return -1;
-}
-
-int isLabelLocation(jumplutpack *lut, unsigned count, unsigned section, unsigned offset) {
-	for(unsigned i = 0; i < count; i++) if(section == lut[i].section && offset == lut[i].offset/2) return i;
-	return -1;
-}
-
-int isLocalLabelLocation(struct localjumpinfo *jumps, unsigned count, unsigned section, unsigned offset) {
-	for(unsigned i = 0; i < count; i++) if(section == jumps[i].index && offset == jumps[i].target) return 1;
-	return -1;
 }
 
 /* returns non-zero if token is text, zero if command */
@@ -220,7 +200,7 @@ int main( int argc, char **argv ) {
 				break;
 			}
 			default: {
-				i += commands[state.script[i]].print(&state);
+				i += printcommands[state.script[i]](&state);
 				break;
 			}
 		}
@@ -250,18 +230,21 @@ int main( int argc, char **argv ) {
 		state.numsections = numScripts;
 	}
 	
+	state.numlocaljumps = numlocaljumps;
+	state.localjumps = localjumps;
+	
 	/* fix up sectionlist to have it hold the indices used during the dump */
 	for(i = 1; i < state.numsections; i++) state.sectionlist[i] = (state.sectionlist[i]-state.sectionlist[0])/2;
 	state.sectionlist[0] = 0;
 	/* fix up local jump structs to make index hold the appropriate section */
-	for(i = 0; i < numlocaljumps; i++) {
+	for(i = 0; i < state.numlocaljumps; i++) {
 		for(j = 1; j < state.numsections; j++) {
-			if(localjumps[i].index < state.sectionlist[j]) {
-				localjumps[i].index = j-1;
+			if(state.localjumps[i].index < state.sectionlist[j]) {
+				state.localjumps[i].index = j-1;
 				break;
 			}
 		}
-		if(j == state.numsections) localjumps[i].index = j-1;
+		if(j == state.numsections) state.localjumps[i].index = j-1;
 	}
 	
 	//~ printf("have %u specialdata and %u(%08x) sections\n", state.numjumplut, state.numsections, state.numsections);
@@ -293,7 +276,7 @@ int main( int argc, char **argv ) {
 		if(isLabelLocation(state.jumplut, state.numjumplut, state.section, state.scriptidx - state.sectionoff) > -1) {
 			state.textidx += sprintf(state.textfile+state.textidx, "label%u_%u:\n", state.section, state.scriptidx - state.sectionoff);
 		}
-		if(isLocalLabelLocation(localjumps, numlocaljumps, state.section, state.scriptidx - state.sectionoff) > -1) {
+		else if(isLocalLabelLocation(state.localjumps, state.numlocaljumps, state.section, state.scriptidx - state.sectionoff) > -1) {
 			state.textidx += sprintf(state.textfile+state.textidx, ".label%u_%u:\n", state.section, state.scriptidx - state.sectionoff);
 		}
 		//~ printf("memidx %08x (off %08x)\n", state.scriptidx, state.scriptidx*2+numScripts*4);
@@ -367,7 +350,7 @@ int main( int argc, char **argv ) {
 				state.outbuf[0] = 0;
 				intext = 0;
 			}
-			commands[state.script[state.scriptidx]].print(&state);
+			printcommands[state.script[state.scriptidx]](&state);
 		}
 	}
 	// get leftover text printed
@@ -381,7 +364,7 @@ int main( int argc, char **argv ) {
 	free(outfilename);
 	free(scriptOffsets);
 	free(jumplutaddrs);
-	free(localjumps);
+	free(state.localjumps);
 	free(state.script);
 	free(state.textfile);
 	free(state.outbuf);
