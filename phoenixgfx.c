@@ -82,6 +82,7 @@ uint32_t *generatePalette(unsigned char *source, unsigned int bpp) {
 				blue = (curentry >> 10) & 0x1F;
 				retpal[i] = 0xFF000000 | color5to8(red) | color5to8(green) << 8 | color5to8(blue) << 16;
 			}
+			break;
 		}
 		case imagea3i5: {
 			retpal = malloc(sizeof(uint32_t)*32);
@@ -148,7 +149,7 @@ tilemapEntry *parseTilemap(void *tilemap, unsigned int maptype, unsigned int map
 	
 uint8_t *generateIndexedImageFromTiles(unsigned char *source, unsigned int tilesWidth, unsigned int tilesHeight, unsigned int bpp, tilemapEntry *tilemap) {
 	uint8_t *retidx = malloc( tilesWidth*tilesHeight*tilesize8 );
-	int x, y, i, j, t = 0;
+	unsigned int x, y, i, j, t = 0;
 	unsigned int tilepos;
 	if(tilemap) {
 		if( bpp == image4bpp ) {
