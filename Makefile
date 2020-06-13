@@ -11,7 +11,7 @@ PHOENIXSCRIPT = phoenixscript_charsets.o phoenixscript_commands.o phoenixscript_
 all: compression general phoenix phoenix-offset apollo edgeworth citrus phoenixpc tools test
 compression: ntrcom/simpleunpak.elf ntrcom/simpleunpak-offset.elf find-compressed-files.elf
 general: extract-raw-file.elf gen-uncomheadermap.elf
-phoenix: convert-text-messages.elf convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf
+phoenix: convert-text-messages.elf convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf dump-person-animations.elf
 phoenix-offset: convert-uncompressed-image-header-offset.elf extract-video-offset.elf extract-image-offset.elf extract-archive-offset.elf
 apollo: extract-apollo-cpac.elf convert-apollo-image.elf convert-apollo-raw.elf
 edgeworth: extract-edgeworth-romfile.elf extract-edgeworth-archive.elf convert-edgeworth-raw.elf generate-edgeworth-tilemap.elf convert-edgeworth-overlay.elf
@@ -26,6 +26,9 @@ extract-video-offset.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) extract-v
 	$(CC) -Wall -g -o $@ $^
 	
 extract-image-offset.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) extract-image-offset.c
+	$(CC) -Wall -g -o $@ $^
+	
+dump-person-animations.elf: $(PHOENIXGFX) $(LODEPNG) dump-person-animations.c
 	$(CC) -Wall -g -o $@ $^
 	
 3dsetc/etc1util.elf: 3dsetc/main.c

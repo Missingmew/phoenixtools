@@ -33,12 +33,6 @@ static inline unsigned int getPixelInTile4(unsigned int x, unsigned int y, unsig
 	return 0;
 }
 
-typedef struct {
-	uint32_t tilenum;
-	uint32_t vflip;
-	uint32_t hflip;
-	uint32_t palnum;
-}tilemapEntry;
 
 /*	generates palettes from RGB555 data
 	NOTE: the returned uint32_t is in the following order in memory:
