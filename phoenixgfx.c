@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include "phoenixgfx.h"
 
-#define color5to8(x) ((x*8)+(x/4))
-#define alpha3to8(x) color5to8(((x*4)+(x/2)))
+#define color5to8(x) (((x)*255)/31)
+#define color3to8(x) (((x)*255)/7)
 #define tileside 8
 #define tilesize8 (tileside*tileside)
 #define tilesize4 ((tileside*tileside)/2)
@@ -327,7 +327,7 @@ unsigned char *linearImageWithPaletteToRGBA(unsigned char *source, unsigned char
 		}
 		case imagea3i5: {
 			for( i = 0; i < numPixels; i++ ) {
-				alpha = alpha3to8(idximage[i] >> 5);
+				alpha = color3to8(idximage[i] >> 5);
 				color = idximage[i] & 0x1F;
 				retimage[i] = (palette[color] & 0x00FFFFFF) | alpha << 24;
 			}
