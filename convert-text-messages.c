@@ -6,8 +6,6 @@
 #include "phoenixscript_charsets.h"
 #include "phoenixscript_commands.h"
 
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
-
 #define OUTBUFSIZE 256
 
 char *supportedgamenames[] = {

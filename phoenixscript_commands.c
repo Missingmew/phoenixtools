@@ -3,7 +3,6 @@
 #include "phoenixscript_commands.h"
 #include "phoenixscript_data.h"
 
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
 /* structure and prettyprinting functions for commands as presented in the GBA/NDS games */
 
@@ -85,7 +84,7 @@ unsigned printCmd05(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned musicid = state->script[state->scriptidx+1];
 		unsigned fadetime = state->script[state->scriptidx+2];
-		if(musicid < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][musicid]) {
+		if(isvalidarrentry(musicid, sound_data[ARRGAMENUM(state->gamenum)])) {
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %u\n", commandnames[state->script[state->scriptidx]], sound_data[ARRGAMENUM(state->gamenum)][musicid], fadetime);
 			state->scriptidx += 1+2;
 		}
@@ -100,7 +99,7 @@ unsigned printCmd06(struct scriptstate *state) {
 		if(state->outputenabled) {
 			unsigned seNum = state->script[state->scriptidx+1] >> 8;
 			unsigned stopplay = state->script[state->scriptidx+1] & 1;
-			if(seNum < sizeofarr(sound_data[ARRGAMENUM(state->gamenum)]) && sound_data[ARRGAMENUM(state->gamenum)][seNum]) {
+			if(isvalidarrentry(seNum, sound_data[ARRGAMENUM(state->gamenum)])) {
 				state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commandnames[state->script[state->scriptidx]], sound_data[ARRGAMENUM(state->gamenum)][seNum], soundplay[stopplay]);
 				state->scriptidx += 1+1;
 			}
@@ -163,7 +162,7 @@ unsigned printCmd0E(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned nameid = (state->script[state->scriptidx+1] >> 8);
 		unsigned whichside = (state->script[state->scriptidx+1] & 0xF);
-		if(nameid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][nameid] && whichside < sizeofarr(showside)) {
+		if(isvalidarrentry(nameid, speakers[ARRGAMENUM(state->gamenum)]) && whichside < sizeofarr(showside)) {
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commandnames[state->script[state->scriptidx]], speakers[ARRGAMENUM(state->gamenum)][nameid], showside[whichside] );
 			state->scriptidx += 1+1;
 		}
@@ -261,7 +260,8 @@ unsigned printCmd1B(struct scriptstate *state) {
 	if(state->outputenabled) {
 		unsigned bgid = state->script[state->scriptidx+1] & 0x7FFF;
 		unsigned shift = state->script[state->scriptidx+1] >> 15;
-		if(bgid < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][bgid]) {
+		//~ if(bgid < sizeofarr(backgrounds[ARRGAMENUM(state->gamenum)]) && backgrounds[ARRGAMENUM(state->gamenum)][bgid]) {
+		if(isvalidarrentry(bgid, backgrounds[ARRGAMENUM(state->gamenum)])) {
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s\n", commandnames[state->script[state->scriptidx]], backgrounds[ARRGAMENUM(state->gamenum)][bgid], bgshift[shift] );
 			state->scriptidx += 1+1;
 		}
@@ -289,10 +289,16 @@ unsigned printCmd1E(struct scriptstate *state) {
 		unsigned personid = state->script[state->scriptidx+1] & 0x1FFF;
 		unsigned hflip = (state->script[state->scriptidx+1] >> 13) & 1;
 		unsigned placement = state->script[state->scriptidx+1] >> 14;
-		unsigned unk2 = state->script[state->scriptidx+2];
-		unsigned unk3 = state->script[state->scriptidx+3];
-		if(personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s, %u, %u, %u\n", commandnames[state->script[state->scriptidx]], speakers[ARRGAMENUM(state->gamenum)][personid], personplacement[placement], hflip, unk2, unk3);
+		unsigned talkinganimation = state->script[state->scriptidx+2];
+		unsigned idleanimation = state->script[state->scriptidx+3];
+		//~ if(ISNDS(state->gamenum) && personid < sizeofarr(speakers[ARRGAMENUM(state->gamenum)]) && speakers[ARRGAMENUM(state->gamenum)][personid]) {
+		if(ISNDS(state->gamenum) && isvalidarrentry(personid, speakers[ARRGAMENUM(state->gamenum)]) && isvalidarrentry(talkinganimation, personanimations[state->gamenum]) && isvalidarrentry(idleanimation, personanimations[state->gamenum])) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s, %u, %s, %s\n", commandnames[state->script[state->scriptidx]], speakers[ARRGAMENUM(state->gamenum)][personid], personplacement[placement], hflip, personanimations[state->gamenum][talkinganimation], personanimations[state->gamenum][idleanimation]);
+			state->scriptidx += 1+3;
+		}
+		/* GBA uses hard offsets into data instead of indices */
+		else if(ISGBA(state->gamenum) && isvalidarrentry(personid, speakers[ARRGAMENUM(state->gamenum)])) {
+			state->textidx += sprintf(state->textfile+state->textidx, "%s %s, %s, %u, %X, %X\n", commandnames[state->script[state->scriptidx]], speakers[ARRGAMENUM(state->gamenum)][personid], personplacement[placement], hflip, talkinganimation, idleanimation);
 			state->scriptidx += 1+3;
 		}
 		else return printCmdGeneric(state, 3);
@@ -414,13 +420,13 @@ unsigned printCmd33(struct scriptstate *state) {
 		
 		/* this block just iterates through all arguments, sanity checks them and then either prints the corresponding string or a number */
 		/* extra checking done only for the first argument to get the output text done right */
-		if(state->script[state->scriptidx+1] < sizeofarr(locations[ARRGAMENUM(state->gamenum)]) && locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]) {
+		if(isvalidarrentry(state->script[state->scriptidx+1], locations[ARRGAMENUM(state->gamenum)])) {
 			state->textidx += sprintf(state->textfile+state->textidx, " %s", locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+1]]);
 		}
 		else state->textidx += sprintf(state->textfile+state->textidx, " %u", state->script[state->scriptidx+1]);
 		
 		for(i = 2; i < 6; i++) {
-			if(state->script[state->scriptidx+i] < sizeofarr(locations[ARRGAMENUM(state->gamenum)]) && locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+i]]) {
+			if(isvalidarrentry(state->script[state->scriptidx+i], locations[ARRGAMENUM(state->gamenum)])) {
 				state->textidx += sprintf(state->textfile+state->textidx, ", %s", locations[ARRGAMENUM(state->gamenum)][state->script[state->scriptidx+i]]);
 			}
 			else state->textidx += sprintf(state->textfile+state->textidx, ", %u", state->script[state->scriptidx+i]);

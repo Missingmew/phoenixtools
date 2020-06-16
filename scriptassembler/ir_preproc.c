@@ -5,8 +5,6 @@
 #include "ir.h"
 #include "../phoenixscript_data.h"
 #include "../phoenixscript_charsets.h"
-
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 	
 #define SETUPGENSPEC(size) \
 	struct ir_generic *gen = malloc(sizeof(struct ir_generic)); \
