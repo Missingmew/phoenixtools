@@ -16,6 +16,9 @@
 #define GBA_CENTER_X (GBA_WIDTH/2)
 #define GBA_CENTER_Y (GBA_HEIGHT/2)
 
+#define PALSIZE4 (2*16)
+#define PALSIZE8 (2*256)
+
 struct objsize {
 	unsigned w, h;
 };
@@ -50,16 +53,18 @@ struct animetatile {
 	signed x, y;
 	signed w, h; /* while never < 0, will make sanitychecks castless */
 	unsigned index;
-	unsigned palette;
+	unsigned twinpalette;
+	unsigned basepalette;
 };
 
 struct partdesc {
 	signed x:8;
 	signed y:8;
 	unsigned tilenum:8; // was 10
-	unsigned pad:3;
+	unsigned pad:1;
+	unsigned palnum:2;
 	//~ unsigned pad:2;
-	unsigned whichpal:1; /* ? */
+	unsigned twinpal:1; /* ? */
 	unsigned shape:2;
 	unsigned size:2;
 }__attribute__((packed));
@@ -141,8 +146,12 @@ void blit_metatile(unsigned char *dest, uint16_t **src, struct animetatile *meta
 	srctiles = deRLE(src[meta->index], metawtiles*metahtiles*tilesize);
 	srclinear = generateIndexedImageFromTiles(srctiles, metawtiles, metahtiles, bpp, NULL);
 	
-	if(meta->palette && bpp == image4bpp) {
-		for(unsigned i = 0; i < meta->w*meta->h; i++) if(srclinear[i]) srclinear[i] += 0x10;
+	if(meta->basepalette) {
+		for(unsigned i = 0; i < meta->w*meta->h; i++) if(srclinear[i]) srclinear[i] += 0x10*meta->basepalette;
+	}
+	
+	if(meta->twinpalette && bpp == image4bpp) {
+		for(unsigned i = 0; i < meta->w*meta->h; i++) if(srclinear[i]) srclinear[i] += 0x10*meta->twinpalette;
 	}
 	
 	blitdest = dest + meta->x+xofs + imagewidth*(meta->y+yofs);
@@ -227,7 +236,7 @@ int main(int argc, char **argv) {
 	
 	finalimage = malloc(NDS_IMAGESIZE);
 	
-	printf("table in gfx file has %u entries\n", partslist[0] / 4);
+	printf("Graphics file has %u palettes and %u metatiles\n", numpals, partslist[0] / 4);
 	
 	numtotalframes = 0;
 	/* only try first table for now */
@@ -261,7 +270,7 @@ int main(int argc, char **argv) {
 			partheads = (void *)numparts + sizeof(uint32_t);
 			for(unsigned curpart = 0; curpart < *numparts; curpart++) {
 				struct animetatile metatile;
-				//~ printf("part %2x x=%4d y=%4d shape=%u size=%u whichpal=%u pad=%u w=%2u h=%2u tilenum=%4u\n", curpart, partheads[curpart].x, partheads[curpart].y, partheads[curpart].shape, partheads[curpart].size, partheads[curpart].whichpal, partheads[curpart].pad, sizelut[partheads[curpart].shape][partheads[curpart].size].w, sizelut[partheads[curpart].shape][partheads[curpart].size].h, partheads[curpart].tilenum);
+				//~ printf("part %2x x=%4d y=%4d shape=%u size=%u twinpal=%u palnum=%u w=%2u h=%2u tilenum=%4u\n", curpart, partheads[curpart].x, partheads[curpart].y, partheads[curpart].shape, partheads[curpart].size, partheads[curpart].twinpal, partheads[curpart].palnum, sizelut[partheads[curpart].shape][partheads[curpart].size].w, sizelut[partheads[curpart].shape][partheads[curpart].size].h, partheads[curpart].tilenum);
 				if(partheads[curpart].pad) printf("Table %u frame %u part %u has nonzero pad %x!\n", currenttable, curframe, curpart, partheads[curpart].pad);
 				if(partheads[curpart].tilenum >= partslist[0] / 4) printf("Table %u frame %u part %u has OOB index %u!\n", currenttable, curframe, curpart, partheads[curpart].tilenum);
 				//~ fflush(stdout);
@@ -270,7 +279,8 @@ int main(int argc, char **argv) {
 				metatile.w = sizelut[partheads[curpart].shape][partheads[curpart].size].w;
 				metatile.h = sizelut[partheads[curpart].shape][partheads[curpart].size].h;
 				metatile.index = partheads[curpart].tilenum;
-				metatile.palette = partheads[curpart].whichpal;
+				metatile.twinpalette = partheads[curpart].twinpal*(numpals/2);
+				metatile.basepalette = partheads[curpart].palnum;
 				//~ metatile.palette = 0;
 				/* convert relative positions to absolute ones */
 				metatile.x += NDS_CENTER_X;
