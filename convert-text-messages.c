@@ -26,7 +26,7 @@ unsigned int prepareToken(uint16_t *token, unsigned int gamenum, unsigned int is
 	//~ printf("original token is %08x ", *token);
 	*token -= 128;
 	if(gamenum == GAME_APOLLO) *token -= 16; // apollo has 16 extra opcodes
-	if(isunity) *token -= 32; // unity uses ASCII with offset?
+	if(isunity) *token += 32; // unity uses ASCII with offset?
 	//~ printf("modified token is %08x\n", *token);
 	return 1;
 }
