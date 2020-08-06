@@ -4,27 +4,65 @@
 #include <string.h>
 #include "ntrcom/nitrocompression.h"
 
+#ifdef _WIN32
+#include <direct.h>
+#define createDirectory(dirname) mkdir(dirname)
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#define createDirectory(dirname) mkdir(dirname, 0777)
+#endif
+
 typedef struct {
 	uint32_t offset;
 	uint32_t size;
-}arcEntry;
+} arcEntry;
 
 typedef enum {
 	LINEUSE,
 	LINEEMPTY
 } linetype;
 
+void makepath(char *path) {
+		//~ printf("making directory %s\n", path);
+	FILE *tmp = NULL;
+	if((tmp = fopen(path, "wb"))) {
+		remove(path);
+		fclose(tmp);
+		return;
+	}
+	//~ printf("bar\n");
+	char bakpath[2048] = {0}, curpath[2048] = {0};
+	char *token = NULL;
+	strcpy(bakpath, path);
+	token = strtok(bakpath, "/");
+	strcpy(curpath, token);
+	
+	while(token) {
+		createDirectory(curpath);
+		//~ printf("creating directory %s\n", curpath);
+		strcat(curpath, "/");
+		token = strtok(NULL, "/");
+		strcat(curpath, token);
+		if((tmp = fopen(path, "wb"))) break;
+	}
+	fclose(tmp);
+	remove(path);
+	fflush(stdout);
+	return;
+}
+
 int main( int argc, char** argv ) {
 	
-	if ( argc < 3 )
+	if ( argc < 2 )
 	{
-		printf( "Not enough arguments given!\nUsage: %s [file] [list]\nFiles will be extracted in current working directory.\n", argv[0] );
+		printf( "Not enough arguments given!\nUsage: %s [file] [optional list]\nFiles will be extracted in current working directory.\n", argv[0] );
 		return 1;
 	}
 	
 	uint32_t listsize;
 	unsigned int i, numFiles, resultsize, compressedsize;
-	char outputname[256] = { 0 }, mapline[256] = {0};
+	char outputfile[512], outputname[256], mapline[256];
 	unsigned char *workbuf = NULL, *resultbuf = NULL;
 	linetype curline;
 	arcEntry *filelist = NULL;
@@ -35,9 +73,11 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 	
-	if( !(t = fopen( argv[2], "r" ))) {
-		printf("Couldnt open file %s\n", argv[2]);
-		return 1;
+	if(argc == 3) {
+		if( !(t = fopen( argv[2], "r" ))) {
+			printf("Couldnt open file %s\n", argv[2]);
+			return 1;
+		}
 	}
 	
 	fread( &listsize, 4, 1, f );
@@ -55,13 +95,17 @@ int main( int argc, char** argv ) {
 		filelist[i].offset += 4;
 	}
 	
+	curline = LINEEMPTY;
+	
 	for( i = 0; i < numFiles; i++ ) {
-		printf("Current file %u offset: %08x - Current file size %08x\n", i, filelist[i].offset, filelist[i].size);
-		fgets(mapline, 256, t);
-		while(!(strncmp(mapline, "//", 2)) && !feof(t)) fgets(mapline, 256, t);
-		if(feof(t)) curline = LINEEMPTY;
-		else if(strlen(mapline) < 3) curline = LINEEMPTY;
-		else curline = LINEUSE;
+		//~ printf("Current file %u offset: %08x - Current file size %08x\n", i, filelist[i].offset, filelist[i].size);
+		if(t) {
+			fgets(mapline, 256, t);
+			while(!(strncmp(mapline, "//", 2)) && !feof(t)) fgets(mapline, 256, t);
+			if(feof(t)) curline = LINEEMPTY;
+			else if(strlen(mapline) < 3) curline = LINEEMPTY;
+			else curline = LINEUSE;
+		}
 		
 		
 		while(strcspn(mapline, "\r\n") < strlen(mapline)) mapline[strcspn(mapline,"\r\n")] = 0;
@@ -91,34 +135,40 @@ int main( int argc, char** argv ) {
 			resultsize = 0;
 		}
 		
-		/* NITRO common filetypes */
 		if(curline == LINEUSE) {
-			snprintf(outputname, 256, "%04d-%.250s", i, mapline);
+			sprintf(outputname, "%.255s", mapline);
 		}
 		else {
-			if( filelist[i].size == 0 ) snprintf( outputname, 256, "%04d-%08x.null", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BCA0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbca", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BMD0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbmd", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BTX0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbtx", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BTA0", 4 )) snprintf( outputname, 256, "%04d-%08x.nsbta", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RNAN", 4 )) snprintf( outputname, 256, "%04d-%08x.nanr", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RECN", 4 )) snprintf( outputname, 256, "%04d-%08x.ncer", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RGCN", 4 )) snprintf( outputname, 256, "%04d-%08x.ncgr", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RLCN", 4 )) snprintf( outputname, 256, "%04d-%08x.nclr", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RCMN", 4 )) snprintf( outputname, 256, "%04d-%08x.nmcr", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RCSN", 4 )) snprintf( outputname, 256, "%04d-%08x.nscr", i, filelist[i].offset );
-			else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "NARC", 4 )) snprintf( outputname, 256, "%04d-%08x.narc", i, filelist[i].offset );
-			else if( (resultsize ? resultsize : filelist[i].size) == 32 ) snprintf( outputname, 32, "%04d-%08x.pal4", i, filelist[i].offset );
-			else if( (resultsize ? resultsize : filelist[i].size) == 512 ) snprintf( outputname, 32, "%04d-%08x.pal8", i, filelist[i].offset );
-			else if( (resultsize ? resultsize : filelist[i].size) % 0x20 == 0 ) snprintf( outputname, 32, "%04d-%08x-img.bin", i, filelist[i].offset );
-			else snprintf( outputname, 32, "%04d-%08x-unk.bin", i, filelist[i].offset );
+			sprintf(outputname, "%04d-%08x", i, filelist[i].offset);
 		}
 		
-		if( !(o = fopen( outputname, "wb" ))) {
-				printf("Couldnt open file %s\n", outputname);
-				//~ return 1;
+		/* NITRO common filetypes */
+		if( filelist[i].size == 0 ) sprintf(outputfile, "%s.null", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BCA0", 4 )) sprintf(outputfile, "%s.nsbca", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BMD0", 4 )) sprintf(outputfile, "%s.nsbmd", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BTX0", 4 )) sprintf(outputfile, "%s.nsbtx", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "BTA0", 4 )) sprintf(outputfile, "%s.nsbta", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RNAN", 4 )) sprintf(outputfile, "%s.nanr", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RECN", 4 )) sprintf(outputfile, "%s.ncer", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RGCN", 4 )) sprintf(outputfile, "%s.ncgr", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RLCN", 4 )) sprintf(outputfile, "%s.nclr", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RCMN", 4 )) sprintf(outputfile, "%s.nmcr", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "RCSN", 4 )) sprintf(outputfile, "%s.nscr", outputname);
+		else if( !strncmp( (char *)(resultsize ? resultbuf : workbuf), "NARC", 4 )) sprintf(outputfile, "%s.narc", outputname);
+		else if( (resultsize ? resultsize : filelist[i].size) == 32 ) sprintf(outputfile, "%s.pal4", outputname);
+		else if( (resultsize ? resultsize : filelist[i].size) == 512 ) sprintf(outputfile, "%s.pal8", outputname);
+		else if( (resultsize ? resultsize : filelist[i].size) % 0x20 == 0 ) sprintf(outputfile, "%s-img.bin", outputname);
+		else sprintf(outputfile, "%s-unk.bin", outputname);
+		
+		makepath(outputfile);
+		
+		if( !(o = fopen( outputfile, "wb" ))) {
+			printf("Couldnt open file %s\n", outputname);
+			//~ return 1;
 			continue;
 		}
+		
+		printf("writing to %s\n", outputfile);
 		
 		if(!resultsize) fwrite( workbuf, filelist[i].size, 1, o );
 		else fwrite( resultbuf, resultsize, 1, o );
@@ -130,7 +180,7 @@ int main( int argc, char** argv ) {
 	}
 	free(filelist);
 	printf("Done.\n");
-	fclose(t);
+	if(t) fclose(t);
 	fclose(f);
 	return 0;
 	

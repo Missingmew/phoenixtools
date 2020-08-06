@@ -41,16 +41,12 @@ int compare (const void * a, const void * b) {
 
 // that ~ will never be used because NULL seems to be terminator...
 char *charset[] = {
-	"~", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
-	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
-	"L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", 
-	"W", "X", "Y", "Z", 
-	"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", 
-	"l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", 
-	"w", "x", "y", "z", 
-	"!", "?", ".", "(", ")", ":", ",", "/", "*", "\'", 
-	"+", "%", "&", "-", "'", "[", "]", "$", "#", ">", "<", 
-	"=", "³", "é", "á", ";", " "
+	"~", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E",
+	"F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+	"V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
+	"l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!",
+	"?", ".", "(", ")", ":", ",", "/", "*", "\'", "+", "%", "&", "-", "'", "[", "]",
+	"$", "#", ">", "<", "=", "³", "é", "á", ";", " "
 };
 
 char *specialchars[8] = {
@@ -114,7 +110,14 @@ int main( int argc, char **argv ) {
 			if(!firstpointeroffset) firstpointeroffset = i;
 			if(i%4) printf("wat numpointer %d\n", numpointers);
 			newpointerbuf[numpointers] = tocheck - presets[preset];
+			printf("found overlay pointer %08x(%08x) at %08x(%08x)\n", newpointerbuf[numpointers], newpointerbuf[numpointers]+presets[preset], i, i+presets[preset]);
 			numpointers++;
+		}
+		else if(tocheck > 0x2000000 && tocheck < 0x2000000+0x11E498) {
+			printf("found possible ARM9 executable pointer %08x(%08x) at %08x(%08x)\n", tocheck-0x2000000, tocheck, i, i+presets[preset]);
+		}
+		else if(tocheck > 0x2000000 && tocheck < 0x2000000+0x400000) {
+			printf("found other possible ARM9 RAM pointer %08x(%08x) at %08x(%08x)\n", tocheck-0x2000000, tocheck, i, i+presets[preset]);
 		}
 	}
 	
