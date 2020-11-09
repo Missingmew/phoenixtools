@@ -1,6 +1,6 @@
 # NITROCOMPRESSION = ntrcom/lze.o ntrcom/blz.o ntrcom/huffman.o ntrcom/lzss.o ntrcom/lzx.o ntrcom/rle.o ntrcom/ndscompression.o
 #~ NITROCOMPRESSION = ntrcom/huffman.o ntrcom/lzss.o ntrcom/lzx.o ntrcom/rle.o ntrcom/nitrocompression.o
-NITROCOMPRESSION = ntrcom/nitrocompression.o
+NITROCOMPRESSION = ntrcom/lz.o ntrcom/nitrocompression.o
 LODEPNG = lodepng/lodepng.o
 PHOENIXGFX = phoenixgfx.o
 PHOENIXSCRIPT = phoenixscript_charsets.o phoenixscript_commands.o phoenixscript_data.o
@@ -10,7 +10,7 @@ PHOENIXSCRIPT = phoenixscript_charsets.o phoenixscript_commands.o phoenixscript_
 # all: compression phoenix apollo edgeworth
 all: compression general phoenix phoenix-offset apollo edgeworth citrus phoenixpc tools test
 compression: ntrcom/simpleunpak.elf ntrcom/simpleunpak-offset.elf find-compressed-files.elf
-general: extract-raw-file.elf gen-uncomheadermap.elf
+general: extract-raw-file.elf gen-uncomheadermap.elf simple-hash.elf
 phoenix: convert-text-messages.elf convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf dump-person-animations.elf
 phoenix-offset: convert-uncompressed-image-header-offset.elf extract-video-offset.elf extract-image-offset.elf extract-archive-offset.elf
 apollo: extract-apollo-cpac.elf convert-apollo-image.elf convert-apollo-raw.elf
