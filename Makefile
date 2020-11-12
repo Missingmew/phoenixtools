@@ -4,6 +4,7 @@ NITROCOMPRESSION = ntrcom/lz.o ntrcom/nitrocompression.o
 LODEPNG = lodepng/lodepng.o
 PHOENIXGFX = phoenixgfx.o
 PHOENIXSCRIPT = phoenixscript_charsets.o phoenixscript_commands.o phoenixscript_data.o
+CTRPORTUTILS = ctrportutils.o
 
 .PHONY: tools
 
@@ -48,6 +49,9 @@ extract-phoenix_data.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) extract-p
 	
 extract-%.elf: $(NITROCOMPRESSION) extract-%.c
 	$(CC) -Wall -g -o $@ $^
+
+extract-trilogy-pack.elf: $(NITROCOMPRESSION) $(CTRPORTUTILS) extract-trilogy-pack.c
+	$(CC) -Wall -g -o $@ $^
 	
 convert-text-messages.elf: $(PHOENIXSCRIPT) convert-text-messages.c
 	$(CC) -Wall -g -o $@ $^
@@ -63,6 +67,9 @@ extract-pc-file.elf: extract-pc-file.c
 	
 %.o: %.c
 	$(CC) -c -Wall -g -o $@ $<
+
+simple-hash.elf: $(CTRPORTUTILS) simple-hash.c
+	$(CC) -Wall -g -o $@ $^
 
 clean:
 	-rm ntrcom/*.o ntrcom/*.elf *.elf lodepng/*.o *.o
