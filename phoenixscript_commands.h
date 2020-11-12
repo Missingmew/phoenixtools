@@ -27,6 +27,7 @@ struct scriptstate {
 	unsigned scriptsize;
 	unsigned outidx;
 	char *outbuf;
+	unsigned maxoutbuf;
 	
 	unsigned section;
 	unsigned sectionoff;

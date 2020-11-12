@@ -6,8 +6,6 @@
 #include "phoenixscript_charsets.h"
 #include "phoenixscript_commands.h"
 
-#define OUTBUFSIZE 256
-
 char *supportedgamenames[] = {
 	"PWAA", "JFA", "TT", "AJAA", "GS1GBA"
 };
@@ -80,7 +78,7 @@ int main( int argc, char **argv ) {
 	uint32_t numScripts, *scriptOffsets = NULL, *jumplutaddrs = NULL;
 	struct localjumpinfo *localjumps = NULL;
 	//~ command *curop;
-	char escapebuf[OUTBUFSIZE*2];
+	char *escapebuf = NULL;
 	struct scriptstate state;
 	memset(&state, 0, sizeof(state));
 	if( argc < 3 ) {
@@ -154,9 +152,13 @@ int main( int argc, char **argv ) {
 	state.textfile = malloc(0x40000); // 256k
 	state.maxtext = 0x40000; // 256k
 	state.script = malloc(state.scriptsize);
+	
 	state.outidx = 0;
-	state.outbuf = malloc(OUTBUFSIZE);
+	state.outbuf = malloc(128);
+	state.maxoutbuf = 128;
 	state.outbuf[0] = 0;
+	escapebuf = malloc(128*2); // escapebuf always maxoutbuf*2
+	
 	state.section = 0;
 	state.sectionoff = 0;
 	state.sectionlist = scriptOffsets;
@@ -258,13 +260,25 @@ int main( int argc, char **argv ) {
 	state.textidx += sprintf(state.textfile+state.textidx, "SECTION 0\n" );
 	intext = 0;
 	while(state.scriptidx < state.scriptsize/2) {
-		if(state.maxtext - 100 < state.textidx) {
+		if(state.maxtext - 1024 < state.textidx) {
 			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
 			if(!(state.textfile = realloc(state.textfile, state.maxtext*2))) {
 				printf("couldnt realloc\n");
 				return 1;
 			}
 			state.maxtext *= 2;
+		}
+		if(state.maxoutbuf - 10 < state.outidx) {
+			printf("internal buffer for converting text approaching current limit of 0x%x bytes, reallocing\n", state.maxoutbuf);
+			if(!(state.outbuf = realloc(state.outbuf, state.maxoutbuf*2))) {
+				printf("couldnt realloc internal out\n");
+				return 1;
+			}
+			if(!(escapebuf = realloc(escapebuf, state.maxoutbuf*2*2))) {
+				printf("couldnt realloc internal out\n");
+				return 1;
+			}
+			state.maxoutbuf *= 2;
 		}
 		if(isSectionStart(state.sectionlist, state.numsections, state.scriptidx) > 0) {
 			state.section = isSectionStart(state.sectionlist, state.numsections, state.scriptidx);
@@ -366,5 +380,6 @@ int main( int argc, char **argv ) {
 	free(state.script);
 	free(state.textfile);
 	free(state.outbuf);
+	free(escapebuf);
 	return 0;
 }
