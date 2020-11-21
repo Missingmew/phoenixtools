@@ -5,16 +5,17 @@
 
 int main( int argc, char** argv ) {
 	
-	unsigned int size, extract, offset, start = 0, end = 0, resultsize = 0, compressedsize = 0;
+	unsigned int size, extract, allowuneven, offset, start = 0, end = 0, resultsize = 0, compressedsize = 0;
 	
-	if ( argc < 3 )
+	if ( argc < 4 )
 	{
-		printf( "Not enough arguments given!\nUsage: %s [file] [map/extract] [offset in hex] [end in hex]\nFiles will be extracted in current working directory.\n", argv[0] );
+		printf( "Not enough arguments given!\nUsage: %s [file] [map/extract] [allow uneven] [offset in hex] [end in hex]\nFiles will be extracted in current working directory.\n", argv[0] );
 		return 1;
 	}
-	extract = strtol(argv[2], NULL, 16);
-	if(argc > 3) start = strtol(argv[3], NULL, 16);
-	if(argc > 4) end = strtol(argv[4], NULL, 16);
+	extract = strtoul(argv[2], NULL, 10);
+	allowuneven = strtoul(argv[3], NULL, 10);
+	if(argc > 4) start = strtoul(argv[4], NULL, 16);
+	if(argc > 5) end = strtoul(argv[5], NULL, 16);
 	
 	char outputname[512] = { 0 };
 	unsigned char *data = NULL, *resultbuffer = NULL;
@@ -34,16 +35,19 @@ int main( int argc, char** argv ) {
 	f = NULL;
 	
 	offset = start;
+	if(offset % 4) offset -= offset % 4;
 	
 	if(!end) end = size;
+	if(end % 4) end -= end % 4;
 	
 	printf("extract %x offset %x end %x\n", extract, offset, end);
 	
 	
 	while(offset < end) {
-		if((data[offset] >> 4) == 1) {
+		//~ if((data[offset] >> 4) == 1) {
+		if((data[offset]) == 0x10) { // only check for lz10
 			resultsize = (data[offset+3] << 16) | (data[offset+2] << 8) | data[offset+1];
-			if(resultsize < 0x10000) {
+			if((!(resultsize % 2) || allowuneven) && resultsize < 0x10000) {
 				compressedsize = resultsize * 2;
 				resultbuffer = unpackBuffer(data+offset, &resultsize, &compressedsize);
 				if(resultbuffer) {
