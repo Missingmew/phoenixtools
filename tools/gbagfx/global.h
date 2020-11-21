@@ -21,6 +21,7 @@ do {                                      \
 #define FATAL_ERROR(format, ...)            \
 do {                                        \
     fprintf(stderr, format, ##__VA_ARGS__); \
+    fprintf(stderr, "\n"); \
     exit(1);                                \
 } while (0)
 
