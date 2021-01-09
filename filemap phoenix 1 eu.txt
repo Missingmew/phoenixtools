@@ -588,6 +588,7 @@
 //~ 0x0205cf24	1	""	0x00002500	uncompressed	phoenix objection closeup			4			
 //~ 0x0205f424	1	""	0x00002bc0	uncompressed	edgeworth objection closeup			4			
 //~ 0x02061fe4	1	""	0x00005400	uncompressed	unknown effect			4			
+// this blob is actually multiple compressed files
 0x020673e4	0	"common/unknown-blob-1.bin"	0x00000704
 0x02067ae8	2	"jp/graphics/interface/keypad-complete.gbapal"	"jp/graphics/interface/keypad-complete"	 32	8
 0x0206e8c8	0	"common/graphics/courtroom-swoosh.gbapal"	0x00000020
