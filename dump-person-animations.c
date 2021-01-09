@@ -9,6 +9,7 @@
 
 #define MODE_GBA 0
 #define MODE_NDS 1
+#define MODE_PC  2
 
 struct objsize {
 	unsigned w, h;
@@ -46,7 +47,7 @@ struct screendims {
 	signed centerx, centery;
 };
 
-struct screendims systemdimensions[2] = {
+struct screendims systemdimensions[3] = {
 	/* GBA */
 	{
 		.width = 240, .height = 160,
@@ -58,7 +59,13 @@ struct screendims systemdimensions[2] = {
 		.width = 256, .height = 192,
 		.size = 256*192,
 		.centerx = 256/2, .centery = 192/2
-	}
+	},
+	/* PC same as GBA */
+	{
+		.width = 240, .height = 160,
+		.size = 240*160,
+		.centerx = 240/2, .centery = 160/2
+	},
 };
 
 struct tiledatastate {
@@ -118,9 +125,18 @@ struct animationframe {
 	uint32_t null;
 }__attribute__((packed));
 
+struct playfile_data {
+	uint32_t anim_offset;
+	uint16_t unk4;
+	uint16_t unk6;
+	char name[8];
+	uint32_t null;
+}__attribute__((packed));
+
 void part2animeta(struct animetatile *dst, void *src, unsigned mode) {
 	unsigned pad = 0;
 	switch(mode) {
+		case MODE_PC:
 		case MODE_GBA: {
 			struct partdesc_gba *partsrc = src;
 			dst->x = partsrc->x;
@@ -303,7 +319,7 @@ unsigned extractframe(unsigned char *dst, uint32_t *src, struct tiledatastate *s
 }
 
 int main(int argc, char **argv) {
-	FILE *gfx = NULL, *anim = NULL;
+	FILE *gfx = NULL, *anim = NULL, *play = NULL;
 	char finaloutputname[256];
 	
 	unsigned gfxsize, animsize;
@@ -319,9 +335,17 @@ int main(int argc, char **argv) {
 	unsigned char *finalimage = NULL;
 	unsigned char *finalrgba = NULL;
 	
+	/* PC PLY stuff */
+	uint16_t numgfxblocks;
+	uint16_t numanimations;
+	uint32_t *gfxoffsets = NULL;
+	struct playfile_data *plydat = NULL;
+	
+	
 	if(argc < 5) {
-		printf("not enough args! use %s mode graphics animation outputprefix\n", argv[0]);
-		printf("allowed modes are: 'g' for GBA and 'n' for NDS\n");
+		printf("not enough args! use %s mode graphics animation outputprefix/PLY-file\n", argv[0]);
+		printf("allowed modes are: 'g' for GBA, 'p' for the native PC port and 'n' for NDS\n");
+		printf("in mode p the last argument must be a PLY file, else it must be the prefix for dumped files\n");
 		return 1;
 	}
 	
@@ -334,6 +358,11 @@ int main(int argc, char **argv) {
 		case 'n': {
 			printf("mode NDS\n");
 			state.mode = MODE_NDS;
+			break;
+		}
+		case 'p': {
+			printf("mode PC\n");
+			state.mode = MODE_PC;
 			break;
 		}
 		default: {
@@ -369,6 +398,68 @@ int main(int argc, char **argv) {
 	finalimage = malloc(systemdimensions[state.mode].size);
 	
 	numtotalframes = 0;
+	
+	
+	if(state.mode == MODE_PC) {
+		if(!(play = fopen(argv[4], "rb"))) {
+			printf("couldnt open %s for reading\n", argv[4]);
+			return 1;
+		}
+		fread(&numgfxblocks, sizeof(uint16_t), 1, play);
+		fread(&numanimations, sizeof(uint16_t), 1, play);
+		gfxoffsets = malloc(numgfxblocks*sizeof(uint32_t));
+		plydat = malloc(numanimations*sizeof(struct playfile_data));
+		fread(gfxoffsets, numgfxblocks*sizeof(uint32_t), 1, play);
+		fread(plydat, numanimations*sizeof(struct playfile_data), 1, play);
+		fclose(play);
+		printf("PLY-file lists the following graphics block addresses:\n");
+		for(unsigned i = 0; i < numgfxblocks; i++) {
+			uint32_t *gfxhead = gfxbuf+gfxoffsets[i];
+			printf("%08x: has %d palettes, RLE is %d\n", gfxoffsets[i], *gfxhead & 0x7FFFFFFF, !!(*gfxhead & 0x80000000));
+		}
+		printf("\nPLY-file lists the following animations:\n");
+		for(unsigned i = 0; i < numanimations; i++) {
+			animhead = animbuf + plydat[i].anim_offset;
+			printf("%08x (%04x %04x): %.8s (%x), animation has %d entries, graphicsoffset is %08x (%x)\n", plydat[i].anim_offset, plydat[i].unk4, plydat[i].unk6, plydat[i].name, plydat[i].null, animhead->numentries, animhead->tiledataoff, animhead->null);
+		}
+		
+		/* HORRIBLE COPYPASTA ARGH */
+		unsigned curframe = 0;
+		for(unsigned i = 0; i < numanimations; i++) {
+			animhead = animbuf + plydat[i].anim_offset;
+			if(animhead->tiledataoff != state.statesrc) {
+				if(animhead->tiledataoff > gfxsize) {
+					printf("Animation %.8s has invalid tiledatasource %08x gfxsize is %08x\n", plydat[i].name, animhead->tiledataoff, gfxsize);
+					break;
+				}
+				printf("Animation %.8s has new tiledatasource, loading (was %08x, new %08x)\n", plydat[i].name, state.statesrc, animhead->tiledataoff);
+				if(!setuptiledatastate(&state, gfxbuf, animhead->tiledataoff)) {
+					break;
+				}
+			}
+			animframes = (void *)animhead+sizeof(struct animationhead);
+			printf("Animation %.8s at %08x has %u animations\n", plydat[i].name, plydat[i].anim_offset, animhead->numentries);
+			numtotalframes += animhead->numentries;
+			
+			for(curframe = 0; curframe < animhead->numentries; curframe++) {
+				memset(finalimage, 0, systemdimensions[state.mode].size);
+				
+				extractedpartcount = extractframe(finalimage, (void *)animhead + animframes[curframe].offset, &state);
+				
+				printf("Frame %2u dataoff %08x(abs %08lx) loaded %u parts\n", curframe, animframes[curframe].offset, (unsigned char *)animhead + animframes[curframe].offset-(unsigned char *)animbuf, extractedpartcount);
+				
+				sprintf(finaloutputname, "%.8s-fr%02u.png", plydat[i].name, curframe);
+				finalrgba = linearImageWithPaletteToRGBA(finalimage, state.paldata, systemdimensions[state.mode].width, systemdimensions[state.mode].height, image8bpp, 0);
+				lodepng_encode32_file(finaloutputname, finalrgba, systemdimensions[state.mode].width, systemdimensions[state.mode].height);
+				free(finalrgba);
+				
+			}
+		}
+		
+		free(plydat);
+		free(gfxoffsets);
+		goto cleanup;
+	}
 	
 	/* curframe needs to be out here to survive loop iterations for extra frame naming */
 	unsigned currenttable, endoftable, lastoffset, lastparts, curframe = 0;
@@ -456,6 +547,7 @@ int main(int argc, char **argv) {
 	}
 	printf("Found a total of %2u tables with %u animations\n", currenttable, numtotalframes);
 	
+	cleanup:
 	if(finalimage) free(finalimage);
 	if(state.tiledata) free(state.tiledata);
 	if(state.paldata) free(state.paldata);
