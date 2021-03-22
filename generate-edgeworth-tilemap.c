@@ -21,7 +21,7 @@ int main( int argc, char** argv ) {
 		return 1;
 	}
 	if( !(o = fopen(argv[2], "wb" ))) {
-		printf("Couldnt open file %s as binmap\n", argv[7]);
+		printf("Couldnt open file %s as binmap\n", argv[2]);
 		return 1;
 	}
 	
