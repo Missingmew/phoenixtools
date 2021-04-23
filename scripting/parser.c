@@ -6,8 +6,8 @@
 #include "parser.h"
 #include "lexer.h"
 #include "ir.h"
-
-#include "../phoenixscript_commands.h"
+#include "common.h"
+#include "commands.h"
 
 #define CHECKTOKENTYPE(ttype, caller) if(currenttoken.type != ttype) { printf("parser (%s): Syntax error at line %u, column %u: expected %s but got %s\n", caller, currenttoken.line, currenttoken.column, ttype < sizeofarr(commandnames) ? commandnames[ttype] : tokentypestrings[ttype-sizeofarr(commandnames)], currenttoken.type < sizeofarr(commandnames) ? commandnames[currenttoken.type] : tokentypestrings[currenttoken.type-sizeofarr(commandnames)]); return 0; }
 #define ACCEPT(tok) if(!parser_accept(tok, __func__)) return NULL;
@@ -15,8 +15,6 @@
 
 #define CHECKTOKENTYPEEITHER(ttype1, ttype2, caller) if(currenttoken.type != ttype1 && currenttoken.type != ttype2) { printf("parser (%s): Syntax error at line %u, column %u: expected %s or %s but got %s\n", caller, currenttoken.line, currenttoken.column, ttype1 < sizeofarr(commandnames) ? commandnames[ttype1] : tokentypestrings[ttype1-sizeofarr(commandnames)], ttype2 < sizeofarr(commandnames) ? commandnames[ttype2] : tokentypestrings[ttype2-sizeofarr(commandnames)], currenttoken.type < sizeofarr(commandnames) ? commandnames[currenttoken.type] : tokentypestrings[currenttoken.type-sizeofarr(commandnames)]); return 0; }
 #define ACCEPTRETEITHER(ret,tok1,tok2) if(!(ret = parser_acceptreteither(tok1,tok2, __func__))) return NULL;
-
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
 #define GENERIC0ARG(token) \
 	struct ir_pre_generic *command = malloc(sizeof(struct ir_pre_generic)); \
@@ -97,7 +95,8 @@ struct ir_pre_generic *parser_parseCommand04(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand05(struct asconfig *config) {
 	char *music, *fade;
 	PREPARENDATA(CMD05, 2)
-	ACCEPTRET(music, IDENT)
+	//~ ACCEPTRET(music, IDENT)
+	ACCEPTRETEITHER(music, IDENT, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(fade, INTEGER)
 	command->data[0] = music;
@@ -108,7 +107,8 @@ struct ir_pre_generic *parser_parseCommand05(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand06(struct asconfig *config) {
 	char *sound, *startstop, *fade;
 	PREPARENDATA(CMD06, 2)
-	ACCEPTRET(sound, IDENT)
+	//~ ACCEPTRET(sound, IDENT)
+	ACCEPTRETEITHER(sound, IDENT, INTEGER)
 	command->data[0] = sound;
 	ACCEPT(COMMA)
 	if(config->gamenum == GAME_GS1GBA) {
@@ -153,7 +153,8 @@ struct ir_pre_generic *parser_parseCommand0d(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand0e(struct asconfig *config) {
 	char *name, *side;
 	PREPARENDATA(CMD0E, 2)
-	ACCEPTRET(name, IDENT)
+	//~ ACCEPTRET(name, IDENT)
+	ACCEPTRETEITHER(name, IDENT, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(side, IDENT)
 	command->data[0] = name;
@@ -239,7 +240,8 @@ struct ir_pre_generic *parser_parseCommand1a(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand1b(struct asconfig *config) {
 	char *bgname, *shift;
 	PREPARENDATA(CMD1B, 2)
-	ACCEPTRET(bgname, IDENT)
+	//~ ACCEPTRET(bgname, IDENT)
+	ACCEPTRETEITHER(bgname, IDENT, INTEGER)
 	command->data[0] = bgname;
 	ACCEPT(COMMA)
 	ACCEPTRET(shift, IDENT)
@@ -263,22 +265,25 @@ struct ir_pre_generic *parser_parseCommand1d(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand1e(struct asconfig *config) {
-	char *person, *placement, *hflip, *arg2, *arg3;
+	char *person, *placement, *hflip, *talkanim, *idleanim;
 	PREPARENDATA(CMD1E, 5)
-	ACCEPTRET(person, IDENT)
+	//~ ACCEPTRET(person, IDENT)
+	ACCEPTRETEITHER(person, IDENT, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(placement, IDENT)
 	ACCEPT(COMMA)
 	ACCEPTRET(hflip, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(arg2, INTEGER)
+	//~ ACCEPTRET(talkanim, INTEGER)
+	ACCEPTRETEITHER(talkanim, IDENT, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(arg3, INTEGER)
+	//~ ACCEPTRET(idleanim, INTEGER)
+	ACCEPTRETEITHER(idleanim, IDENT, INTEGER)
 	command->data[0] = person;
 	command->data[1] = placement;
 	command->data[2] = hflip;
-	command->data[3] = arg2;
-	command->data[4] = arg3;
+	command->data[3] = talkanim;
+	command->data[4] = idleanim;
 	return command;
 }
 
@@ -379,15 +384,15 @@ struct ir_pre_generic *parser_parseCommand32(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand33(struct asconfig *config) {
 	char *loc1, *loc2, *loc3, *loc4, *loc5;
 	PREPARENDATA(CMD33, 5)
-	ACCEPTRET(loc1, IDENT)
+	ACCEPTRETEITHER(loc1, IDENT, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(loc2, IDENT)
+	ACCEPTRETEITHER(loc2, IDENT, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(loc3, IDENT)
+	ACCEPTRETEITHER(loc3, IDENT, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(loc4, IDENT)
+	ACCEPTRETEITHER(loc4, IDENT, INTEGER)
 	ACCEPT(COMMA)
-	ACCEPTRET(loc5, IDENT)
+	ACCEPTRETEITHER(loc5, IDENT, INTEGER)
 	command->data[0] = loc1;
 	command->data[1] = loc2;
 	command->data[2] = loc3;

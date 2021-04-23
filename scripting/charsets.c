@@ -1,6 +1,5 @@
-#include "phoenixscript_charsets.h"
-
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
+#include "common.h"
+#include "charsets.h"
 
 enum tokenset charset_isTokenValid(uint16_t token, unsigned isjp, unsigned gamenum) {
 	if(token < sizeofarr(charset_shared)) { /* token is within default charsets */

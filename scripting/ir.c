@@ -2,9 +2,8 @@
 #include <stdlib.h>
 
 #include "ir.h"
-#include "../phoenixscript_commands.h"
-
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
+#include "common.h"
+#include "commands.h"
 
 int currentsection = -1;
 unsigned currentspecials = 0;

@@ -3,8 +3,11 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "phoenixscript_charsets.h"
-#include "phoenixscript_commands.h"
+#include "common.h"
+#include "charsets.h"
+#include "commands.h"
+#include "param.h"
+#include "data_support.h"
 
 char *supportedgamenames[] = {
 	"PWAA", "JFA", "TT", "AJAA", "GS1GBA"
@@ -79,37 +82,15 @@ int main( int argc, char **argv ) {
 	struct localjumpinfo *localjumps = NULL;
 	//~ command *curop;
 	char *escapebuf = NULL;
+	struct params param;
 	struct scriptstate state;
 	memset(&state, 0, sizeof(state));
-	if( argc < 3 ) {
-		printf("Not enough args!\nUse: %s [binary script] [gamenum]\nwhere gamenum is\n", argv[0]);
-		printf("1 - original phoenix wright\n2 - justice for all\n3 - trials and tribulations\n4 - apollo justice\n5 - Gyakuten Saiban 1 (GBA)\n\n");
-		printf("add 10 to enable compat for japanese in non-unity versions\nadd 20 to enable unity mode\nGBA versions imply japanese mode, do not explicitly enable it\n");
-		return 1;
-	}
 	
-	gamenum = strtoul(argv[2], NULL, 10) - 1;
+	if(!parse_args(&param, argc, argv, "txt")) return 1;
 	
-	//~ printf("gamenum is %u %u\n", gamenum, gamenum == GAME_GS1GBA);
-	if(gamenum == GAME_GS1GBA) {
-		state.isjp = 1;
-	}
-	else {
-		if(gamenum > 19) {
-			state.isunity = 1;
-			gamenum -= 20;
-		}
-		else if(gamenum > 9) {
-			state.isjp = 1;
-			gamenum -= 10;
-		}
-	}
-	if( gamenum >= GAME_NUMGAMES ) {
-		printf("unsupported gamenum %d\n", gamenum+1);
-		return 1;
-	}
-	
-	state.gamenum = gamenum;
+	state.isjp = param.isjp;
+	state.isunity = param.isunity;
+	state.gamenum = param.gamenum;
 	
 	/* ensure sane combo of gamenum, isunity and isjp */
 	if(state.gamenum == GAME_APOLLO && state.isunity) {
@@ -121,20 +102,25 @@ int main( int argc, char **argv ) {
 		return 1;
 	}
 	
-	printf("selected config: %s %s %s\n", supportedgamenames[state.gamenum], state.isjp ? "jp" : "", state.isunity ? "unity" : "");
+	//~ printf("selected config: %s %s %s\n", supportedgamenames[state.gamenum], state.isjp ? "jp" : "", state.isunity ? "unity" : "");
 	
-	if( !(f = fopen( argv[1], "rb" ))) {
-		printf("Couldnt open file %s\n", argv[1]);
+	if( !(f = fopen( param.infile, "rb" ))) {
+		printf("Couldnt open file %s\n", param.infile);
 		return 1;
 	}
 	
-	char *outfilename = malloc( strlen( argv[1] ) + 4 + 1 );
-	
-	sprintf( outfilename, "%s.txt", argv[1] );
-	if( !(o = fopen( outfilename, "w" ))) {
-			printf("Couldnt open file %s\n", outfilename);
-			return 1;
+	if( !(o = fopen( param.outfile, "w" ))) {
+		printf("Couldnt open file %s\n", param.outfile);
+		return 1;
 	}
+	
+	/* attempt to load support files now */
+	data_loadfile(DATA_SOUND, param.soundfile);
+	data_loadfile(DATA_SPEAKER, param.speakerfile);
+	if(ISNDS(state.gamenum)) data_loadfile(DATA_ANIMATIONNDS, param.animfile);
+	else data_loadfile(DATA_ANIMATIONGBA, param.animfile);
+	data_loadfile(DATA_BACKGROUND, param.bgfile);
+	data_loadfile(DATA_LOCATION, param.locationfile);
 	
 	fseek( f, 0, SEEK_END );
 	fileSize = ftell(f);
@@ -261,7 +247,7 @@ int main( int argc, char **argv ) {
 	intext = 0;
 	while(state.scriptidx < state.scriptsize/2) {
 		if(state.maxtext - 1024 < state.textidx) {
-			printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
+			//~ printf("converted textfile is approaching current limit of 0x%x bytes, reallocing\n", state.maxtext);
 			if(!(state.textfile = realloc(state.textfile, state.maxtext*2))) {
 				printf("couldnt realloc\n");
 				return 1;
@@ -269,7 +255,7 @@ int main( int argc, char **argv ) {
 			state.maxtext *= 2;
 		}
 		if(state.maxoutbuf - 10 < state.outidx) {
-			printf("internal buffer for converting text approaching current limit of 0x%x bytes, reallocing\n", state.maxoutbuf);
+			//~ printf("internal buffer for converting text approaching current limit of 0x%x bytes, reallocing\n", state.maxoutbuf);
 			if(!(state.outbuf = realloc(state.outbuf, state.maxoutbuf*2))) {
 				printf("couldnt realloc internal out\n");
 				return 1;
@@ -373,7 +359,6 @@ int main( int argc, char **argv ) {
 	fwrite(state.textfile, state.textidx, 1, o);
 	fclose(f);
 	fclose(o);
-	free(outfilename);
 	free(scriptOffsets);
 	free(jumplutaddrs);
 	free(state.localjumps);
@@ -381,5 +366,8 @@ int main( int argc, char **argv ) {
 	free(state.textfile);
 	free(state.outbuf);
 	free(escapebuf);
+	
+	params_cleanup(&param);
+	data_cleanup();
 	return 0;
 }

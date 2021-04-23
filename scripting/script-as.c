@@ -6,7 +6,9 @@
 #include "parser.h"
 #include "ir.h"
 #include "asconfig.h"
-#include "../phoenixscript_commands.h"
+#include "common.h"
+#include "param.h"
+#include "data_support.h"
 
 int main(int argc, char **argv) {
 	/* idea:
@@ -22,25 +24,30 @@ int main(int argc, char **argv) {
 	struct ir_script *script = NULL;
 	struct asconfig config;
 	
-	if(argc != 4) {
-		printf("usage: %s gamenum infile outfile\n", argv[0]);
+	struct params param;
+	
+	if(!parse_args(&param, argc, argv, "bin")) return 1;
+	
+	config.gamenum = param.gamenum;
+	config.isjp = param.isjp;
+	
+	if(!(f = fopen(param.infile, "r"))) {
+		printf("couldnt open %s as input\n", param.infile);
 		return 1;
 	}
 	
-	config.gamenum = strtoul(argv[1], NULL, 10) - 1;
-	config.isjp = 0;
-	
-	if( config.gamenum >= GAME_NUMGAMES ) {
-		printf("unsupported gamenum %d\n", config.gamenum+1);
+	if(!(o = fopen(param.outfile, "wb"))) {
+		printf("couldnt open %s as output\n", param.outfile);
 		return 1;
 	}
 	
-	if(config.gamenum == GAME_GS1GBA) config.isjp = 1;
-	
-	if(!(f = fopen(argv[2], "r"))) {
-		printf("couldnt open %s as input\n", argv[2]);
-		return 1;
-	}
+	/* attempt to load support files now */
+	data_loadfile(DATA_SOUND, param.soundfile);
+	data_loadfile(DATA_SPEAKER, param.speakerfile);
+	if(ISNDS(config.gamenum)) data_loadfile(DATA_ANIMATIONNDS, param.animfile);
+	else data_loadfile(DATA_ANIMATIONGBA, param.animfile);
+	data_loadfile(DATA_BACKGROUND, param.bgfile);
+	data_loadfile(DATA_LOCATION, param.locationfile);
 	
 	fseek(f, 0, SEEK_END);
 	insize = ftell(f);
@@ -59,17 +66,11 @@ int main(int argc, char **argv) {
 	
 	if(!ir_script_preprocess(script, &config)) return 1;
 	
-	ir_script_dump(script);
+	//~ ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
 	if(!ir_script_fixup(script)) return 1;
 	
 	//~ ir_script_dump(script);
-	
-	
-	if(!(o = fopen(argv[3], "wb"))) {
-		printf("couldnt open %s as output\n", argv[3]);
-		return 1;
-	}
 	
 	ir_script_emit(o, script);
 	
@@ -79,4 +80,7 @@ int main(int argc, char **argv) {
 	
 	free(input);
 	fclose(o);
+	
+	params_cleanup(&param);
+	data_cleanup();
 }

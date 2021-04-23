@@ -3,23 +3,25 @@
 NITROCOMPRESSION = ntrcom/lz.o ntrcom/nitrocompression.o
 LODEPNG = lodepng/lodepng.o
 PHOENIXGFX = phoenixgfx.o
-PHOENIXSCRIPT = phoenixscript_charsets.o phoenixscript_commands.o phoenixscript_data.o
 CTRPORTUTILS = ctrportutils.o
 
-.PHONY: tools
+.PHONY: tools scripting
 
 # all: compression phoenix apollo edgeworth
-all: compression general phoenix phoenix-offset apollo edgeworth citrus phoenixpc tools test
+all: compression general phoenix phoenix-offset apollo edgeworth citrus phoenixpc tools scripting test
 compression: ntrcom/simpleunpak.elf ntrcom/simpleunpak-offset.elf find-compressed-files.elf
 general: extract-raw-file.elf gen-uncomheadermap.elf simple-hash.elf
-phoenix: convert-text-messages.elf convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf dump-person-animations.elf
+phoenix: convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf dump-person-animations.elf
 phoenix-offset: convert-uncompressed-image-header-offset.elf extract-video-offset.elf extract-image-offset.elf extract-archive-offset.elf
 apollo: extract-apollo-cpac.elf convert-apollo-image.elf convert-apollo-raw.elf
 edgeworth: extract-edgeworth-romfile.elf extract-edgeworth-archive.elf convert-edgeworth-raw.elf generate-edgeworth-tilemap.elf convert-edgeworth-overlay.elf
 citrus: extract-trilogy-pack.elf 3dsetc/etc1util.elf
 phoenixpc: extract-pc-file.elf
 test: test-char-oam.elf
-	
+
+scripting:
+	$(MAKE) -C scripting
+
 tools:
 	$(MAKE) -C tools/gbagfx
 
@@ -53,9 +55,6 @@ extract-%.elf: $(NITROCOMPRESSION) extract-%.c
 extract-trilogy-pack.elf: $(NITROCOMPRESSION) $(CTRPORTUTILS) extract-trilogy-pack.c
 	$(CC) -Wall -g -o $@ $^
 	
-convert-text-messages.elf: $(PHOENIXSCRIPT) convert-text-messages.c
-	$(CC) -Wall -g -o $@ $^
-	
 convert-%.elf: $(PHOENIXGFX) $(LODEPNG) $(NITROCOMPRESSION) convert-%.c
 	$(CC) -Wall -g -o $@ $^
 	
@@ -74,3 +73,4 @@ simple-hash.elf: $(CTRPORTUTILS) simple-hash.c
 clean:
 	-rm ntrcom/*.o ntrcom/*.elf *.elf lodepng/*.o *.o
 	$(MAKE) clean -C tools/gbagfx
+	$(MAKE) clean -C scripting

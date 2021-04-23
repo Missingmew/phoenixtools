@@ -2,8 +2,6 @@
 #define PHOENIXSCRIPT_CHARSETS_H
 
 #include <stdint.h>
-/* for ARRGAMENUM macro */
-#include "phoenixscript_commands.h"
 
 enum tokenset {
 	SET_NONE,

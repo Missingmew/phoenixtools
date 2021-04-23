@@ -4,15 +4,14 @@
 #include <string.h>
 
 #include "lexer.h"
-#include "../phoenixscript_commands.h"
+#include "common.h"
+#include "commands.h"
 
 #define SPELLLENGTH 256
 
 #define TAKEIT {if(!lexer_take()) return 0;}
 #define SKIPIT {if(!lexer_skip()) return 0;}
 #define SETTOKEN(x) { currenttoken.type = x; currenttoken.string = state.string; }
-
-#define sizeofarr(a) (sizeof(a) / sizeof(a[0]))
 
 char *tokentypestrings[] = { "TEXT", "SECTION", "ENDSECTION", "STRING", "IDENT", "INTEGER", "PLUS", "COLON", "COMMA", "TEXTEOF", "NUMTOKENS" };
 

@@ -46,27 +46,8 @@ struct scriptstate {
 	unsigned outputenabled;
 };
 
-//~ typedef struct cmd {
-	//~ unsigned (*print)(struct scriptstate *);
-	//~ char *name;
-//~ } command;
-
 extern char *commandnames[144];
 extern unsigned (*printcommands[0x90])(struct scriptstate *); // 144
-
-enum supportedgames {
-	GAME_PHOENIX1,
-	GAME_PHOENIX2,
-	GAME_PHOENIX3,
-	GAME_APOLLO,
-	GAME_GS1GBA,
-	GAME_NUMGAMES
-};
-
-/* this is incredibly dirty but the alternatives would be either a giant waste of space or spaghetti */
-#define ARRGAMENUM(x) ((x) % 4)
-#define ISNDS(x) ((x) >= GAME_PHOENIX1 && (x) < GAME_GS1GBA)
-#define ISGBA(x) ((x) >= GAME_GS1GBA && (x) < GAME_NUMGAMES)
 
 int isSectionStart(uint32_t *list, unsigned count, unsigned index);
 

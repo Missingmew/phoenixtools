@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "ir.h"
-#include "../phoenixscript_data.h"
-#include "../phoenixscript_charsets.h"
+#include "data.h"
+#include "data_support.h"
+#include "charsets.h"
+#include "common.h"
 	
 #define SETUPGENSPEC(size) \
 	struct ir_generic *gen = malloc(sizeof(struct ir_generic)); \
@@ -71,9 +74,21 @@ unsigned utf8len(char *str) {
 	return ret;
 }
 
+#define DONTCARE 0
+
+#define LOOKUPDATA(idx, type, string, person) { \
+	if(isdigit(string[0])) idx = cleanNumber(string); \
+	else { \
+		idx = data_getindexoffset(type, string, person);\
+		if(idx < 0) PREPROCERR(string) \
+	}}
+
 #define LOOKUP(idx, data, thing) { \
-	idx = lookupStr(data, thing, sizeofarr(data));\
-	if(idx < 0) PREPROCERR(thing) }
+	if(isdigit(thing[0])) idx = cleanNumber(thing); \
+	else { \
+		idx = lookupStr(data, thing, sizeofarr(data));\
+		if(idx < 0) PREPROCERR(thing) \
+	}}
 
 struct ir_generic *preproc_Generic(struct ir_pre_generic *pre, struct asconfig *config) {
 	SETUPGEN
@@ -98,7 +113,8 @@ struct ir_generic *preproc_Command03(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command05(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
-	LOOKUP(idx, sound_data[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	//~ LOOKUP(idx, sound_data[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	LOOKUPDATA(idx, DATA_SOUND, pre->data[0], DONTCARE);
 	gen->data[1].type = DATARAW;
 	gen->data[1].data = idx;
 	gen->data[2].type = DATARAW;
@@ -111,7 +127,8 @@ struct ir_generic *preproc_Command06(struct ir_pre_generic *pre, struct asconfig
 		unsigned short data;
 		int idx;
 		SETUPGENSPEC(1)
-		LOOKUP(idx, sound_data[ARRGAMENUM(config->gamenum)], pre->data[0]);
+		//~ LOOKUP(idx, sound_data[ARRGAMENUM(config->gamenum)], pre->data[0]);
+		LOOKUPDATA(idx, DATA_SOUND, pre->data[0], DONTCARE);
 		data = idx << 8;
 		LOOKUP(idx, soundplay, pre->data[1]);
 		data += idx;
@@ -153,7 +170,8 @@ struct ir_generic *preproc_Command0e(struct ir_pre_generic *pre, struct asconfig
 	unsigned short data;
 	int idx;
 	SETUPGENSPEC(1)
-	LOOKUP(idx, speakers[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	//~ LOOKUP(idx, speakers[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	LOOKUPDATA(idx, DATA_SPEAKER, pre->data[0], DONTCARE);
 	data = idx << 8;
 	LOOKUP(idx, showside, pre->data[1]);
 	data += idx;
@@ -216,7 +234,8 @@ struct ir_generic *preproc_Command1b(struct ir_pre_generic *pre, struct asconfig
 	unsigned short data;
 	int idx;
 	SETUPGENSPEC(1)
-	LOOKUP(idx, backgrounds[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	//~ LOOKUP(idx, backgrounds[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	LOOKUPDATA(idx, DATA_BACKGROUND, pre->data[0], DONTCARE);
 	data = idx;
 	LOOKUP(idx, bgshift, pre->data[1]);
 	data += 0x8000 * idx;
@@ -239,19 +258,29 @@ struct ir_generic *preproc_Command1d(struct ir_pre_generic *pre, struct asconfig
 
 struct ir_generic *preproc_Command1e(struct ir_pre_generic *pre, struct asconfig *config) {
 	unsigned short data;
-	int idx;
+	int idx, speaker, talking, idle;
 	SETUPGENSPEC(3)
-	LOOKUP(idx, speakers[ARRGAMENUM(config->gamenum)], pre->data[0]);
-	data = idx;
+	//~ LOOKUP(idx, speakers[ARRGAMENUM(config->gamenum)], pre->data[0]);
+	LOOKUPDATA(speaker, DATA_SPEAKER, pre->data[0], DONTCARE);
+	data = speaker;
 	LOOKUP(idx, personplacement, pre->data[1]);
 	data |= idx << 14;
+	// hflip
 	data |= cleanNumber(pre->data[2]) << 13;
 	gen->data[1].type = DATARAW;
 	gen->data[1].data = data;
+	if(config->gamenum == GAME_GS1GBA) {
+		LOOKUPDATA(talking, DATA_ANIMATIONGBA, pre->data[3], speaker);
+		LOOKUPDATA(idle, DATA_ANIMATIONGBA, pre->data[4], speaker);
+	}
+	else {
+		LOOKUPDATA(talking, DATA_ANIMATIONNDS, pre->data[3], DONTCARE);
+		LOOKUPDATA(idle, DATA_ANIMATIONNDS, pre->data[4], DONTCARE);
+	}
 	gen->data[2].type = DATARAW;
-	gen->data[2].data = cleanNumber(pre->data[3]);
+	gen->data[2].data = talking;
 	gen->data[3].type = DATARAW;
-	gen->data[3].data = cleanNumber(pre->data[4]);
+	gen->data[3].data = idle;
 	return gen;
 }
 
@@ -280,11 +309,16 @@ struct ir_generic *preproc_Command2f(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command33(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
-	LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[0]); gen->data[1].type = DATARAW; gen->data[1].data = idx;
-	LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[1]); gen->data[2].type = DATARAW; gen->data[2].data = idx;
-	LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[2]); gen->data[3].type = DATARAW; gen->data[3].data = idx;
-	LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[3]); gen->data[4].type = DATARAW; gen->data[4].data = idx;
-	LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[4]); gen->data[5].type = DATARAW; gen->data[5].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[0]); gen->data[1].type = DATARAW; gen->data[1].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[1]); gen->data[2].type = DATARAW; gen->data[2].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[2]); gen->data[3].type = DATARAW; gen->data[3].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[3]); gen->data[4].type = DATARAW; gen->data[4].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[4]); gen->data[5].type = DATARAW; gen->data[5].data = idx;
+	LOOKUPDATA(idx, DATA_LOCATION, pre->data[0], DONTCARE); gen->data[1].type = DATARAW; gen->data[1].data = idx;
+	LOOKUPDATA(idx, DATA_LOCATION, pre->data[1], DONTCARE); gen->data[2].type = DATARAW; gen->data[2].data = idx;
+	LOOKUPDATA(idx, DATA_LOCATION, pre->data[2], DONTCARE); gen->data[3].type = DATARAW; gen->data[3].data = idx;
+	LOOKUPDATA(idx, DATA_LOCATION, pre->data[3], DONTCARE); gen->data[4].type = DATARAW; gen->data[4].data = idx;
+	LOOKUPDATA(idx, DATA_LOCATION, pre->data[4], DONTCARE); gen->data[5].type = DATARAW; gen->data[5].data = idx;
 	return gen;
 }
 
@@ -538,7 +572,7 @@ struct ir_generic *text_preproc(struct ir_pre_generic *pre, struct asconfig *con
 }
 
 struct ir_generic *ir_precommand_preprocess(struct ir_pre_generic *pre, struct asconfig *config) {
-	if(pre->type < sizeofarr(commandnames)) return command_preproc[pre->type](pre, config);
+	if(pre->type <= CMD8F) return command_preproc[pre->type](pre, config);
 	else if(pre->type == TEXT) return text_preproc(pre, config);
 	else {
 		printf("error during preprocessing: encountered unknown type %u\n", pre->type);
