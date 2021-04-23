@@ -10,7 +10,7 @@ CTRPORTUTILS = ctrportutils.o
 # all: compression phoenix apollo edgeworth
 all: compression general phoenix phoenix-offset apollo edgeworth citrus phoenixpc tools scripting test
 compression: ntrcom/simpleunpak.elf ntrcom/simpleunpak-offset.elf find-compressed-files.elf
-general: extract-raw-file.elf gen-uncomheadermap.elf simple-hash.elf
+general: extract-raw-file.elf gen-uncomheadermap.elf simple-hash.elf decrypt-ios-data.elf
 phoenix: convert-uncompressed-image-header.elf extract-archive.elf extract-mes_all-bin.elf extract-phoenix_data.elf dump-person-animations.elf
 phoenix-offset: convert-uncompressed-image-header-offset.elf extract-video-offset.elf extract-image-offset.elf extract-archive-offset.elf
 apollo: extract-apollo-cpac.elf convert-apollo-image.elf convert-apollo-raw.elf
