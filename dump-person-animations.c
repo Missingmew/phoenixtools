@@ -190,7 +190,7 @@ unsigned setuptiledatastate(struct tiledatastate *dst, void *src, unsigned offse
 		}
 		dst->tiledata = malloc((dst->partslist[0] / 4)*sizeof(uint16_t *));
 		for(unsigned i = 0; i < (dst->partslist[0] / 4); i++) dst->tiledata[i] = dst->gfxbase+dst->partslist[i];
-		printf("%s: graphics file has %u palettes and %u metatiles\n", __func__, dst->numpals, dst->partslist[0] / 4);
+		//~ printf("%s: graphics file has %u palettes and %u metatiles\n", __func__, dst->numpals, dst->partslist[0] / 4);
 	}
 	else {
 		if(dst->tiledata) {
@@ -198,7 +198,7 @@ unsigned setuptiledatastate(struct tiledatastate *dst, void *src, unsigned offse
 			dst->tiledata = 0;
 		}
 		dst->rawtiledata = dst->gfxbase = dst->palbase+dst->numpals*0x20;
-		printf("%s: graphics file has %u palettes\n", __func__, dst->numpals);
+		//~ printf("%s: graphics file has %u palettes\n", __func__, dst->numpals);
 	}
 	dst->statesrc = offset;
 	return 1;
@@ -299,11 +299,16 @@ unsigned isvalidtable(struct animationhead *head) {
 	return !(head->null);
 }
 
-unsigned extractframe(unsigned char *dst, uint32_t *src, struct tiledatastate *state) {
+int extractframe(unsigned char *dst, uint32_t *src, struct tiledatastate *state) {
 	uint32_t numparts;
 	uint32_t *partheads = NULL;
 	numparts = *src;
 	partheads = (void *)src + sizeof(uint32_t);
+	
+	if(numparts > 64) {
+		printf("attempted to load %u > 64 parts, skipping\n", numparts);
+		return -1;
+	}
 	
 	for(unsigned curpart = 0; curpart < numparts; curpart++) {
 		struct animetatile metatile;
@@ -330,7 +335,7 @@ int main(int argc, char **argv) {
 	unsigned numtotalframes;
 	struct animationhead *animhead = NULL;
 	struct animationframe *animframes = NULL;
-	unsigned extractedpartcount = 0;
+	int extractedpartcount = 0;
 	
 	unsigned char *finalimage = NULL;
 	unsigned char *finalrgba = NULL;
@@ -388,6 +393,7 @@ int main(int argc, char **argv) {
 	}
 	fseek(anim, 0, SEEK_END);
 	animsize = ftell(anim);
+	printf("animsize is %08x %u\n", animsize, animsize);
 	fseek(anim, 0, SEEK_SET);
 	animbuf = malloc(animsize);
 	fread(animbuf, animsize, 1, anim);
@@ -446,7 +452,7 @@ int main(int argc, char **argv) {
 				
 				extractedpartcount = extractframe(finalimage, (void *)animhead + animframes[curframe].offset, &state);
 				
-				printf("Frame %2u dataoff %08x(abs %08lx) loaded %u parts\n", curframe, animframes[curframe].offset, (unsigned char *)animhead + animframes[curframe].offset-(unsigned char *)animbuf, extractedpartcount);
+				//~ printf("Frame %2u dataoff %08x(abs %08lx) loaded %u parts\n", curframe, animframes[curframe].offset, (unsigned char *)animhead + animframes[curframe].offset-(unsigned char *)animbuf, extractedpartcount);
 				
 				sprintf(finaloutputname, "%.8s-fr%02u.png", plydat[i].name, curframe);
 				finalrgba = linearImageWithPaletteToRGBA(finalimage, state.paldata, systemdimensions[state.mode].width, systemdimensions[state.mode].height, image8bpp, 0);
@@ -529,14 +535,19 @@ int main(int argc, char **argv) {
 			}
 			memset(finalimage, 0, systemdimensions[state.mode].size);
 			
+			//~ printf("Frame %2u dataoff %08x(abs %08lx)\n", curframe, animframes[curframe].offset, (unsigned char *)animhead + animframes[curframe].offset-(unsigned char *)animbuf);
+			
 			extractedpartcount = extractframe(finalimage, (void *)animhead + animframes[curframe].offset, &state);
 			
-			printf("Frame %2u dataoff %08x(abs %08lx) loaded %u parts\n", curframe, animframes[curframe].offset, (unsigned char *)animhead + animframes[curframe].offset-(unsigned char *)animbuf, extractedpartcount);
-			
-			sprintf(finaloutputname, "%s-tb%02u-fr%02u.png", argv[4], currenttable, curframe);
-			finalrgba = linearImageWithPaletteToRGBA(finalimage, state.paldata, systemdimensions[state.mode].width, systemdimensions[state.mode].height, image8bpp, 0);
-			lodepng_encode32_file(finaloutputname, finalrgba, systemdimensions[state.mode].width, systemdimensions[state.mode].height);
-			free(finalrgba);
+			// gs1 has an animation that points to garbage, makes things break!
+			if(extractedpartcount >= 0) {
+				//~ printf("Frame %2u dataoff %08x(abs %08lx) loaded %u parts\n", curframe, animframes[curframe].offset, (unsigned char *)animhead + animframes[curframe].offset-(unsigned char *)animbuf, extractedpartcount);
+				
+				sprintf(finaloutputname, "%s-tb%02u-fr%02u.png", argv[4], currenttable, curframe);
+				finalrgba = linearImageWithPaletteToRGBA(finalimage, state.paldata, systemdimensions[state.mode].width, systemdimensions[state.mode].height, image8bpp, 0);
+				lodepng_encode32_file(finaloutputname, finalrgba, systemdimensions[state.mode].width, systemdimensions[state.mode].height);
+				free(finalrgba);
+			}
 			
 			if(animframes[curframe].offset > lastoffset) {
 				lastoffset = animframes[curframe].offset;
