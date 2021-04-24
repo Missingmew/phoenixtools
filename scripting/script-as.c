@@ -42,12 +42,7 @@ int main(int argc, char **argv) {
 	}
 	
 	/* attempt to load support files now */
-	data_loadfile(DATA_SOUND, param.soundfile);
-	data_loadfile(DATA_SPEAKER, param.speakerfile);
-	if(ISNDS(config.gamenum)) data_loadfile(DATA_ANIMATIONNDS, param.animfile);
-	else data_loadfile(DATA_ANIMATIONGBA, param.animfile);
-	data_loadfile(DATA_BACKGROUND, param.bgfile);
-	data_loadfile(DATA_LOCATION, param.locationfile);
+	data_loadfilesfromparams(&param);
 	
 	fseek(f, 0, SEEK_END);
 	insize = ftell(f);

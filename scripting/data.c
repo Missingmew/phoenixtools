@@ -1,11 +1,6 @@
 #include "data.h"
+
 /* textual representation of constants found in the scripts */
-
-/*	names_for_the_"PERSON"_command
-	note_that_all_typos_and/or_inconsistencies_are_transcribed_as-is_from_the_US_releases
-	TODO:_fix_these_names, maybe_add_localization? */
-
-/* zeroes are required because apollo introduces 5 additional slots */
 char *personplacement[4] = {
 	"PLACE_DEFAULT", "PLACE_RIGHT", "PLACE_LEFT", "PLACE_UNK"
 };
@@ -30,9 +25,6 @@ char *cmd35jumphint[2] = {
 	"JUMP_THIS_SECTION", "JUMP_OTHER_SECTION"
 };
 
-/* multilang backgrounds share their number! */
-/* TODO: add support for multiple games */
-/* 4096 is the size per game due to BGSPC, this may change due to various weird leftover commands though */
 char *musicfading[2] = {
 	"FADE_OUT", "FADE_IN"
 };
@@ -61,3 +53,6 @@ char *animationstate[2] = {
 	"ANIM_STOP", "ANIM_START"
 };
 
+char *profileevidence[2] = {
+	"EVIDENCE", "PROFILE"
+};

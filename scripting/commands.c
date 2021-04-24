@@ -231,14 +231,21 @@ unsigned printCmd12(struct scriptstate *state) {
 }
 
 unsigned printCmd13(struct scriptstate *state) {
+	char *evidencename;
 	if(state->outputenabled) {
 		unsigned evidenceid = state->script[state->scriptidx+1] & 0xFF;
 		unsigned whichside = state->script[state->scriptidx+1] >> 8;
-		if(whichside < sizeofarr(showside)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], evidenceid, showside[whichside]);
-			state->scriptidx += 1+1;
-		}
-		else return printCmdGeneric(state, 1);
+		evidencename = data_getname(DATA_EVIDENCE, evidenceid, 0);
+		
+		state->textidx += sprintf(state->textfile+state->textidx, "%s ", commandnames[state->script[state->scriptidx]]);
+		
+		if(evidencename) state->textidx += sprintf(state->textfile+state->textidx, "%s, ", evidencename);
+		else state->textidx += sprintf(state->textfile+state->textidx, "%u, ", evidenceid);
+		
+		if(whichside < sizeofarr(showside)) state->textidx += sprintf(state->textfile+state->textidx, "%s\n", showside[whichside]);
+		else state->textidx += sprintf(state->textfile+state->textidx, "%u\n", whichside);
+		
+		state->scriptidx += 1+1;
 	}
 	return 1;
 }
@@ -256,7 +263,24 @@ unsigned printCmd16(struct scriptstate *state) {
 }
 
 unsigned printCmd17(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	char *evidencename;
+	if(state->outputenabled) {
+		unsigned evidenceid = state->script[state->scriptidx+1] & 0x3FFF;
+		unsigned animate = (state->script[state->scriptidx+1] & 0x4000) >> 14;
+		unsigned isprofile = state->script[state->scriptidx+1] >> 15;
+		evidencename = data_getname(isprofile ? DATA_PROFILE : DATA_EVIDENCE, evidenceid, 0);
+		
+		state->textidx += sprintf(state->textfile+state->textidx, "%s ", commandnames[state->script[state->scriptidx]]);
+		
+		if(evidencename) state->textidx += sprintf(state->textfile+state->textidx, "%s, ", evidencename);
+		else state->textidx += sprintf(state->textfile+state->textidx, "%u, ", evidenceid);
+		
+		state->textidx += sprintf(state->textfile+state->textidx, "%s, %u\n", profileevidence[isprofile], animate);
+		
+		
+		state->scriptidx += 1+1;
+	}
+	return 1;
 }
 
 unsigned printCmd18(struct scriptstate *state) {

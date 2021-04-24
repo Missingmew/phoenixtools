@@ -6,6 +6,7 @@
 !lodepng/
 !tools/
 !scripting/
+!scripting/support
 
 !*.c
 !*.h

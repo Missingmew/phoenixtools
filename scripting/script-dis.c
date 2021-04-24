@@ -77,7 +77,7 @@ void escapeText(char *dst, char* src) {
 int main( int argc, char **argv ) {
 	FILE *f, *o;
 	unsigned i, j;
-	unsigned int fileSize, gamenum, intext, numlocaljumps;
+	unsigned int fileSize, intext, numlocaljumps;
 	uint32_t numScripts, *scriptOffsets = NULL, *jumplutaddrs = NULL;
 	struct localjumpinfo *localjumps = NULL;
 	//~ command *curop;
@@ -115,12 +115,7 @@ int main( int argc, char **argv ) {
 	}
 	
 	/* attempt to load support files now */
-	data_loadfile(DATA_SOUND, param.soundfile);
-	data_loadfile(DATA_SPEAKER, param.speakerfile);
-	if(ISNDS(state.gamenum)) data_loadfile(DATA_ANIMATIONNDS, param.animfile);
-	else data_loadfile(DATA_ANIMATIONGBA, param.animfile);
-	data_loadfile(DATA_BACKGROUND, param.bgfile);
-	data_loadfile(DATA_LOCATION, param.locationfile);
+	data_loadfilesfromparams(&param);
 	
 	fseek( f, 0, SEEK_END );
 	fileSize = ftell(f);

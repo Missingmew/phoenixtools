@@ -17,4 +17,6 @@ extern char *cmd35jumphint[2];
 extern char *bgshift[2];
 extern char *personplacement[4];
 
+extern char *profileevidence[2];
+
 #endif

@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include "data_support.h"
+#include "param.h"
+#include "common.h"
 
 // apollo has 60...
 #define MAXPERSONS 64
@@ -29,6 +31,8 @@ struct datalist speakers;
 struct datalist animations;
 struct datalist bgs;
 struct datalist locations;
+struct datalist evidences;
+struct datalist profiles;
 
 struct datalist_gba_anim gba_anims;
 
@@ -54,6 +58,14 @@ char *data_getname_regular(enum datatypes type, unsigned id) {
 			if(id < locations.size) return locations.names[id];
 			break;
 		}
+		case DATA_EVIDENCE: {
+			if(id < evidences.size) return evidences.names[id];
+			break;
+		}
+		case DATA_PROFILE: {
+			if(id < profiles.size) return profiles.names[id];
+			break;
+		}
 		default: break;
 	}
 	return NULL;
@@ -74,7 +86,9 @@ char *data_getname(enum datatypes type, unsigned id, unsigned offset) {
 		case DATA_SPEAKER:
 		case DATA_ANIMATIONNDS:
 		case DATA_BACKGROUND:
-		case DATA_LOCATION: {
+		case DATA_LOCATION:
+		case DATA_EVIDENCE:
+		case DATA_PROFILE: {
 			return data_getname_regular(type, id);
 		}
 		case DATA_ANIMATIONGBA: {
@@ -92,31 +106,43 @@ int data_getindex_regular(enum datatypes type, char *str) {
 	switch(type) {
 		case DATA_SOUND: {
 			for(unsigned i = 0; i < sounds.size; i++) {
-				if(!strcmp(str, sounds.names[i])) return i;
+				if(sounds.names[i] && !strcmp(str, sounds.names[i])) return i;
 			}
 			break;
 		}
 		case DATA_SPEAKER: {
 			for(unsigned i = 0; i < speakers.size; i++) {
-				if(!strcmp(str, speakers.names[i])) return i;
+				if(speakers.names[i] && !strcmp(str, speakers.names[i])) return i;
 			}
 			break;
 		}
 		case DATA_ANIMATIONNDS: {
 			for(unsigned i = 0; i < animations.size; i++) {
-				if(!strcmp(str, animations.names[i])) return i;
+				if(animations.names[i] && !strcmp(str, animations.names[i])) return i;
 			}
 			break;
 		}
 		case DATA_BACKGROUND: {
 			for(unsigned i = 0; i < bgs.size; i++) {
-				if(!strcmp(str, bgs.names[i])) return i;
+				if(bgs.names[i] && !strcmp(str, bgs.names[i])) return i;
 			}
 			break;
 		}
 		case DATA_LOCATION: {
 			for(unsigned i = 0; i < locations.size; i++) {
-				if(!strcmp(str, locations.names[i])) return i;
+				if(locations.names[i] && !strcmp(str, locations.names[i])) return i;
+			}
+			break;
+		}
+		case DATA_EVIDENCE: {
+			for(unsigned i = 0; i < evidences.size; i++) {
+				if(evidences.names[i] && !strcmp(str, evidences.names[i])) return i;
+			}
+			break;
+		}
+		case DATA_PROFILE: {
+			for(unsigned i = 0; i < profiles.size; i++) {
+				if(profiles.names[i] && !strcmp(str, profiles.names[i])) return i;
 			}
 			break;
 		}
@@ -128,7 +154,7 @@ int data_getindex_regular(enum datatypes type, char *str) {
 int data_getoffset_gba_animation(char *str, unsigned person) {
 	if(person < gba_anims.numsizes) {
 		for(unsigned i = 0; i < gba_anims.sizes[person]; i++) {
-			if(!strcmp(str, gba_anims.anims[person][i].name)) return gba_anims.anims[person][i].offset;
+			if(gba_anims.anims[person][i].name && !strcmp(str, gba_anims.anims[person][i].name)) return gba_anims.anims[person][i].offset;
 		}
 	}
 	return -1;
@@ -140,7 +166,9 @@ int data_getindexoffset(enum datatypes type, char *str, unsigned person) {
 		case DATA_SPEAKER:
 		case DATA_ANIMATIONNDS:
 		case DATA_BACKGROUND:
-		case DATA_LOCATION: {
+		case DATA_LOCATION:
+		case DATA_EVIDENCE:
+		case DATA_PROFILE: {
 			return data_getindex_regular(type, str);
 		}
 		case DATA_ANIMATIONGBA: {
@@ -155,7 +183,8 @@ int data_getindexoffset(enum datatypes type, char *str, unsigned person) {
 }
 
 void data_loadfile_regular(FILE *f, struct datalist *dat) {
-	unsigned scanindex, curalloc = 0, curcount = 0;
+	unsigned curalloc = 0;
+	int scanindex, maxindex = -1;
 	unsigned line = 0;
 	char scanline[512];
 	char scanname[256];
@@ -168,28 +197,30 @@ void data_loadfile_regular(FILE *f, struct datalist *dat) {
 	while(!feof(f)) {
 		line++;
 		if(!fgets(scanline, 512, f)) scanline[0] = 0;
-		numitems = sscanf(scanline, "%u = %n%255s%n\n", &scanindex, &scannamestart, scanname, &scannameend);
+		numitems = sscanf(scanline, "%d = %n%255s%n\n", &scanindex, &scannamestart, scanname, &scannameend);
 		if(numitems == 2) {
 			unsigned scannamelen = scannameend-scannamestart;
 			//~ printf("line %u: found index %u for name %s %u-%u\n", line, scanindex, scanname, scannamestart, scannameend);
-			if(curcount == curalloc) {
+			maxindex = (scanindex > maxindex) ? scanindex : maxindex;
+			while(scanindex >= curalloc) {
 				curalloc += REALLOCNUM;
 				newnamearr = realloc(newnamearr, curalloc*sizeof(char *));
 				// make sure that new elements are null
 				memset(newnamearr+curalloc-REALLOCNUM, 0, sizeof(char *)*REALLOCNUM);
 			}
 			
-			newnamearr[curcount] = malloc(scannamelen+1);
-			memcpy(newnamearr[curcount++], scanname, scannamelen+1);
+			newnamearr[scanindex] = malloc(scannamelen+1);
+			memcpy(newnamearr[scanindex], scanname, scannamelen+1);
 		}
 	}
 	
-	dat->size = curcount;
+	dat->size = maxindex+1;
 	dat->names = newnamearr;
 }
 
 void data_loadfile_gba_animation(FILE *f, struct datalist_gba_anim *dat) {
-	unsigned scanindex, scanoffset, curalloc = 0, maxindex = 0;
+	unsigned scanoffset, curalloc = 0;
+	int scanindex, maxindex = -1;
 	unsigned *curallocs = NULL;
 	unsigned line = 0;
 	char scanline[512];
@@ -205,7 +236,7 @@ void data_loadfile_gba_animation(FILE *f, struct datalist_gba_anim *dat) {
 	while(!feof(f)) {
 		line++;
 		fgets(scanline, 512, f);
-		numitems = sscanf(scanline, "%u, %x = %n%255s%n\n", &scanindex, &scanoffset, &scannamestart, scanname, &scannameend);
+		numitems = sscanf(scanline, "%d, %x = %n%255s%n\n", &scanindex, &scanoffset, &scannamestart, scanname, &scannameend);
 		if(numitems == 3) {
 			unsigned scannamelen = scannameend-scannamestart;
 			//~ printf("line %u: found index %u and offset %x for name %s\n", line, scanindex, scanoffset, scanname);
@@ -215,7 +246,7 @@ void data_loadfile_gba_animation(FILE *f, struct datalist_gba_anim *dat) {
 			}
 			maxindex = (scanindex > maxindex) ? scanindex : maxindex;
 			// if we found a person id greater than what we have alloced for, expand allocated arrays
-			if(scanindex >= curalloc) {
+			while(scanindex >= curalloc) {
 				curalloc += REALLOCNUM;
 				
 				// realloc arrays that hold current allocated space and elements for each person
@@ -281,6 +312,14 @@ void data_loadfile(enum datatypes type, char *file) {
 			data_loadfile_regular(f, &locations);
 			break;
 		}
+		case DATA_EVIDENCE: {
+			data_loadfile_regular(f, &evidences);
+			break;
+		}
+		case DATA_PROFILE: {
+			data_loadfile_regular(f, &profiles);
+			break;
+		}
 		case DATA_ANIMATIONGBA: {
 			data_loadfile_gba_animation(f, &gba_anims);
 			break;
@@ -292,6 +331,17 @@ void data_loadfile(enum datatypes type, char *file) {
 	}
 	
 	fclose(f);
+}
+
+void data_loadfilesfromparams(struct params *param) {
+	data_loadfile(DATA_SOUND, param->soundfile);
+	data_loadfile(DATA_SPEAKER, param->speakerfile);
+	if(ISNDS(param->gamenum)) data_loadfile(DATA_ANIMATIONNDS, param->animfile);
+	else data_loadfile(DATA_ANIMATIONGBA, param->animfile);
+	data_loadfile(DATA_BACKGROUND, param->bgfile);
+	data_loadfile(DATA_LOCATION, param->locationfile);
+	data_loadfile(DATA_EVIDENCE, param->evidencefile);
+	data_loadfile(DATA_PROFILE, param->profilefile);
 }
 
 void data_cleanup_generic(struct datalist *dat) {
@@ -318,5 +368,7 @@ void data_cleanup(void) {
 	data_cleanup_generic(&animations);
 	data_cleanup_generic(&bgs);
 	data_cleanup_generic(&locations);
+	data_cleanup_generic(&evidences);
+	data_cleanup_generic(&profiles);
 	data_cleanup_gba_animation(&gba_anims);
 }

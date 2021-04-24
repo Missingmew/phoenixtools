@@ -201,7 +201,7 @@ struct ir_pre_generic *parser_parseCommand12(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand13(struct asconfig *config) {
 	char *id, *side;
 	PREPARENDATA(CMD13, 2)
-	ACCEPTRET(id, INTEGER)
+	ACCEPTRETEITHER(id, IDENT, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(side, IDENT)
 	command->data[0] = id;
@@ -222,7 +222,17 @@ struct ir_pre_generic *parser_parseCommand16(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand17(struct asconfig *config) {
-	GENERICNARG(CMD17, 1)
+	char *id, *type, *animate;
+	PREPARENDATA(CMD17, 3)
+	ACCEPTRETEITHER(id, IDENT, INTEGER)
+	ACCEPT(COMMA)
+	ACCEPTRET(type, IDENT)
+	ACCEPT(COMMA)
+	ACCEPTRET(animate, INTEGER)
+	command->data[0] = id;
+	command->data[1] = type;
+	command->data[2] = animate;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand18(struct asconfig *config) {

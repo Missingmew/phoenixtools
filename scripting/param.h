@@ -17,6 +17,8 @@ struct params {
 	char *animfile;
 	char *bgfile;
 	char *locationfile;
+	char *evidencefile;
+	char *profilefile;
 	
 	/* state */
 	unsigned autoalloc_out;

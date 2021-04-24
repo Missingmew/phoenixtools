@@ -222,9 +222,28 @@ struct ir_generic *preproc_Command13(struct ir_pre_generic *pre, struct asconfig
 	unsigned short data;
 	int idx;
 	SETUPGENSPEC(1)
-	data = cleanNumber(pre->data[0]);
+	//~ data = cleanNumber(pre->data[0]);
+	LOOKUPDATA(idx, DATA_EVIDENCE, pre->data[0], DONTCARE);
+	data = idx;
 	LOOKUP(idx, showside, pre->data[1]);
 	data += idx << 8;
+	gen->data[1].type = DATARAW;
+	gen->data[1].data = data;
+	return gen;
+}
+
+struct ir_generic *preproc_Command17(struct ir_pre_generic *pre, struct asconfig *config) {
+	unsigned short data;
+	int idx, isprofile;
+	SETUPGENSPEC(1)
+	
+	LOOKUP(isprofile, profileevidence, pre->data[1]);
+	data = 0x8000 * isprofile;
+	
+	//~ data = cleanNumber(pre->data[0]);
+	LOOKUPDATA(idx, isprofile ? DATA_PROFILE : DATA_EVIDENCE, pre->data[0], DONTCARE);
+	data += idx;
+	data += 0x4000 * cleanNumber(pre->data[2]);
 	gen->data[1].type = DATARAW;
 	gen->data[1].data = data;
 	return gen;
@@ -416,7 +435,7 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, struct as
 	preproc_Generic, /* 0x14 */
 	preproc_Generic, /* 0x15 */
 	preproc_Generic, /* 0x16 */
-	preproc_Generic, /* 0x17 */
+	preproc_Command17, /* 0x17 */
 	preproc_Generic, /* 0x18 */
 	preproc_Generic, /* 0x19 */
 	preproc_Generic, /* 0x1a */
