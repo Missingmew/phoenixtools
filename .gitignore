@@ -1,40 +1,11 @@
-# shamelessly stolen
+# exclude all by default
+*
 
-# Project Config
-#-------------------------
-.vscode
-.vs
-
-# Objects/Libraries
-#-------------------------
-*.[Oo]
-*.[Aa]
-*.[Oo][Bb][Jj]
-*.[Ll][Ii][Bb]
-
-# Binaries
-#-------------------------
-*.[Bb][Ii][Nn]
-*.[Cc][Pp][Ee]
-*.[Ee][Xx][Ee]
-*.[Ll][Nn][Kk]
-*.[Mm][Aa][Pp]
-*.[Ss][Yy][Mm]
-*.[Ee][Ll][Ff]
-
-# Archives
-#-------------------------
-*.7[Zz]
-*.[Zz][Ii][Pp]
-*.[Rr][Aa][Rr]
-
-# Excludes
-#-------------------------
-*/
-
-# Explicitly included
-#-------------------------
+# include the following
 !ntrcom/
 !lodepng/
 !tools/
-!scriptassembler/
+!scripting/
+
+!*.c
+!*.h
