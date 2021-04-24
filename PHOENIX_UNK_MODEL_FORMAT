@@ -1,0 +1,64 @@
+phoenix wright somethingsomething model format:
+all fields little-endian
+header:
+$00 u32 position data offset
+$04 u32 normal data offset
+$08 u32 texcoord data offset
+$0C u32 material data offset
+$10 u32 tri data offset
+$14 u16 vertex (position+normal) count
+$16 u16 texcoord count
+$18 u16 material count
+$1A u16 tri count
+
+note: each .bin file may be multiple related models concatenated
+  (i.e. screwdriver in main model and tag in second model),
+  unknown how far this may be a ripping artifact and how any secondary
+  models would be cleanly addressed
+
+another note: for some reason, edgeworths-parking-ticket.bin appears to
+  use a different u/v scale than screwdriver.bin. I have no idea how to
+  detect this or how this would make sense on nitro. the texture is
+  128x128 but texcoords only use a 64x64 range and it only looks right
+  when the texcoords are rescaled to use the full range. no, "material
+  data" does not contain a field that's set for this model. might be
+  specified in the proper material table, or I'm missing something obvious.
+  okay, only hardware-specific guess: per-material texcoord matrix.
+  this may be a development artifact where this model was initially unwrapped
+  for a 64x64 texture, which later turned out not to be sufficient.
+
+position data entry:
+3 * 16-bit:
+  s16 x, y, z
+
+normal data entry:
+32-bit field matching nitro hardware specs, i.e. 1.0.9 fixed-point
+    9..0: x
+  19..10: y
+  29..20: z
+  31..30: unused
+
+texcoord data entry:
+2 * 16-bit, matching nitro hardware specs, i.e. 1.11.4 fixed-point texel coordinates
+  s16 u, v
+
+material entry:
+16 bytes, not fully understood. example:
+  69 74 6d 30 35 36 31 00  00 00 00 00 b0 00 3e 00  |itm0561.........|
+  ^                                    ^     ^
+  name                                 start count
+
+  name most likely links this to some external material structure,
+  specifying texture and, if used, material properties.
+  unknown about the specifics, but some other example names are:
+    itm04a0, itm04a0u, itm0560, itm0562
+
+  start is the starting tri (0 for first) to which this mat is applied
+  count is the number of tris to which this mat is applied
+
+tri entry:
+6 * 16-bit:
+  u16 pos_idx_0, uv_idx_0, pos_idx_1, uv_idx_1, pos_idx_2, uv_idx_2
+
+  pos_idx is used to index into both position and normal tables
+  0 -> 1 -> 2 is a clockwise winding, for some reason? (nitro hardware specs: CCW)
