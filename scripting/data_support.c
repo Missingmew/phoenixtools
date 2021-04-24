@@ -167,7 +167,7 @@ void data_loadfile_regular(FILE *f, struct datalist *dat) {
 	
 	while(!feof(f)) {
 		line++;
-		fgets(scanline, 512, f);
+		if(!fgets(scanline, 512, f)) scanline[0] = 0;
 		numitems = sscanf(scanline, "%u = %n%255s%n\n", &scanindex, &scannamestart, scanname, &scannameend);
 		if(numitems == 2) {
 			unsigned scannamelen = scannameend-scannamestart;
