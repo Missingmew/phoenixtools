@@ -11,7 +11,6 @@ enum datatypes {
 	DATA_BACKGROUND,
 	DATA_LOCATION,
 	DATA_EVIDENCE,
-	DATA_PROFILE
 };
 
 char *data_getname(enum datatypes type, unsigned id, unsigned offset);

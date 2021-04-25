@@ -268,7 +268,7 @@ unsigned printCmd17(struct scriptstate *state) {
 		unsigned evidenceid = state->script[state->scriptidx+1] & 0x3FFF;
 		unsigned animate = (state->script[state->scriptidx+1] & 0x4000) >> 14;
 		unsigned isprofile = state->script[state->scriptidx+1] >> 15;
-		evidencename = data_getname(isprofile ? DATA_PROFILE : DATA_EVIDENCE, evidenceid, 0);
+		evidencename = data_getname(DATA_EVIDENCE, evidenceid, 0);
 		
 		state->textidx += sprintf(state->textfile+state->textidx, "%s ", commandnames[state->script[state->scriptidx]]);
 		

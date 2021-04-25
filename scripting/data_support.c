@@ -32,7 +32,6 @@ struct datalist animations;
 struct datalist bgs;
 struct datalist locations;
 struct datalist evidences;
-struct datalist profiles;
 
 struct datalist_gba_anim gba_anims;
 
@@ -62,10 +61,6 @@ char *data_getname_regular(enum datatypes type, unsigned id) {
 			if(id < evidences.size) return evidences.names[id];
 			break;
 		}
-		case DATA_PROFILE: {
-			if(id < profiles.size) return profiles.names[id];
-			break;
-		}
 		default: break;
 	}
 	return NULL;
@@ -87,8 +82,7 @@ char *data_getname(enum datatypes type, unsigned id, unsigned offset) {
 		case DATA_ANIMATIONNDS:
 		case DATA_BACKGROUND:
 		case DATA_LOCATION:
-		case DATA_EVIDENCE:
-		case DATA_PROFILE: {
+		case DATA_EVIDENCE: {
 			return data_getname_regular(type, id);
 		}
 		case DATA_ANIMATIONGBA: {
@@ -140,12 +134,6 @@ int data_getindex_regular(enum datatypes type, char *str) {
 			}
 			break;
 		}
-		case DATA_PROFILE: {
-			for(unsigned i = 0; i < profiles.size; i++) {
-				if(profiles.names[i] && !strcmp(str, profiles.names[i])) return i;
-			}
-			break;
-		}
 		default: break;
 	}
 	return -1;
@@ -167,8 +155,7 @@ int data_getindexoffset(enum datatypes type, char *str, unsigned person) {
 		case DATA_ANIMATIONNDS:
 		case DATA_BACKGROUND:
 		case DATA_LOCATION:
-		case DATA_EVIDENCE:
-		case DATA_PROFILE: {
+		case DATA_EVIDENCE: {
 			return data_getindex_regular(type, str);
 		}
 		case DATA_ANIMATIONGBA: {
@@ -316,10 +303,6 @@ void data_loadfile(enum datatypes type, char *file) {
 			data_loadfile_regular(f, &evidences);
 			break;
 		}
-		case DATA_PROFILE: {
-			data_loadfile_regular(f, &profiles);
-			break;
-		}
 		case DATA_ANIMATIONGBA: {
 			data_loadfile_gba_animation(f, &gba_anims);
 			break;
@@ -341,7 +324,6 @@ void data_loadfilesfromparams(struct params *param) {
 	data_loadfile(DATA_BACKGROUND, param->bgfile);
 	data_loadfile(DATA_LOCATION, param->locationfile);
 	data_loadfile(DATA_EVIDENCE, param->evidencefile);
-	data_loadfile(DATA_PROFILE, param->profilefile);
 }
 
 void data_cleanup_generic(struct datalist *dat) {
@@ -369,6 +351,5 @@ void data_cleanup(void) {
 	data_cleanup_generic(&bgs);
 	data_cleanup_generic(&locations);
 	data_cleanup_generic(&evidences);
-	data_cleanup_generic(&profiles);
 	data_cleanup_gba_animation(&gba_anims);
 }

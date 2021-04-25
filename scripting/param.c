@@ -17,12 +17,11 @@ void print_help(char *argv0) {
 	printf("-j        enable japanese mode\n");
 	printf("-u        enable unity mode (experimental!)\n");
 	printf("-fs FILE  sound name file\n");
-	printf("-fn FILE  person name file\n");
+	printf("-fp FILE  person name file\n");
 	printf("-fa FILE  animation name file\n");
 	printf("-fb FILE  background name file\n");
 	printf("-fl FILE  location name file\n");
 	printf("-fe FILE  evidence name file\n");
-	printf("-fp FILE  profile name file\n");
 	
 	printf("game numbers are as follows:\n");
 	printf("1 - original phoenix wright\n");
@@ -99,7 +98,7 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 						ret->soundfile = *argv;
 						break;
 					}
-					case 'n': {
+					case 'p': {
 						ret->speakerfile = *argv;
 						break;
 					}
@@ -117,10 +116,6 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 					}
 					case 'e': {
 						ret->evidencefile = *argv;
-						break;
-					}
-					case 'p': {
-						ret->profilefile = *argv;
 						break;
 					}
 					default: {
