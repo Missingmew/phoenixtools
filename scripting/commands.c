@@ -939,7 +939,7 @@ unsigned printCmd8F(struct scriptstate *state) {
 /* length of 256 is arbitrarily chosen but should be enough to hold all possible strings
    its required to allow the definition of commands below to use commandnames for initialization */
 char *commandnames[144] = {
-/* 00h */ "section_setup", "linebreak", "pagebreak", "textcolor", "pause", "music", "sound", "fullscreen_text",
+/* 00h */ "section_setup", "newline", "paragraph", "textcolor", "pause", "music", "sound", "fullscreen_text",
 /* 08h */ "finger_choice_2_args_jmp", "finger_choice_3_args_jmp", "pagebreak_section", "speed", "wait", "section_end", "name", "testimony_box",
 /* 10h */ "flagctl", "evidence_window_plain", "screen_fade", "showevidence", "removeevidence", "halt", "scenario_end_save", "newevidence",
 /* 18h */ "newevidence_noanim", "cmd19", "swoosh", "bg", "hidetextbox", "shift_background", "person", "hideperson",
