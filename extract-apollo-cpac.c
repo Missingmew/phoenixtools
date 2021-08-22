@@ -114,6 +114,7 @@ int main( int argc, char** argv ) {
 			if(entries[j].size & (1 << 31)) {
 				workbuf = malloc(entries[j].size & ~(1<<31));
 				fread(workbuf, (entries[j].size & ~(1<<31)), 1, f);
+				compressedsize = entries[j].size & ~(1<<31);
 				resultbuf = unpackBuffer(workbuf, &resultsize, &compressedsize);
 				free(workbuf);
 				/* NITRO common filetypes */

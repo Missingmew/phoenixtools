@@ -42,6 +42,7 @@ int main( int argc, char** argv ) {
 		snprintf( outputname, 32, "%08d-%08x.bin", i, i );
 		workbuffer = malloc(workentry.size);
 		fread( workbuffer, workentry.size, 1, f );
+		compressedsize = workentry.size;
 		resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 		if(!resultbuffer) {
 			printf("file %08x is uncompressed!\n", i);

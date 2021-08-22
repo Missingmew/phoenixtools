@@ -70,6 +70,7 @@ int main( int argc, char** argv ) {
 		fread( workbuf, filelist[i].size, 1, f );
 		
 		if( filelist[i].compressed ) {
+			compressedsize = filelist[i].size;
 			resultbuf = unpackBuffer( workbuf, &resultsize, &compressedsize );
 			if(!resultbuf) {
 				printf("file %08d is uncompressed!\n", i);

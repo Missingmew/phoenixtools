@@ -49,6 +49,7 @@ int main( int argc, char** argv ) {
 				snprintf( outputname, 32, "%08d-%08x.png", i, i );
 				workbuffer = malloc(workentry.size);
 				fread( workbuffer, workentry.size, 1, f );
+				compressedsize = workentry.size;
 				resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 				// generates a RGBA image
 				rgbaPixelData = tiledImageToRGBA( resultbuffer, tilesx, tilesy, image4bpp, 1 );
@@ -78,6 +79,7 @@ int main( int argc, char** argv ) {
 				snprintf( outputname, 32, "%08d-%08x.png", i, i );
 				workbuffer = malloc(workentry.size);
 				fread( workbuffer, workentry.size, 1, f );
+				compressedsize = workentry.size;
 				resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 				if(bpp == image8bpp) {
 					if((tilesx*8*tilesy*8) != resultsize) BREAK("size dont match with uncompressed size\n");

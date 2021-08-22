@@ -65,6 +65,7 @@ int main( int argc, char** argv ) {
 		fread( workbuffer, entrylist[i].size, 1, f );
 		
 		if(decompress) {
+			compressedsize = entrylist[i].size;
 			resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 			if(!resultbuffer) {
 				printf("file %08x is uncompressed!\n", i);

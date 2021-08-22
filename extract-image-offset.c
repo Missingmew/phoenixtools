@@ -98,6 +98,7 @@ int main( int argc, char** argv ) {
 			fseek( f, givenOffset, SEEK_SET );
 			workbuffer = malloc( tempsize );
 			fread( workbuffer, tempsize, 1, f );
+			compressedsize = tempsize;
 			resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 			if(bpp == image8bpp) {
 				if((tilesx*8*tilesy*8+512) != resultsize) BREAK("size/bpp dont match with uncompressed size\n");
@@ -135,6 +136,7 @@ int main( int argc, char** argv ) {
 				
 				workbuffer = malloc(workentry.size);
 				fread( workbuffer, workentry.size, 1, f );
+				compressedsize = workentry.size;
 				resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 				if( !resultbuffer ) BREAK("error occured\n");
 				if(bpp == image8bpp) {
@@ -179,6 +181,7 @@ int main( int argc, char** argv ) {
 				fseek( f, givenOffset, SEEK_SET );
 				workbuffer = malloc( tempsize );
 				fread( workbuffer, tempsize, 1, f );
+				compressedsize = tempsize;
 				resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 				if( !resultbuffer ) BREAK("error occured\n");
 				tempsize = (bpp == image4bpp)?32:512;
@@ -195,6 +198,7 @@ int main( int argc, char** argv ) {
 			fseek( f, patchOffset, SEEK_SET );
 			workbuffer = malloc( tempsize );
 			fread( workbuffer, tempsize, 1, f );
+			compressedsize = tempsize;
 			resultbuffer = unpackBuffer(workbuffer, &resultsize, &compressedsize);
 			if( !resultbuffer ) BREAK("error occured\n");
 			if(bpp == image8bpp) {
@@ -236,6 +240,7 @@ int main( int argc, char** argv ) {
 				printf("given offset %08x\n", givenOffset);
 				fseek( f, givenOffset, SEEK_SET );
 				fread( workbuffer, evidenceSize, 1, f );
+				compressedsize = evidenceSize;
 				resultbuffer = unpackBuffer(workbuffer, &resultsize, &compressedsize);
 				if(!resultbuffer) BREAK("error occured\n");
 				if(resultsize != evidenceSize) {

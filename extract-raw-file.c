@@ -28,6 +28,7 @@ int main( int argc, char** argv ) {
 	printf("Current file offset: %08x - Current file size %08x\n", givenOffset, givenSize);
 	workbuffer = malloc(givenSize);
 	fread( workbuffer, givenSize, 1, f );
+	compressedsize = givenSize;
 	resultbuffer = unpackBuffer( workbuffer, &resultsize, &compressedsize );
 	if(!resultbuffer) {
 		printf("file is uncompressed!\n");
