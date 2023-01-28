@@ -16,12 +16,13 @@ void print_help(char *argv0) {
 	printf("-o FILE   output file (optional)\n");
 	printf("-j        enable japanese mode\n");
 	printf("-u        enable unity mode (experimental!)\n");
-	printf("-fs FILE  sound name file\n");
-	printf("-fp FILE  person name file\n");
-	printf("-fa FILE  animation name file\n");
+	printf("-fm FILE  music and sound name file\n");
+	printf("-fs FILE  speaker name file\n");
+	printf("-fp FILE  person animation name file\n");
 	printf("-fb FILE  background name file\n");
 	printf("-fl FILE  location name file\n");
 	printf("-fe FILE  evidence name file\n");
+	printf("-fa FILE  regular animation name file\n");
 	
 	printf("game numbers are as follows:\n");
 	printf("1 - original phoenix wright\n");
@@ -29,6 +30,7 @@ void print_help(char *argv0) {
 	printf("3 - trials and tribulations\n");
 	printf("4 - apollo justice\n");
 	printf("5 - Gyakuten Saiban 1 (GBA)\n");
+	printf("6 - Gyakuten Saiban 2 (GBA)\n");
 }
 
 void params_cleanup(struct params *par) {
@@ -72,7 +74,7 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 					print_help(argv0);
 					return 0;
 				}
-				if(gamenum == GAME_GS1GBA) ret->isjp = 1;
+				if(ISGBA(gamenum)) ret->isjp = 1;
 				ret->gamenum = gamenum;
 				ADVANCE;
 				break;
@@ -94,16 +96,16 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 			case 'f': {
 				CHECKARGC;
 				switch(cur[2]) {
-					case 's': {
+					case 'm': {
 						ret->soundfile = *argv;
 						break;
 					}
-					case 'p': {
+					case 's': {
 						ret->speakerfile = *argv;
 						break;
 					}
-					case 'a': {
-						ret->animfile = *argv;
+					case 'p': {
+						ret->persfile = *argv;
 						break;
 					}
 					case 'b': {
@@ -116,6 +118,10 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 					}
 					case 'e': {
 						ret->evidencefile = *argv;
+						break;
+					}
+					case 'a': {
+						ret->animfile = *argv;
 						break;
 					}
 					default: {

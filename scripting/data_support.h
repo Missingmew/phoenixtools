@@ -6,11 +6,12 @@
 enum datatypes {
 	DATA_SOUND,
 	DATA_SPEAKER,
-	DATA_ANIMATIONNDS,
-	DATA_ANIMATIONGBA,
+	DATA_PERSONNDS,
+	DATA_PERSONGBA,
 	DATA_BACKGROUND,
 	DATA_LOCATION,
 	DATA_EVIDENCE,
+	DATA_ANIMATION,
 };
 
 char *data_getname(enum datatypes type, unsigned id, unsigned offset);

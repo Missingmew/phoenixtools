@@ -14,10 +14,11 @@ struct params {
 	/* support */
 	char *soundfile;
 	char *speakerfile;
-	char *animfile;
+	char *persfile;
 	char *bgfile;
 	char *locationfile;
 	char *evidencefile;
+	char *animfile;
 	
 	/* state */
 	unsigned autoalloc_out;

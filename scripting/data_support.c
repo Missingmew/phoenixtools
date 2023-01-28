@@ -15,7 +15,7 @@ struct gba_personanim {
 	char *name;
 };
 
-struct datalist_gba_anim {
+struct datalist_gba_person {
 	unsigned numsizes;
 	unsigned *sizes;
 	struct gba_personanim **anims;
@@ -28,12 +28,13 @@ struct datalist {
 
 struct datalist sounds;
 struct datalist speakers;
-struct datalist animations;
+struct datalist persons;
 struct datalist bgs;
 struct datalist locations;
 struct datalist evidences;
+struct datalist animations;
 
-struct datalist_gba_anim gba_anims;
+struct datalist_gba_person gba_persons;
 
 char *data_getname_regular(enum datatypes type, unsigned id) {
 	switch(type) {
@@ -45,8 +46,8 @@ char *data_getname_regular(enum datatypes type, unsigned id) {
 			if(id < speakers.size) return speakers.names[id];
 			break;
 		}
-		case DATA_ANIMATIONNDS: {
-			if(id < animations.size) return animations.names[id];
+		case DATA_PERSONNDS: {
+			if(id < persons.size) return persons.names[id];
 			break;
 		}
 		case DATA_BACKGROUND: {
@@ -61,15 +62,19 @@ char *data_getname_regular(enum datatypes type, unsigned id) {
 			if(id < evidences.size) return evidences.names[id];
 			break;
 		}
+		case DATA_ANIMATION: {
+			if(id < animations.size) return animations.names[id];
+			break;
+		}
 		default: break;
 	}
 	return NULL;
 }
 
-char *data_getname_gba_animation(unsigned person, unsigned offset) {
-	if(person < gba_anims.numsizes) {
-		for(unsigned i = 0; i < gba_anims.sizes[person]; i++) {
-			if(gba_anims.anims[person][i].offset == offset) return gba_anims.anims[person][i].name;
+char *data_getname_gba_person(unsigned person, unsigned offset) {
+	if(person < gba_persons.numsizes) {
+		for(unsigned i = 0; i < gba_persons.sizes[person]; i++) {
+			if(gba_persons.anims[person][i].offset == offset) return gba_persons.anims[person][i].name;
 		}
 	}
 	return NULL;
@@ -79,14 +84,15 @@ char *data_getname(enum datatypes type, unsigned id, unsigned offset) {
 	switch(type) {
 		case DATA_SOUND:
 		case DATA_SPEAKER:
-		case DATA_ANIMATIONNDS:
+		case DATA_PERSONNDS:
 		case DATA_BACKGROUND:
 		case DATA_LOCATION:
-		case DATA_EVIDENCE: {
+		case DATA_EVIDENCE:
+		case DATA_ANIMATION: {
 			return data_getname_regular(type, id);
 		}
-		case DATA_ANIMATIONGBA: {
-			return data_getname_gba_animation(id, offset);
+		case DATA_PERSONGBA: {
+			return data_getname_gba_person(id, offset);
 		}
 		default: {
 			fprintf(stderr, "tried data_getname with unknown type %d and id %u and offset %x!\n", type, id, offset);
@@ -110,7 +116,7 @@ int data_getindex_regular(enum datatypes type, char *str) {
 			}
 			break;
 		}
-		case DATA_ANIMATIONNDS: {
+		case DATA_PERSONNDS: {
 			for(unsigned i = 0; i < animations.size; i++) {
 				if(animations.names[i] && !strcmp(str, animations.names[i])) return i;
 			}
@@ -134,15 +140,21 @@ int data_getindex_regular(enum datatypes type, char *str) {
 			}
 			break;
 		}
+		case DATA_ANIMATION: {
+			for(unsigned i = 0; i < animations.size; i++) {
+				if(animations.names[i] && !strcmp(str, animations.names[i])) return i;
+			}
+			break;
+		}
 		default: break;
 	}
 	return -1;
 }
 
-int data_getoffset_gba_animation(char *str, unsigned person) {
-	if(person < gba_anims.numsizes) {
-		for(unsigned i = 0; i < gba_anims.sizes[person]; i++) {
-			if(gba_anims.anims[person][i].name && !strcmp(str, gba_anims.anims[person][i].name)) return gba_anims.anims[person][i].offset;
+int data_getoffset_gba_person(char *str, unsigned person) {
+	if(person < gba_persons.numsizes) {
+		for(unsigned i = 0; i < gba_persons.sizes[person]; i++) {
+			if(gba_persons.anims[person][i].name && !strcmp(str, gba_persons.anims[person][i].name)) return gba_persons.anims[person][i].offset;
 		}
 	}
 	return -1;
@@ -152,14 +164,15 @@ int data_getindexoffset(enum datatypes type, char *str, unsigned person) {
 	switch(type) {
 		case DATA_SOUND:
 		case DATA_SPEAKER:
-		case DATA_ANIMATIONNDS:
+		case DATA_PERSONNDS:
 		case DATA_BACKGROUND:
 		case DATA_LOCATION:
-		case DATA_EVIDENCE: {
+		case DATA_EVIDENCE:
+		case DATA_ANIMATION: {
 			return data_getindex_regular(type, str);
 		}
-		case DATA_ANIMATIONGBA: {
-			return data_getoffset_gba_animation(str, person);
+		case DATA_PERSONGBA: {
+			return data_getoffset_gba_person(str, person);
 		}
 		default: {
 			fprintf(stderr, "tried data_getindex with unknown type %d and str %s and person %u!\n", type, str, person);
@@ -205,7 +218,7 @@ void data_loadfile_regular(FILE *f, struct datalist *dat) {
 	dat->names = newnamearr;
 }
 
-void data_loadfile_gba_animation(FILE *f, struct datalist_gba_anim *dat) {
+void data_loadfile_gba_person(FILE *f, struct datalist_gba_person *dat) {
 	unsigned scanoffset, curalloc = 0;
 	int scanindex, maxindex = -1;
 	unsigned *curallocs = NULL;
@@ -287,7 +300,7 @@ void data_loadfile(enum datatypes type, char *file) {
 			data_loadfile_regular(f, &speakers);
 			break;
 		}
-		case DATA_ANIMATIONNDS: {
+		case DATA_PERSONNDS: {
 			data_loadfile_regular(f, &animations);
 			break;
 		}
@@ -303,8 +316,12 @@ void data_loadfile(enum datatypes type, char *file) {
 			data_loadfile_regular(f, &evidences);
 			break;
 		}
-		case DATA_ANIMATIONGBA: {
-			data_loadfile_gba_animation(f, &gba_anims);
+		case DATA_ANIMATION: {
+			data_loadfile_regular(f, &animations);
+			break;
+		}
+		case DATA_PERSONGBA: {
+			data_loadfile_gba_person(f, &gba_persons);
 			break;
 		}
 		default: {
@@ -319,11 +336,12 @@ void data_loadfile(enum datatypes type, char *file) {
 void data_loadfilesfromparams(struct params *param) {
 	data_loadfile(DATA_SOUND, param->soundfile);
 	data_loadfile(DATA_SPEAKER, param->speakerfile);
-	if(ISNDS(param->gamenum)) data_loadfile(DATA_ANIMATIONNDS, param->animfile);
-	else data_loadfile(DATA_ANIMATIONGBA, param->animfile);
+	if(ISNDS(param->gamenum)) data_loadfile(DATA_PERSONNDS, param->persfile);
+	else data_loadfile(DATA_PERSONGBA, param->persfile);
 	data_loadfile(DATA_BACKGROUND, param->bgfile);
 	data_loadfile(DATA_LOCATION, param->locationfile);
 	data_loadfile(DATA_EVIDENCE, param->evidencefile);
+	data_loadfile(DATA_ANIMATION, param->animfile);
 }
 
 void data_cleanup_generic(struct datalist *dat) {
@@ -333,7 +351,7 @@ void data_cleanup_generic(struct datalist *dat) {
 	free(dat->names);
 }
 
-void data_cleanup_gba_animation(struct datalist_gba_anim *dat) {
+void data_cleanup_gba_person(struct datalist_gba_person *dat) {
 	for(unsigned i = 0; i < dat->numsizes; i++) {
 		for(unsigned j = 0; j < dat->sizes[i]; j++) {
 			free(dat->anims[i][j].name);
@@ -347,9 +365,10 @@ void data_cleanup_gba_animation(struct datalist_gba_anim *dat) {
 void data_cleanup(void) {
 	data_cleanup_generic(&sounds);
 	data_cleanup_generic(&speakers);
-	data_cleanup_generic(&animations);
+	data_cleanup_generic(&persons);
 	data_cleanup_generic(&bgs);
 	data_cleanup_generic(&locations);
 	data_cleanup_generic(&evidences);
-	data_cleanup_gba_animation(&gba_anims);
+	data_cleanup_generic(&animations);
+	data_cleanup_gba_person(&gba_persons);
 }

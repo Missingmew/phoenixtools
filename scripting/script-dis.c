@@ -10,7 +10,7 @@
 #include "data_support.h"
 
 char *supportedgamenames[] = {
-	"PWAA", "JFA", "TT", "AJAA", "GS1GBA"
+	"PWAA", "JFA", "TT", "AJAA", "GS1GBA", "GS2GBA"
 };
 
 int compare_uint32(const void *a, const void *b) {

@@ -7,6 +7,7 @@ enum supportedgames {
 	GAME_PHOENIX3,
 	GAME_APOLLO,
 	GAME_GS1GBA,
+	GAME_GS2GBA,
 	GAME_NUMGAMES
 };
 

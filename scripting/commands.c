@@ -100,8 +100,8 @@ unsigned printCmd05(struct scriptstate *state) {
 
 unsigned printCmd06(struct scriptstate *state) {
 	char *soundname;
-	/* GS1GBA only takes one argument for the sound command */
-	if(state->gamenum == GAME_GS1GBA) {
+	/* GS1/2GBA only takes one argument for the sound command */
+	if(state->gamenum == GAME_GS1GBA || state->gamenum == GAME_GS2GBA) {
 		if(state->outputenabled) {
 			unsigned seNum = state->script[state->scriptidx+1] >> 8;
 			unsigned stopplay = state->script[state->scriptidx+1] & 1;
@@ -339,13 +339,13 @@ unsigned printCmd1E(struct scriptstate *state) {
 		speakername = data_getname(DATA_SPEAKER, personid, 0);
 		// get names as required per system
 		if(ISNDS(state->gamenum)) {
-			talkanimname = data_getname(DATA_ANIMATIONNDS, talkinganimation, 0);
-			idleanimname = data_getname(DATA_ANIMATIONNDS, idleanimation, 0);
+			talkanimname = data_getname(DATA_PERSONNDS, talkinganimation, 0);
+			idleanimname = data_getname(DATA_PERSONNDS, idleanimation, 0);
 		}
 		/* GBA uses hard offsets into data instead of indices */
 		else if(ISGBA(state->gamenum)) {
-			talkanimname = data_getname(DATA_ANIMATIONGBA, personid, talkinganimation);
-			idleanimname = data_getname(DATA_ANIMATIONGBA, personid, idleanimation);
+			talkanimname = data_getname(DATA_PERSONGBA, personid, talkinganimation);
+			idleanimname = data_getname(DATA_PERSONGBA, personid, idleanimation);
 		}
 		
 		state->textidx += sprintf(state->textfile+state->textidx, "%s ", commandnames[state->script[state->scriptidx]]);
@@ -449,14 +449,24 @@ unsigned printCmd2E(struct scriptstate *state) {
 }
 
 unsigned printCmd2F(struct scriptstate *state) {
+	char *animname;
 	if(state->outputenabled) {
-		unsigned unk1 = state->script[state->scriptidx+1];
+		unsigned animid = state->script[state->scriptidx+1];
 		unsigned anistate = state->script[state->scriptidx+2];
+		animname = data_getname(DATA_ANIMATION, animid, 0);
+		
+		state->textidx += sprintf(state->textfile+state->textidx, "%s ", commandnames[state->script[state->scriptidx]]);
+		
+		if(animname) state->textidx += sprintf(state->textfile+state->textidx, "%s, ", animname);
+		else state->textidx += sprintf(state->textfile+state->textidx, "%u, ", animid);
+		
 		if(anistate < sizeofarr(animationstate)) {
-			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], unk1, animationstate[anistate]);
-			state->scriptidx += 1+2;
+			state->textidx += sprintf(state->textfile+state->textidx, "%s\n", animationstate[anistate]);
 		}
-		else return printCmdGeneric(state, 2);
+		else {
+			state->textidx += sprintf(state->textfile+state->textidx, "%u\n", anistate);
+		}
+		state->scriptidx += 1+2;
 	}
 	return 2;
 }
@@ -570,8 +580,8 @@ unsigned printCmd39(struct scriptstate *state) {
 }
 
 unsigned printCmd3A(struct scriptstate *state) {
-	/* has 2 args in GS1GBA */
-	if(state->gamenum == GAME_GS1GBA) {
+	/* has 2 args in GS1/2GBA */
+	if(state->gamenum == GAME_GS1GBA || state->gamenum == GAME_GS2GBA) {
 		return printCmdGeneric(state, 2);
 	}
 	else return printCmdGeneric(state, 3);
@@ -684,11 +694,19 @@ unsigned printCmd54(struct scriptstate *state) {
 }
 
 unsigned printCmd55(struct scriptstate *state) { /* 1 */
-	return printCmdGeneric(state, 2);
+	/* has 0 args in GS2GBA */
+	if(state->gamenum == GAME_GS2GBA) {
+		return printCmdGeneric(state, 0);
+	}
+	else return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd56(struct scriptstate *state) {
-	return printCmdGeneric(state, 2);
+	/* has 0 args in GS2GBA */
+	if(state->gamenum == GAME_GS2GBA) {
+		return printCmdGeneric(state, 0);
+	}
+	else return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd57(struct scriptstate *state) {
@@ -716,7 +734,11 @@ unsigned printCmd5C(struct scriptstate *state) {
 }
 
 unsigned printCmd5D(struct scriptstate *state) { /* 0 */
-	return printCmdGeneric(state, 1);
+	/* has 0 args in GS2GBA */
+	if(state->gamenum == GAME_GS2GBA) {
+		return printCmdGeneric(state, 0);
+	}
+	else return printCmdGeneric(state, 1);
 }
 
 unsigned printCmd5E(struct scriptstate *state) { /* 0 */
@@ -775,7 +797,11 @@ unsigned printCmd68(struct scriptstate *state) {
 }
 
 unsigned printCmd69(struct scriptstate *state) { /* 4 */
-	return printCmdGeneric(state, 2);
+	/* has 0 args in GS2GBA */
+	if(state->gamenum == GAME_GS2GBA) {
+		return printCmdGeneric(state, 0);
+	}
+	else return printCmdGeneric(state, 2);
 }
 
 unsigned printCmd6A(struct scriptstate *state) {
@@ -783,11 +809,19 @@ unsigned printCmd6A(struct scriptstate *state) {
 }
 
 unsigned printCmd6B(struct scriptstate *state) {
-	return printCmdGeneric(state, 3);
+	/* has 1 arg in GS2GBA */
+	if(state->gamenum == GAME_GS2GBA) {
+		return printCmdGeneric(state, 1);
+	}
+	else return printCmdGeneric(state, 3);
 }
 
 unsigned printCmd6C(struct scriptstate *state) { /* 0 */
-	return printCmdGeneric(state, 1);
+	/* has 0 args in GS2GBA */
+	if(state->gamenum == GAME_GS2GBA) {
+		return printCmdGeneric(state, 0);
+	}
+	else return printCmdGeneric(state, 1);
 }
 
 unsigned printCmd6D(struct scriptstate *state) {
@@ -809,6 +843,8 @@ unsigned printCmd70(struct scriptstate *state) {
 unsigned printCmd71(struct scriptstate *state) {
 	return printCmdGeneric(state, 3);
 }
+
+/* commands introduced after GS2 gba */
 
 unsigned printCmd72(struct scriptstate *state) {
 	return printCmdGeneric(state, 0);

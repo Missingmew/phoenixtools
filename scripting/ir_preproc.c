@@ -123,7 +123,7 @@ struct ir_generic *preproc_Command05(struct ir_pre_generic *pre, struct asconfig
 }
 
 struct ir_generic *preproc_Command06(struct ir_pre_generic *pre, struct asconfig *config) {
-	if(config->gamenum == GAME_GS1GBA) {
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA) {
 		unsigned short data;
 		int idx;
 		SETUPGENSPEC(1)
@@ -286,13 +286,13 @@ struct ir_generic *preproc_Command1e(struct ir_pre_generic *pre, struct asconfig
 	data |= cleanNumber(pre->data[2]) << 13;
 	gen->data[1].type = DATARAW;
 	gen->data[1].data = data;
-	if(config->gamenum == GAME_GS1GBA) {
-		LOOKUPDATA(talking, DATA_ANIMATIONGBA, pre->data[3], speaker);
-		LOOKUPDATA(idle, DATA_ANIMATIONGBA, pre->data[4], speaker);
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA) {
+		LOOKUPDATA(talking, DATA_PERSONGBA, pre->data[3], speaker);
+		LOOKUPDATA(idle, DATA_PERSONGBA, pre->data[4], speaker);
 	}
 	else {
-		LOOKUPDATA(talking, DATA_ANIMATIONNDS, pre->data[3], DONTCARE);
-		LOOKUPDATA(idle, DATA_ANIMATIONNDS, pre->data[4], DONTCARE);
+		LOOKUPDATA(talking, DATA_PERSONNDS, pre->data[3], DONTCARE);
+		LOOKUPDATA(idle, DATA_PERSONNDS, pre->data[4], DONTCARE);
 	}
 	gen->data[2].type = DATARAW;
 	gen->data[2].data = talking;
@@ -315,8 +315,9 @@ struct ir_generic *preproc_Command23(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command2f(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
+	LOOKUPDATA(idx, DATA_ANIMATION, pre->data[0], DONTCARE);
 	gen->data[1].type = DATARAW;
-	gen->data[1].data = cleanNumber(pre->data[0]);
+	gen->data[1].data = idx;
 	LOOKUP(idx, animationstate, pre->data[1]);
 	gen->data[2].type = DATARAW;
 	gen->data[2].data = idx;

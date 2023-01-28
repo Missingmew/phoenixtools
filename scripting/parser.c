@@ -83,7 +83,8 @@ struct ir_pre_generic *parser_parseCommand02(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand03(struct asconfig *config) {
 	char *color;
 	PREPARENDATA(CMD03, 1)
-	ACCEPTRET(color, IDENT)
+	// ACCEPTRET(color, IDENT)
+	ACCEPTRETEITHER(color, IDENT, INTEGER)
 	command->data[0] = color;
 	return command;
 }
@@ -111,7 +112,7 @@ struct ir_pre_generic *parser_parseCommand06(struct asconfig *config) {
 	ACCEPTRETEITHER(sound, IDENT, INTEGER)
 	command->data[0] = sound;
 	ACCEPT(COMMA)
-	if(config->gamenum == GAME_GS1GBA) {
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA) {
 		ACCEPTRET(startstop, IDENT)
 		command->data[1] = startstop;
 	}
@@ -454,7 +455,7 @@ struct ir_pre_generic *parser_parseCommand39(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand3a(struct asconfig *config) {
-	if(config->gamenum == GAME_GS1GBA) {
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA) {
 		GENERICNARG(CMD3A, 2)
 	}
 	else {
@@ -567,11 +568,21 @@ struct ir_pre_generic *parser_parseCommand54(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand55(struct asconfig *config) {
-	GENERICNARG(CMD55, 2)
+	if(config->gamenum == GAME_GS2GBA) {
+		GENERICNARG(CMD55, 0)
+	}
+	else {
+		GENERICNARG(CMD55, 2)
+	}
 }
 
 struct ir_pre_generic *parser_parseCommand56(struct asconfig *config) {
-	GENERICNARG(CMD56, 2)
+	if(config->gamenum == GAME_GS2GBA) {
+		GENERICNARG(CMD56, 0)
+	}
+	else {
+		GENERICNARG(CMD56, 2)
+	}
 }
 
 struct ir_pre_generic *parser_parseCommand57(struct asconfig *config) {
@@ -599,7 +610,12 @@ struct ir_pre_generic *parser_parseCommand5c(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand5d(struct asconfig *config) {
-	GENERICNARG(CMD5D, 1)
+	if(config->gamenum == GAME_GS2GBA) {
+		GENERICNARG(CMD5D, 0)
+	}
+	else {
+		GENERICNARG(CMD5D, 1)
+	}
 }
 
 struct ir_pre_generic *parser_parseCommand5e(struct asconfig *config) {
@@ -660,7 +676,12 @@ struct ir_pre_generic *parser_parseCommand68(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand69(struct asconfig *config) {
-	GENERICNARG(CMD69, 2)
+	if(config->gamenum == GAME_GS2GBA) {
+		GENERICNARG(CMD69, 0)
+	}
+	else {
+		GENERICNARG(CMD69, 2)
+	}
 }
 
 struct ir_pre_generic *parser_parseCommand6a(struct asconfig *config) {
@@ -668,11 +689,21 @@ struct ir_pre_generic *parser_parseCommand6a(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand6b(struct asconfig *config) {
-	GENERICNARG(CMD6B, 3)
+	if(config->gamenum == GAME_GS2GBA) {
+		GENERICNARG(CMD6B, 1)
+	}
+	else {
+		GENERICNARG(CMD6B, 3)
+	}
 }
 
 struct ir_pre_generic *parser_parseCommand6c(struct asconfig *config) {
-	GENERICNARG(CMD6C, 1)
+	if(config->gamenum == GAME_GS2GBA) {
+		GENERICNARG(CMD6C, 0)
+	}
+	else {
+		GENERICNARG(CMD6C, 1)
+	}
 }
 
 struct ir_pre_generic *parser_parseCommand6d(struct asconfig *config) {
