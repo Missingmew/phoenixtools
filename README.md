@@ -109,7 +109,7 @@ Extracts romfile.bin found in edgeworth1
 Converts images found in phoenix1-3 from an offset, probably not needed anymore...
 
 ### mes_all-bin
-Extracts mes_all.bin from phoenix1-4 into individual script binaries, use convert-text-messages to get readable text
+Extracts mes_all.bin from phoenix1-4 into individual script binaries, use scripting/script-dis to get readable text
 
 ### phoenix_data
 Uses mapfiles to extract data.bin from phoenix1-3, use this instead of *-offset
