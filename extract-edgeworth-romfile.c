@@ -66,7 +66,7 @@ int main( int argc, char** argv ) {
 	unsigned char *workbuf = NULL, *resultbuf = NULL;
 	linetype curline;
 	arcEntry *filelist = NULL;
-	FILE *f, *t, *o;
+	FILE *f, *t = NULL, *o;
 	
 	if( !(f = fopen( argv[1], "rb" ))) {
 		printf("Couldnt open file %s\n", argv[1]);
