@@ -372,7 +372,7 @@ struct ir_pre_generic *parser_parseCommand2e(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand2f(struct asconfig *config) {
 	char *arg1, *anistate;
 	PREPARENDATA(CMD2F, 2)
-	ACCEPTRET(arg1, INTEGER)
+	ACCEPTRETEITHER(arg1, IDENT, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(anistate, IDENT)
 	command->data[0] = arg1;

@@ -10,6 +10,8 @@
 #include "param.h"
 #include "data_support.h"
 
+#define BAIL { retval = 1; goto error; }
+
 int main(int argc, char **argv) {
 	/* idea:
 	- open
@@ -25,6 +27,8 @@ int main(int argc, char **argv) {
 	struct asconfig config;
 	
 	struct params param;
+	
+	int retval = 0;
 	
 	if(!parse_args(&param, argc, argv, "bin")) return 1;
 	
@@ -55,20 +59,21 @@ int main(int argc, char **argv) {
 	lexer_init(input);
 	if(!lexer_scan()) printf("couldnt lex file\n");
 	
-	if(!(script = parser_parse(&config))) return 1;
+	if(!(script = parser_parse(&config))) BAIL;
 	
 	//~ ir_script_dump(script);
 	
-	if(!ir_script_preprocess(script, &config)) return 1;
+	if(!ir_script_preprocess(script, &config)) BAIL;
 	
 	//~ ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
-	if(!ir_script_fixup(script)) return 1;
+	if(!ir_script_fixup(script)) BAIL;
 	
 	//~ ir_script_dump(script);
 	
 	ir_script_emit(o, script);
 	
+	error:
 	ir_script_free(script);
 	
 	lexer_finalize();
@@ -78,4 +83,5 @@ int main(int argc, char **argv) {
 	
 	params_cleanup(&param);
 	data_cleanup();
+	return retval;
 }

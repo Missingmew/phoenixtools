@@ -301,7 +301,7 @@ void data_loadfile(enum datatypes type, char *file) {
 			break;
 		}
 		case DATA_PERSONNDS: {
-			data_loadfile_regular(f, &animations);
+			data_loadfile_regular(f, &persons);
 			break;
 		}
 		case DATA_BACKGROUND: {

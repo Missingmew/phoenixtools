@@ -61,6 +61,10 @@ unsigned int lexer_skip(void) {
 }
 
 unsigned int lexer_take(void) {
+	if(state.idx == SPELLLENGTH-1) {
+		printf("token at line %u, column %u would exceed maximum spelling of 256 characters at line %u, column %u\n", state.lastline, state.lastcolumn, state.line, state.column);
+		return 0;
+	}
 	state.string[state.idx] = *(state.current);
 	state.idx++;
 	return lexer_skip();
