@@ -309,7 +309,7 @@ struct ir_generic *preproc_Command20(struct ir_pre_generic *pre, struct asconfig
 	int idx;
 	SETUPGEN
 	gen->data[1].type = DATASECTION;
-	gen->data[1].data = pre->data[0];
+	gen->data[1].data = hash(pre->data[0]);
 	return gen;
 }
 
