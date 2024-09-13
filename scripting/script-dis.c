@@ -333,7 +333,8 @@ int main( int argc, char **argv ) {
 		}
 		else {
 			// do indentation
-			if(!intext) state.textidx += sprintf(state.textfile+state.textidx, " %04u\t", state.scriptidx - state.sectionoff);
+			if(state.script[state.scriptidx] != 0x0 && state.script[state.scriptidx] != 0xD)
+				if(!intext) state.textidx += sprintf(state.textfile+state.textidx, " %04u\t", state.scriptidx - state.sectionoff);
 			if(state.outidx && state.script[state.scriptidx] != 0x01) {
 				// escape collected text
 				escapeText(escapebuf, state.outbuf);

@@ -7,6 +7,14 @@ struct locallut {
 	unsigned addr;
 };
 
+int findsectionnamehash(struct ir_script *script, unsigned long hash) {
+	for(unsigned cursec = 0; cursec < script->numsections; cursec++) {
+		if(script->secarr[cursec]->hash == hash) return cursec;
+	}
+	//for(unsigned i = 0; i < count; i++) if(hashes[i] == what) return i;
+	return -1;
+}
+
 int findhash(unsigned long *hashes, unsigned count, unsigned long what) {
 	for(unsigned i = 0; i < count; i++) if(hashes[i] == what) return i;
 	return -1;
@@ -94,6 +102,25 @@ unsigned ir_script_fixup(struct ir_script *script) {
 						break;
 					}
 					default: {
+						// this shouldn't go here but i'll put it here for now
+						// we give sections names so we need to be able to convert those to section index and this is where this fixup comes in
+						for(unsigned curdata = 0; curdata < command->numdata; curdata++) {
+							switch(command->data[curdata].type) {
+								case DATASECTIONLOCAL:
+								case DATASECTION: {
+									int idx = findsectionnamehash(script, command->data[curdata].data);
+									if(idx == -1) {
+										printf("fixup (%s): failed to find label for hash %08lx at line %d\n", __func__, command->data[curdata].data, command->line);
+										return 0;
+									}
+									command->data[curdata].data = idx;
+									if(command->data[curdata].type == DATASECTION)
+										command->data[curdata].data += 0x80;
+									command->data[curdata].type = DATARAW;
+									break;
+								}
+							}
+					    }
 						break;
 					}
 				}

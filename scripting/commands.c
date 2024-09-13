@@ -46,7 +46,11 @@ unsigned printCmdGeneric(struct scriptstate *state, unsigned args) {
 }
 
 unsigned printCmd00(struct scriptstate *state) {
-	return printCmdGeneric(state, 0);
+	if(state->outputenabled) {
+		state->scriptidx++;
+	}
+	return 0;
+	//return printCmdGeneric(state, 0);
 }
 
 unsigned printCmd01(struct scriptstate *state) {
@@ -164,7 +168,10 @@ unsigned printCmd0C(struct scriptstate *state) {
 }
 
 unsigned printCmd0D(struct scriptstate *state) {
-	return printCmdGeneric(state, 0);
+	if(state->outputenabled) {
+		state->scriptidx++;
+	}
+	return 0;
 }
 
 unsigned printCmd0E(struct scriptstate *state) {
@@ -189,8 +196,11 @@ unsigned printCmd0E(struct scriptstate *state) {
 unsigned printCmd0F(struct scriptstate *state) {
 	if(state->outputenabled) {
 		/* this does _NOT_ use the 128 offset for the section */
+		// MCboy: it does for GS1??? i have no idea i'll just if this
 		unsigned presssection = state->script[state->scriptidx+1];
 		unsigned hidetextbox = state->script[state->scriptidx+2];
+		if(state->gamenum == GAME_GS1GBA)
+			presssection -= 0x80;
 		if(hidetextbox < sizeofarr(testimonypress)) {
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], presssection, testimonypress[hidetextbox]);
 			state->scriptidx += 1+2;
@@ -429,7 +439,14 @@ unsigned printCmd29(struct scriptstate *state) {
 }
 
 unsigned printCmd2A(struct scriptstate *state) {
-	return printCmdGeneric(state, 3);
+	if(state->outputenabled) {
+		unsigned flag = state->script[state->scriptidx+1];
+		unsigned section1 = state->script[state->scriptidx+2]-128;
+		unsigned section2 = state->script[state->scriptidx+3]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commandnames[state->script[state->scriptidx]], flag, section1, section2);
+		state->scriptidx += 1+3;
+	}
+	return 3;
 }
 
 unsigned printCmd2B(struct scriptstate *state) {

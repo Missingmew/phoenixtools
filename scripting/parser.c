@@ -128,15 +128,36 @@ struct ir_pre_generic *parser_parseCommand07(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand08(struct asconfig *config) {
-	GENERICNARG(CMD08, 2)
+	char *section1, *section2;
+	PREPARENDATA(CMD08, 2)
+	ACCEPTRETEITHER(section1, IDENT, INTEGER)
+	ACCEPT(COMMA)
+	ACCEPTRETEITHER(section2, IDENT, INTEGER)
+	command->data[0] = section1;
+	command->data[1] = section2;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand09(struct asconfig *config) {
-	GENERICNARG(CMD09, 3)
+	char *section1, *section2, *section3;
+	PREPARENDATA(CMD09, 3)
+	ACCEPTRETEITHER(section1, IDENT, INTEGER)
+	command->data[0] = section1;
+	ACCEPT(COMMA)
+	ACCEPTRETEITHER(section2, IDENT, INTEGER)
+	command->data[1] = section2;
+	ACCEPT(COMMA)
+	ACCEPTRETEITHER(section3, IDENT, INTEGER)
+	command->data[2] = section3;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand0a(struct asconfig *config) {
-	GENERICNARG(CMD0A, 1)
+	char *section;
+	PREPARENDATA(CMD0A, 1)
+	ACCEPTRETEITHER(section, IDENT, INTEGER)
+	command->data[0] = section;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand0b(struct asconfig *config) {
@@ -166,7 +187,7 @@ struct ir_pre_generic *parser_parseCommand0e(struct asconfig *config) {
 struct ir_pre_generic *parser_parseCommand0f(struct asconfig *config) {
 	char *target1, *hide;
 	PREPARENDATA(CMD0F, 2)
-	ACCEPTRET(target1, INTEGER)
+	ACCEPTRETEITHER(target1, IDENT, INTEGER)
 	ACCEPT(COMMA)
 	ACCEPTRET(hide, IDENT)
 	command->data[0] = target1;
@@ -303,7 +324,11 @@ struct ir_pre_generic *parser_parseCommand1f(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand20(struct asconfig *config) {
-	GENERICNARG(CMD20, 1)
+	char * section;
+	PREPARENDATA(CMD20, 1)
+	ACCEPTRETEITHER(section, IDENT, INTEGER)
+	command->data[0] = section;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand21(struct asconfig *config) {
@@ -330,7 +355,11 @@ struct ir_pre_generic *parser_parseCommand24(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand25(struct asconfig *config) {
-	GENERICNARG(CMD25, 1)
+	char * section;
+	PREPARENDATA(CMD20, 1)
+	ACCEPTRETEITHER(section, IDENT, INTEGER)
+	command->data[0] = section;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand26(struct asconfig *config) {
@@ -350,7 +379,18 @@ struct ir_pre_generic *parser_parseCommand29(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand2a(struct asconfig *config) {
-	GENERICNARG(CMD2A, 3)
+	char *flag;
+	char *section1, *section2;
+	PREPARENDATA(CMD2A, 3)
+	ACCEPTRET(flag, INTEGER)
+	ACCEPT(COMMA)
+	ACCEPTRETEITHER(section1, IDENT, INTEGER)
+	ACCEPT(COMMA)
+	ACCEPTRETEITHER(section2, IDENT, INTEGER)
+	command->data[0] = flag;
+	command->data[1] = section1;
+	command->data[2] = section2;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand2b(struct asconfig *config) {
@@ -358,7 +398,11 @@ struct ir_pre_generic *parser_parseCommand2b(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand2c(struct asconfig *config) {
-	GENERICNARG(CMD2C, 1)
+	char * section;
+	PREPARENDATA(CMD2C, 1)
+	ACCEPTRETEITHER(section, IDENT, INTEGER)
+	command->data[0] = section;
+	return command;
 }
 
 struct ir_pre_generic *parser_parseCommand2d(struct asconfig *config) {
@@ -1024,7 +1068,7 @@ struct ir_label *parser_parseLabel(struct asconfig *config) {
 
 struct ir_section *parser_parseSection(struct asconfig *config) {
 	struct ir_section *section = malloc(sizeof(struct ir_section));
-	char *sectionnum;
+	char *sectionname;
 	
 	
 	section->type = SECTION;
@@ -1034,14 +1078,14 @@ struct ir_section *parser_parseSection(struct asconfig *config) {
 	section->labels = NULL;
 	section->numprecommands = 0;
 	section->precommands = NULL;
-	section->numcommands = 0;
+	section->numcommands = 2; // section start and end add commands automatically
 	section->commands = NULL;
-	section->prenum = NULL;
-	section->num = 0;
+	section->name = NULL;
 	
 	ACCEPT(SECTION)
-	ACCEPTRET(sectionnum, INTEGER)
-	section->prenum = sectionnum;
+	ACCEPTRETEITHER(sectionname, IDENT, INTEGER)
+	section->name = sectionname;
+	section->hash = hash(section->name);
 	
 	while(currenttoken.type != ENDSECTION) {
 		/* we are inside a section now */

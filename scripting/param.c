@@ -13,6 +13,7 @@ void print_help(char *argv0) {
 	
 	printf("OPTIONAL  options are\n");
 	printf("-h        print this help\n");
+	printf("-m STRING script name\n");
 	printf("-o FILE   output file (optional)\n");
 	printf("-j        enable japanese mode\n");
 	printf("-u        enable unity mode (experimental!)\n");
@@ -130,6 +131,12 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 						return 0;
 					}
 				}
+				ADVANCE;
+				break;
+			}
+			case 'm': {
+				CHECKARGC;
+				ret->scriptName = *argv;
 				ADVANCE;
 				break;
 			}

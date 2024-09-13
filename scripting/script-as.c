@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "lexer.h"
 #include "parser.h"
@@ -20,7 +21,7 @@ int main(int argc, char **argv) {
 	- emit
 	- close
 	*/
-	FILE *f, *o;
+	FILE *f, *o, *h;
 	unsigned insize;
 	char *input = NULL;
 	struct ir_script *script = NULL;
@@ -44,7 +45,18 @@ int main(int argc, char **argv) {
 		printf("couldnt open %s as output\n", param.outfile);
 		return 1;
 	}
-	
+		// config.emitheader
+	if(1) {
+		size_t outfilelen = strlen(param.outfile);
+		char * headerfile = malloc(outfilelen+3);
+		strcpy(headerfile, param.outfile);
+		strcat(headerfile, ".h");
+		if(!(h = fopen(headerfile, "wb"))) {
+			printf("couldnt open %s as header output\n", headerfile);
+			return 1;
+		}
+		free(headerfile);
+	}
 	/* attempt to load support files now */
 	data_loadfilesfromparams(&param);
 	
@@ -73,6 +85,8 @@ int main(int argc, char **argv) {
 	
 	ir_script_emit(o, script);
 	
+	ir_script_emit_header(h, script, param.scriptName);
+	
 	error:
 	ir_script_free(script);
 	
@@ -80,6 +94,7 @@ int main(int argc, char **argv) {
 	
 	free(input);
 	fclose(o);
+	fclose(h);
 	
 	params_cleanup(&param);
 	data_cleanup();
