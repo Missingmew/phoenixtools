@@ -25,6 +25,31 @@ int findlocalhash(struct locallut *hashes, unsigned count, unsigned long what) {
 	return -1;
 }
 
+unsigned ir_script_fixup_sections(struct ir_script * script) {
+	for(unsigned cursec = 0; cursec < script->numsections; cursec++) {
+		struct ir_section * section = script->secarr[cursec];
+		/* collect stuff needed to fix up commands */
+		for(unsigned curcmd = 0; curcmd < section->numcommands; curcmd++) {
+			struct ir_generic * command = section->commands[curcmd];
+			for(unsigned curdata = 0; curdata < command->numdata; curdata++) {
+				switch(command->data[curdata].type) {
+					case DATASECTIONLOCAL:
+					case DATASECTION: {
+						int idx = findsectionnamehash(script, command->data[curdata].data);
+						if(idx == -1) {
+							printf("fixup (%s): failed to find label for hash %08lx at line %d\n", __func__, command->data[curdata].data, command->line);
+							return 0;
+						}
+						command->data[curdata].data = idx;
+						if(command->data[curdata].type == DATASECTION)
+							command->data[curdata].data += 0x80;
+						command->data[curdata].type = DATARAW;
+					}
+				}
+			}	
+		}
+	}
+}
 unsigned ir_script_fixup(struct ir_script *script) {
 	unsigned lutsize = 0, curhash = 0, curfixup = 0, curspecial = 0, curlocal;
 	unsigned curoffset, sectionhashoffset;
@@ -34,6 +59,7 @@ unsigned ir_script_fixup(struct ir_script *script) {
 	struct ir_section *section;
 	struct ir_generic *command;
 	struct locallut *locals;
+	ir_script_fixup_sections(script);
 	for(unsigned i = 0; i < script->numsections; i++) lutsize += script->secarr[i]->numlabels;
 	if(lutsize) {
 		if(script->numspecials) {
@@ -102,25 +128,6 @@ unsigned ir_script_fixup(struct ir_script *script) {
 						break;
 					}
 					default: {
-						// this shouldn't go here but i'll put it here for now
-						// we give sections names so we need to be able to convert those to section index and this is where this fixup comes in
-						for(unsigned curdata = 0; curdata < command->numdata; curdata++) {
-							switch(command->data[curdata].type) {
-								case DATASECTIONLOCAL:
-								case DATASECTION: {
-									int idx = findsectionnamehash(script, command->data[curdata].data);
-									if(idx == -1) {
-										printf("fixup (%s): failed to find label for hash %08lx at line %d\n", __func__, command->data[curdata].data, command->line);
-										return 0;
-									}
-									command->data[curdata].data = idx;
-									if(command->data[curdata].type == DATASECTION)
-										command->data[curdata].data += 0x80;
-									command->data[curdata].type = DATARAW;
-									break;
-								}
-							}
-					    }
 						break;
 					}
 				}

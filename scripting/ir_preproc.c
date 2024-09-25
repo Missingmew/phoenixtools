@@ -184,10 +184,10 @@ struct ir_generic *preproc_Command0e(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command0f(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
-	if(config->gamenum != GAME_GS1GBA)
-	    gen->data[1].type = DATASECTIONLOCAL;
-    else
+	if(config->gamenum == GAME_GS1GBA)
 		gen->data[1].type = DATASECTION;
+    else
+	    gen->data[1].type = DATASECTIONLOCAL;
 	gen->data[1].data = hash(pre->data[0]);
 	LOOKUP(idx, testimonypress, pre->data[1]);
 	gen->data[2].type = DATARAW;
