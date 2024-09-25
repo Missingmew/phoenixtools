@@ -92,7 +92,7 @@ extern unsigned currentspecials;
 void ir_script_emit(FILE *o, struct ir_script *script);
 void ir_script_emit_header(FILE *h, struct ir_script *script, char *name);
 
-unsigned ir_script_fixup(struct ir_script *script);
+unsigned ir_script_fixup(struct ir_script *script, struct asconfig *config);
 
 unsigned cleanNumber(char *str);
 extern struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, struct asconfig *config);

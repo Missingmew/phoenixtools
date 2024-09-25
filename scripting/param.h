@@ -7,6 +7,7 @@ struct params {
 	unsigned gamenum;
 	
 	/* optional/automatic */
+	unsigned isstd;
 	unsigned isjp;
 	unsigned isunity;
 	char *outfile;

@@ -743,7 +743,7 @@ struct ir_pre_generic *parser_parseCommand6b(struct asconfig *config) {
 
 struct ir_pre_generic *parser_parseCommand6c(struct asconfig *config) {
 	if(config->gamenum == GAME_GS2GBA) {
-		GENERICNARG(CMD6C, 0)
+		GENERIC0ARG(CMD6C)
 	}
 	else {
 		GENERICNARG(CMD6C, 1)

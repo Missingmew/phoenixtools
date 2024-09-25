@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 	
 	config.gamenum = param.gamenum;
 	config.isjp = param.isjp;
-	
+	config.isstd = param.isstd;
 	if(!(f = fopen(param.infile, "r"))) {
 		printf("couldnt open %s as input\n", param.infile);
 		return 1;
@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 	
 	//~ ir_script_dump(script);
 	/* for fixing up addresses for sections and labels */
-	if(!ir_script_fixup(script)) BAIL;
+	if(!ir_script_fixup(script, &config)) BAIL;
 	
 	//~ ir_script_dump(script);
 	

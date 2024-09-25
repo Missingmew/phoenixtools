@@ -25,7 +25,7 @@ int findlocalhash(struct locallut *hashes, unsigned count, unsigned long what) {
 	return -1;
 }
 
-unsigned ir_script_fixup_sections(struct ir_script * script) {
+unsigned ir_script_fixup_sections(struct ir_script * script, struct asconfig *config) {
 	for(unsigned cursec = 0; cursec < script->numsections; cursec++) {
 		struct ir_section * section = script->secarr[cursec];
 		/* collect stuff needed to fix up commands */
@@ -41,7 +41,7 @@ unsigned ir_script_fixup_sections(struct ir_script * script) {
 							return 0;
 						}
 						command->data[curdata].data = idx;
-						if(command->data[curdata].type == DATASECTION)
+						if(command->data[curdata].type == DATASECTION && !config->isstd)
 							command->data[curdata].data += 0x80;
 						command->data[curdata].type = DATARAW;
 					}
@@ -49,8 +49,9 @@ unsigned ir_script_fixup_sections(struct ir_script * script) {
 			}	
 		}
 	}
+	return 1;
 }
-unsigned ir_script_fixup(struct ir_script *script) {
+unsigned ir_script_fixup(struct ir_script *script, struct asconfig *config) {
 	unsigned lutsize = 0, curhash = 0, curfixup = 0, curspecial = 0, curlocal;
 	unsigned curoffset, sectionhashoffset;
 	unsigned long *hashes, *sectionhashes;
@@ -59,7 +60,7 @@ unsigned ir_script_fixup(struct ir_script *script) {
 	struct ir_section *section;
 	struct ir_generic *command;
 	struct locallut *locals;
-	ir_script_fixup_sections(script);
+	ir_script_fixup_sections(script, config);
 	for(unsigned i = 0; i < script->numsections; i++) lutsize += script->secarr[i]->numlabels;
 	if(lutsize) {
 		if(script->numspecials) {

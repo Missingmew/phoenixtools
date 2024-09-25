@@ -184,7 +184,7 @@ struct ir_generic *preproc_Command0e(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command0f(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
-	if(config->gamenum == GAME_GS1GBA)
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA)
 		gen->data[1].type = DATASECTION;
     else
 	    gen->data[1].type = DATASECTIONLOCAL;

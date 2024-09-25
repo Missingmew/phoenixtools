@@ -197,9 +197,10 @@ unsigned printCmd0F(struct scriptstate *state) {
 	if(state->outputenabled) {
 		/* this does _NOT_ use the 128 offset for the section */
 		// MCboy: it does for GS1??? i have no idea i'll just if this
+		// Later MCboy: ok so it's used in the standard scripts with their sections
 		unsigned presssection = state->script[state->scriptidx+1];
 		unsigned hidetextbox = state->script[state->scriptidx+2];
-		if(state->gamenum == GAME_GS1GBA)
+		if(presssection > 0x80)
 			presssection -= 0x80;
 		if(hidetextbox < sizeofarr(testimonypress)) {
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], presssection, testimonypress[hidetextbox]);
@@ -381,7 +382,12 @@ unsigned printCmd1F(struct scriptstate *state) {
 }
 
 unsigned printCmd20(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	if(state->outputenabled) {
+		unsigned targetsection = state->script[state->scriptidx+1]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u\n", commandnames[state->script[state->scriptidx]], targetsection);
+		state->scriptidx += 1+1;
+	}
+	return 1;
 }
 
 unsigned printCmd21(struct scriptstate *state) {
