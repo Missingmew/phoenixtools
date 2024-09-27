@@ -572,7 +572,7 @@ struct ir_pre_generic *parser_parseCommand4a(struct asconfig *config) {
 }
 
 struct ir_pre_generic *parser_parseCommand4b(struct asconfig *config) {
-	GENERICNARG(CMD4B, 1)
+	GENERICNARG(CMD4B, 2)
 }
 
 struct ir_pre_generic *parser_parseCommand4c(struct asconfig *config) {
@@ -721,7 +721,7 @@ struct ir_pre_generic *parser_parseCommand68(struct asconfig *config) {
 
 struct ir_pre_generic *parser_parseCommand69(struct asconfig *config) {
 	if(config->gamenum == GAME_GS2GBA) {
-		GENERICNARG(CMD69, 0)
+		GENERIC0ARG(CMD69)
 	}
 	else {
 		GENERICNARG(CMD69, 2)

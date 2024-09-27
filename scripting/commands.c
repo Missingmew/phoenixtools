@@ -47,10 +47,13 @@ unsigned printCmdGeneric(struct scriptstate *state, unsigned args) {
 
 unsigned printCmd00(struct scriptstate *state) {
 	if(state->outputenabled) {
+		if(state->sectionoff == state->scriptidx-1) {
+			state->textidx += sprintf(state->textfile+state->textidx, " %04u\t", state->scriptidx - state->sectionoff);
+			return printCmdGeneric(state, 0);
+		}
 		state->scriptidx++;
 	}
 	return 0;
-	//return printCmdGeneric(state, 0);
 }
 
 unsigned printCmd01(struct scriptstate *state) {
@@ -169,6 +172,10 @@ unsigned printCmd0C(struct scriptstate *state) {
 
 unsigned printCmd0D(struct scriptstate *state) {
 	if(state->outputenabled) {
+		if(isSectionStart(state->sectionlist, state->numsections, state->scriptidx+1) < 0 && state->scriptsize/2 != state->scriptidx+1) {
+			state->textidx += sprintf(state->textfile+state->textidx, " %04u\t", state->scriptidx - state->sectionoff);
+			return printCmdGeneric(state, 0);
+		}
 		state->scriptidx++;
 	}
 	return 0;
@@ -675,7 +682,23 @@ unsigned printCmd4A(struct scriptstate *state) {
 }
 
 unsigned printCmd4B(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	unsigned flip, sprite;
+	unsigned args;
+	if(state->outputenabled) {
+		/* has 1 args in GS1/2 GBA */
+		if(state->gamenum == GAME_GS1GBA || state->gamenum == GAME_GS2GBA) {
+			sprite = (state->script[state->scriptidx+1] & 0xFF00) >> 8;
+			flip = state->script[state->scriptidx+1] & 0x3;
+			args = 1;
+		} else {
+			sprite = state->script[state->scriptidx+1];
+			flip = state->script[state->scriptidx+2];
+			args = 2;
+		}
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commandnames[state->script[state->scriptidx]], sprite, flip);
+		state->scriptidx += 1+args;
+	}
+	return 1;
 }
 
 unsigned printCmd4C(struct scriptstate *state) {

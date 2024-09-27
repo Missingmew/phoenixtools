@@ -184,10 +184,7 @@ struct ir_generic *preproc_Command0e(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command0f(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
-	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA)
-		gen->data[1].type = DATASECTION;
-    else
-	    gen->data[1].type = DATASECTIONLOCAL;
+	gen->data[1].type = DATASECTION;
 	gen->data[1].data = hash(pre->data[0]);
 	LOOKUP(idx, testimonypress, pre->data[1]);
 	gen->data[2].type = DATARAW;
@@ -353,7 +350,7 @@ struct ir_generic *preproc_Command33(struct ir_pre_generic *pre, struct asconfig
 	SETUPGEN
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[0]); gen->data[1].type = DATARAW; gen->data[1].data = idx;
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[1]); gen->data[2].type = DATARAW; gen->data[2].data = idx;
-	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[2]); gen->data[3].type = DATARAW; gen->data[3].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[2]); gen->data[3].type = DATARAW; gen->data[3].data = idx; 
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[3]); gen->data[4].type = DATARAW; gen->data[4].data = idx;
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[4]); gen->data[5].type = DATARAW; gen->data[5].data = idx;
 	LOOKUPDATA(idx, DATA_LOCATION, pre->data[0], DONTCARE); gen->data[1].type = DATARAW; gen->data[1].data = idx;
@@ -411,6 +408,20 @@ struct ir_generic *preproc_Command36(struct ir_pre_generic *pre, struct asconfig
 	//~ printf("preproc (%s): adding cmd35 with label %s hash %lx\n", __func__, pre->data[0], hash(pre->data[0]));
 	currentspecials++;
 	return gen;
+}
+
+struct ir_generic *preproc_Command4B(struct ir_pre_generic *pre, struct asconfig *config) {
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA) {
+		unsigned short data;
+		SETUPGENSPEC(1)
+		//~ LOOKUP(idx, sound_data[ARRGAMENUM(config->gamenum)], pre->data[0]);
+		data = cleanNumber(pre->data[0]) << 8;
+		data |= cleanNumber(pre->data[1]) & 3;
+		gen->data[1].type = DATARAW;
+		gen->data[1].data = data;
+		return gen;
+	}
+	else return preproc_Generic(pre, config);
 }
 
 struct ir_generic *preproc_Command60(struct ir_pre_generic *pre, struct asconfig *config) {
@@ -510,7 +521,7 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, struct as
 	preproc_Generic, /* 0x48 */
 	preproc_Generic, /* 0x49 */
 	preproc_Generic, /* 0x4a */
-	preproc_Generic, /* 0x4b */
+	preproc_Command4B, /* 0x4b */
 	preproc_Generic, /* 0x4c */
 	preproc_Generic, /* 0x4d */
 	preproc_Generic, /* 0x4e */
