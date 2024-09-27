@@ -141,28 +141,29 @@ struct ir_generic *preproc_Command06(struct ir_pre_generic *pre, struct asconfig
 
 struct ir_generic *preproc_Command08(struct ir_pre_generic *pre, struct asconfig *config) {
 	SETUPGEN
-	gen->data[1].type = DATARAW;
-	gen->data[1].data = cleanNumber(pre->data[0]) + 128;
-	gen->data[2].type = DATARAW;
-	gen->data[2].data = cleanNumber(pre->data[1]) + 128;
+	gen->data[1].type = DATASECTION;
+	gen->data[1].data = hash(pre->data[0]);
+	gen->data[2].type = DATASECTION;
+	gen->data[2].data = hash(pre->data[1]);
 	return gen;
 }
 
 struct ir_generic *preproc_Command09(struct ir_pre_generic *pre, struct asconfig *config) {
 	SETUPGEN
-	gen->data[1].type = DATARAW;
-	gen->data[1].data = cleanNumber(pre->data[0]) + 128;
-	gen->data[2].type = DATARAW;
-	gen->data[2].data = cleanNumber(pre->data[1]) + 128;
-	gen->data[3].type = DATARAW;
-	gen->data[3].data = cleanNumber(pre->data[2]) + 128;
+	gen->data[1].type = DATASECTION;
+	gen->data[1].data = hash(pre->data[0]);
+	gen->data[2].type = DATASECTION;
+	gen->data[2].data = hash(pre->data[1]);
+	gen->data[3].type = DATASECTION;
+	gen->data[3].data = hash(pre->data[2]);
 	return gen;
 }
 
 struct ir_generic *preproc_Command0a(struct ir_pre_generic *pre, struct asconfig *config) {
+	int idx;
 	SETUPGEN
-	gen->data[1].type = DATARAW;
-	gen->data[1].data = cleanNumber(pre->data[0]) + 128;
+	gen->data[1].type = DATASECTION;
+	gen->data[1].data = hash(pre->data[0]);
 	return gen;
 }
 
@@ -183,8 +184,8 @@ struct ir_generic *preproc_Command0e(struct ir_pre_generic *pre, struct asconfig
 struct ir_generic *preproc_Command0f(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
-	gen->data[1].type = DATARAW;
-	gen->data[1].data = cleanNumber(pre->data[0]);
+	gen->data[1].type = DATASECTION;
+	gen->data[1].data = hash(pre->data[0]);
 	LOOKUP(idx, testimonypress, pre->data[1]);
 	gen->data[2].type = DATARAW;
 	gen->data[2].data = idx;
@@ -301,6 +302,14 @@ struct ir_generic *preproc_Command1e(struct ir_pre_generic *pre, struct asconfig
 	return gen;
 }
 
+struct ir_generic *preproc_Command20(struct ir_pre_generic *pre, struct asconfig *config) {
+	int idx;
+	SETUPGEN
+	gen->data[1].type = DATASECTION;
+	gen->data[1].data = hash(pre->data[0]);
+	return gen;
+}
+
 struct ir_generic *preproc_Command23(struct ir_pre_generic *pre, struct asconfig *config) {
 	int idx;
 	SETUPGEN
@@ -309,6 +318,18 @@ struct ir_generic *preproc_Command23(struct ir_pre_generic *pre, struct asconfig
 	LOOKUP(idx, musicpause, pre->data[1]);
 	gen->data[2].type = DATARAW;
 	gen->data[2].data = idx;
+	return gen;
+}
+
+struct ir_generic *preproc_Command2a(struct ir_pre_generic *pre, struct asconfig *config) {
+	int idx;
+	SETUPGEN
+	gen->data[1].type = DATARAW;
+	gen->data[1].data = cleanNumber(pre->data[0]);
+	gen->data[2].type = DATASECTION;
+	gen->data[2].data = hash(pre->data[1]);
+	gen->data[3].type = DATASECTION;
+	gen->data[3].data = hash(pre->data[2]);
 	return gen;
 }
 
@@ -329,7 +350,7 @@ struct ir_generic *preproc_Command33(struct ir_pre_generic *pre, struct asconfig
 	SETUPGEN
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[0]); gen->data[1].type = DATARAW; gen->data[1].data = idx;
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[1]); gen->data[2].type = DATARAW; gen->data[2].data = idx;
-	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[2]); gen->data[3].type = DATARAW; gen->data[3].data = idx;
+	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[2]); gen->data[3].type = DATARAW; gen->data[3].data = idx; 
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[3]); gen->data[4].type = DATARAW; gen->data[4].data = idx;
 	//~ LOOKUP(idx, locations[ARRGAMENUM(config->gamenum)], pre->data[4]); gen->data[5].type = DATARAW; gen->data[5].data = idx;
 	LOOKUPDATA(idx, DATA_LOCATION, pre->data[0], DONTCARE); gen->data[1].type = DATARAW; gen->data[1].data = idx;
@@ -389,6 +410,20 @@ struct ir_generic *preproc_Command36(struct ir_pre_generic *pre, struct asconfig
 	return gen;
 }
 
+struct ir_generic *preproc_Command4B(struct ir_pre_generic *pre, struct asconfig *config) {
+	if(config->gamenum == GAME_GS1GBA || config->gamenum == GAME_GS2GBA) {
+		unsigned short data;
+		SETUPGENSPEC(1)
+		//~ LOOKUP(idx, sound_data[ARRGAMENUM(config->gamenum)], pre->data[0]);
+		data = cleanNumber(pre->data[0]) << 8;
+		data |= cleanNumber(pre->data[1]) & 3;
+		gen->data[1].type = DATARAW;
+		gen->data[1].data = data;
+		return gen;
+	}
+	else return preproc_Generic(pre, config);
+}
+
 struct ir_generic *preproc_Command60(struct ir_pre_generic *pre, struct asconfig *config) {
 	SETUPGEN
 	gen->data[1].type = DATARAW;
@@ -443,17 +478,17 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, struct as
 	preproc_Command1d, /* 0x1d */
 	preproc_Command1e, /* 0x1e */
 	preproc_Generic, /* 0x1f */
-	preproc_Generic, /* 0x20 */
+	preproc_Command20, /* 0x20 */
 	preproc_Generic, /* 0x21 */
 	preproc_Generic, /* 0x22 */
 	preproc_Command23, /* 0x23 */
 	preproc_Generic, /* 0x24 */
-	preproc_Generic, /* 0x25 */
+	preproc_Command20, /* 0x25 */
 	preproc_Generic, /* 0x26 */
 	preproc_Generic, /* 0x27 */
 	preproc_Generic, /* 0x28 */
 	preproc_Generic, /* 0x29 */
-	preproc_Generic, /* 0x2a */
+	preproc_Command2a, /* 0x2a */
 	preproc_Generic, /* 0x2b */
 	preproc_Command0a, /* 0x2c */
 	preproc_Generic, /* 0x2d */
@@ -486,7 +521,7 @@ struct ir_generic *(*command_preproc[144])(struct ir_pre_generic *pre, struct as
 	preproc_Generic, /* 0x48 */
 	preproc_Generic, /* 0x49 */
 	preproc_Generic, /* 0x4a */
-	preproc_Generic, /* 0x4b */
+	preproc_Command4B, /* 0x4b */
 	preproc_Generic, /* 0x4c */
 	preproc_Generic, /* 0x4d */
 	preproc_Generic, /* 0x4e */
@@ -605,16 +640,24 @@ struct ir_label *ir_label_preprocess(struct ir_label *lab, unsigned cursecaddr) 
 }
 
 unsigned ir_section_preprocess(struct ir_section *section, struct asconfig *config) {
-	unsigned i, curcmd, curlab;
+	unsigned i, curcmd = 0, curlab;
 	struct ir_list *iter;
 	
-	section->num = cleanNumber(section->prenum);
-	currentsection = section->num;
+	//currentsection = section->num;
 	
-	section->commands = malloc(sizeof(struct ir_generic *) * section->numcommands);
+	section->commands = malloc(sizeof(struct ir_generic *) * (section->numcommands));
 	section->labels = malloc(sizeof(struct ir_label *) * section->numlabels);
 	
-	for(i = 0, curcmd = 0, curlab = 0, iter = section->precommands;i < section->numprecommands; i++, iter = iter->next) {
+	section->commands[curcmd] = malloc(sizeof(struct ir_generic));
+	section->commands[curcmd]->type = CMD00;
+	section->commands[curcmd]->line = section->line;
+	section->commands[curcmd]->numdata = 1;
+	section->commands[curcmd]->data = malloc(sizeof(struct ir_datapacket));
+	section->commands[curcmd]->data[0].type = DATARAW;
+	section->commands[curcmd]->data[0].data = CMD00;
+	curcmd++;
+	section->datasize += sizeof(uint16_t);
+	for(i = 0, curcmd = 1, curlab = 0, iter = section->precommands;i < section->numprecommands; i++, iter = iter->next) {
 		if(*iter->type == LABEL) {
 			section->labels[curlab++] = ir_label_preprocess((struct ir_label *)iter->type, section->datasize);
 		}
@@ -624,7 +667,16 @@ unsigned ir_section_preprocess(struct ir_section *section, struct asconfig *conf
 		}
 	}
 	
-	currentsection = -1;
+	section->commands[curcmd] = malloc(sizeof(struct ir_generic));
+	section->commands[curcmd]->type = CMD0D;
+	section->commands[curcmd]->line = section->line;
+	section->commands[curcmd]->numdata = 1;
+	section->commands[curcmd]->data = malloc(sizeof(struct ir_datapacket));
+	section->commands[curcmd]->data[0].type = DATARAW;
+	section->commands[curcmd]->data[0].data = CMD0D;
+	section->datasize += sizeof(uint16_t);
+	
+	//currentsection = -1;
 	
 	return 1;
 }
@@ -635,7 +687,9 @@ unsigned ir_script_preprocess(struct ir_script *script, struct asconfig *config)
 	script->secarr = malloc(sizeof(struct ir_section *) * script->numsections);
 	for(i = 0, iter = script->sections;i < script->numsections; i++, iter = iter->next) {
 		script->secarr[i] = (struct ir_section *)iter->type;
+		currentsection = i;
 		if(!ir_section_preprocess((struct ir_section *)iter->type, config)) return 0;
+		currentsection = -1;
 	}
 	script->numspecials = currentspecials;
 	return 1;

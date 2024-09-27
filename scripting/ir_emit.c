@@ -26,3 +26,15 @@ void ir_script_emit(FILE *o, struct ir_script *script) {
 		}
 	}
 }
+
+void ir_script_emit_header(FILE *h, struct ir_script *script, char *name) {
+	fprintf(h, "#ifndef _%s_SCRIPT_GUARD\n", name);
+	fprintf(h, "#define _%s_SCRIPT_GUARD\n\n", name);
+	{
+		for(int cursec = 0; cursec < script->numsections; cursec++) {
+			struct ir_section * section = script->secarr[cursec];
+			fprintf(h, "#define SCRIPT_%s_S_%s 0x%04X\n", name, section->name, 0x80+cursec);
+		}
+	}
+	fprintf(h, "\n#endif _%s_SCRIPT_GUARD\n", name);
+}

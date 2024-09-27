@@ -4,6 +4,7 @@
 struct asconfig {
 	unsigned isjp;
 	unsigned gamenum;
+	unsigned isstd;
 };
 
 #endif

@@ -154,7 +154,7 @@ void ir_section_free(struct ir_section *section) {
 	free(section->commands);
 	free(section->labels);
 	
-	free(section->prenum);
+	free(section->name);
 	free(section);
 }
 

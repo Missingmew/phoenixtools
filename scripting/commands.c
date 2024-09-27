@@ -46,7 +46,14 @@ unsigned printCmdGeneric(struct scriptstate *state, unsigned args) {
 }
 
 unsigned printCmd00(struct scriptstate *state) {
-	return printCmdGeneric(state, 0);
+	if(state->outputenabled) {
+		if(state->sectionoff == state->scriptidx-1) {
+			state->textidx += sprintf(state->textfile+state->textidx, " %04u\t", state->scriptidx - state->sectionoff);
+			return printCmdGeneric(state, 0);
+		}
+		state->scriptidx++;
+	}
+	return 0;
 }
 
 unsigned printCmd01(struct scriptstate *state) {
@@ -164,7 +171,14 @@ unsigned printCmd0C(struct scriptstate *state) {
 }
 
 unsigned printCmd0D(struct scriptstate *state) {
-	return printCmdGeneric(state, 0);
+	if(state->outputenabled) {
+		if(isSectionStart(state->sectionlist, state->numsections, state->scriptidx+1) < 0 && state->scriptsize/2 != state->scriptidx+1) {
+			state->textidx += sprintf(state->textfile+state->textidx, " %04u\t", state->scriptidx - state->sectionoff);
+			return printCmdGeneric(state, 0);
+		}
+		state->scriptidx++;
+	}
+	return 0;
 }
 
 unsigned printCmd0E(struct scriptstate *state) {
@@ -189,8 +203,12 @@ unsigned printCmd0E(struct scriptstate *state) {
 unsigned printCmd0F(struct scriptstate *state) {
 	if(state->outputenabled) {
 		/* this does _NOT_ use the 128 offset for the section */
+		// MCboy: it does for GS1??? i have no idea i'll just if this
+		// Later MCboy: ok so it's used in the standard scripts with their sections
 		unsigned presssection = state->script[state->scriptidx+1];
 		unsigned hidetextbox = state->script[state->scriptidx+2];
+		if(presssection > 0x80)
+			presssection -= 0x80;
 		if(hidetextbox < sizeofarr(testimonypress)) {
 			state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %s\n", commandnames[state->script[state->scriptidx]], presssection, testimonypress[hidetextbox]);
 			state->scriptidx += 1+2;
@@ -371,7 +389,12 @@ unsigned printCmd1F(struct scriptstate *state) {
 }
 
 unsigned printCmd20(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	if(state->outputenabled) {
+		unsigned targetsection = state->script[state->scriptidx+1]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u\n", commandnames[state->script[state->scriptidx]], targetsection);
+		state->scriptidx += 1+1;
+	}
+	return 1;
 }
 
 unsigned printCmd21(struct scriptstate *state) {
@@ -429,7 +452,14 @@ unsigned printCmd29(struct scriptstate *state) {
 }
 
 unsigned printCmd2A(struct scriptstate *state) {
-	return printCmdGeneric(state, 3);
+	if(state->outputenabled) {
+		unsigned flag = state->script[state->scriptidx+1];
+		unsigned section1 = state->script[state->scriptidx+2]-128;
+		unsigned section2 = state->script[state->scriptidx+3]-128;
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u, %u\n", commandnames[state->script[state->scriptidx]], flag, section1, section2);
+		state->scriptidx += 1+3;
+	}
+	return 3;
 }
 
 unsigned printCmd2B(struct scriptstate *state) {
@@ -652,7 +682,23 @@ unsigned printCmd4A(struct scriptstate *state) {
 }
 
 unsigned printCmd4B(struct scriptstate *state) {
-	return printCmdGeneric(state, 1);
+	unsigned flip, sprite;
+	unsigned args;
+	if(state->outputenabled) {
+		/* has 1 args in GS1/2 GBA */
+		if(state->gamenum == GAME_GS1GBA || state->gamenum == GAME_GS2GBA) {
+			sprite = (state->script[state->scriptidx+1] & 0xFF00) >> 8;
+			flip = state->script[state->scriptidx+1] & 0x3;
+			args = 1;
+		} else {
+			sprite = state->script[state->scriptidx+1];
+			flip = state->script[state->scriptidx+2];
+			args = 2;
+		}
+		state->textidx += sprintf(state->textfile+state->textidx, "%s %u, %u\n", commandnames[state->script[state->scriptidx]], sprite, flip);
+		state->scriptidx += 1+args;
+	}
+	return 1;
 }
 
 unsigned printCmd4C(struct scriptstate *state) {

@@ -13,8 +13,10 @@ void print_help(char *argv0) {
 	
 	printf("OPTIONAL  options are\n");
 	printf("-h        print this help\n");
+	printf("-m STRING script name\n");
 	printf("-o FILE   output file (optional)\n");
 	printf("-j        enable japanese mode\n");
+	printf("-s        enable standard mode\n");
 	printf("-u        enable unity mode (experimental!)\n");
 	printf("-fm FILE  music and sound name file\n");
 	printf("-fs FILE  speaker name file\n");
@@ -93,6 +95,10 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 				ret->isunity = 1;
 				break;
 			}
+			case 's': {
+				ret->isstd = 1;
+				break;
+			}
 			case 'f': {
 				CHECKARGC;
 				switch(cur[2]) {
@@ -130,6 +136,12 @@ unsigned parse_args(struct params *ret, int argc, char **argv, char *autosuffix)
 						return 0;
 					}
 				}
+				ADVANCE;
+				break;
+			}
+			case 'm': {
+				CHECKARGC;
+				ret->scriptName = *argv;
 				ADVANCE;
 				break;
 			}
